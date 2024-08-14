@@ -9,7 +9,9 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { AnimatedInput } from "@/components/utils/forms/AnimatedInput";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -64,7 +66,11 @@ export function SignUpForm() {
                     control={form.control}
                     name="email"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem
+                            className={cn(
+                                form.getValues("name") ? "visible" : "hidden"
+                            )}
+                        >
                             <FormControl>
                                 <AnimatedInput label="E-mail" {...field} />
                             </FormControl>
@@ -76,7 +82,11 @@ export function SignUpForm() {
                     control={form.control}
                     name="password"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem
+                            className={cn(
+                                form.getValues("email") ? "visible" : "hidden"
+                            )}
+                        >
                             <FormControl>
                                 <AnimatedInput label="Password" {...field} />
                             </FormControl>
@@ -88,7 +98,13 @@ export function SignUpForm() {
                     control={form.control}
                     name="confirmPassword"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem
+                            className={cn(
+                                form.getValues("password")
+                                    ? "visible"
+                                    : "hidden"
+                            )}
+                        >
                             <FormControl>
                                 <AnimatedInput
                                     label="Confirm Password"
@@ -99,10 +115,17 @@ export function SignUpForm() {
                         </FormItem>
                     )}
                 />
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col gap-5 items-center">
                     <Button type="submit" className="w-4/5 h-12">
                         Continue
                     </Button>
+                    <Link
+                        href="/auth/login"
+                        className="text-center text-sm space-x-1 hover:underline"
+                    >
+                        <span>Already have an account?</span>
+                        <span className="text-primary underline">Login</span>
+                    </Link>
                 </div>
             </form>
         </Form>

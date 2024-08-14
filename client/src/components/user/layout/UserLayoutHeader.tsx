@@ -1,6 +1,6 @@
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { InlineLogo } from "@/components/utils/app-logos/InlineLogo";
 import { LangSelect } from "@/components/utils/lang/LangSelect";
-import { InlineLogo } from "@/components/utils/logos/InlineLogo";
 
 export function UserLayoutHeader() {
     return (
