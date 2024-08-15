@@ -25,14 +25,14 @@ export function Divisor({
             <div
                 className={cn(
                     "bg-muted-foreground",
-                    isVertical ? "min-h-[200px]  w-0.5" : "w-1/2 h-0.5"
+                    isVertical ? "min-h-[200px]  w-px" : "w-1/2 h-px"
                 )}
             />
             <span className="text-xs text-muted-foreground">{children}</span>
             <div
                 className={cn(
                     "bg-muted-foreground",
-                    isVertical ? "min-h-[200px] w-0.5" : "w-1/2 h-0.5"
+                    isVertical ? "min-h-[200px] w-px" : "w-1/2 h-px"
                 )}
             />
         </div>
