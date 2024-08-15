@@ -1,12 +1,14 @@
+import { cn } from "@/lib/utils";
+import { HTMLAttributes } from "react";
 import { DiscordLogo } from "../providers-logo/DiscordLogo";
 import { FacebookLogo } from "../providers-logo/FacebookLogo";
 import { GoogleLogo } from "../providers-logo/GoogleLogo";
 import { RedditLogo } from "../providers-logo/RedditLogo";
 import { OAuthButton } from "./OAuthButton";
 
-export function OAuthGroupButtons() {
+export function OAuthGroupButtons(props: HTMLAttributes<HTMLDivElement>) {
     return (
-        <div className="space-y-2">
+        <div className={cn("space-y-2", props.className)}>
             <OAuthButton className="bg-white">
                 <GoogleLogo />
             </OAuthButton>

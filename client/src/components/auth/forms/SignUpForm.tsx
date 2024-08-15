@@ -48,7 +48,7 @@ export function SignUpForm() {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-10 my-5"
+                className="space-y-10 my-5 w-full"
             >
                 <FormField
                     control={form.control}
@@ -68,7 +68,7 @@ export function SignUpForm() {
                     render={({ field }) => (
                         <FormItem
                             className={cn(
-                                form.getValues("name") ? "visible" : "hidden"
+                                form.getValues("name") ? "visible" : "hidden "
                             )}
                         >
                             <FormControl>
@@ -84,7 +84,7 @@ export function SignUpForm() {
                     render={({ field }) => (
                         <FormItem
                             className={cn(
-                                form.getValues("email") ? "visible" : "hidden"
+                                form.getValues("email") ? "visible" : "hidden "
                             )}
                         >
                             <FormControl>
@@ -102,7 +102,7 @@ export function SignUpForm() {
                             className={cn(
                                 form.getValues("password")
                                     ? "visible"
-                                    : "hidden"
+                                    : "hidden "
                             )}
                         >
                             <FormControl>

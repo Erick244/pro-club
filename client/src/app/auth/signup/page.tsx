@@ -16,9 +16,13 @@ export default function Page() {
                 </Muted>
             </section>
             <section className="space-y-3">
-                <OAuthGroupButtons />
-                <Divisor>OR</Divisor>
-                <FormContainer>
+                <OAuthGroupButtons className="max-w-md m-auto sm:hidden" />
+                <Divisor className="sm:hidden">OR</Divisor>
+                <FormContainer className="flex flex-col sm:flex-row sm:justify-between sm:items-center sm:gap-5 sm:min-h-[500px]">
+                    <OAuthGroupButtons className="hidden sm:block w-full" />
+                    <Divisor className="hidden sm:flex" direction="vertical">
+                        OR
+                    </Divisor>
                     <SignUpForm />
                 </FormContainer>
             </section>
