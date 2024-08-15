@@ -68,7 +68,9 @@ export function SignUpForm() {
                     render={({ field }) => (
                         <FormItem
                             className={cn(
-                                form.getValues("name") ? "visible" : "hidden "
+                                form.getValues("name")
+                                    ? "visible"
+                                    : "hidden sm:block"
                             )}
                         >
                             <FormControl>
@@ -84,7 +86,9 @@ export function SignUpForm() {
                     render={({ field }) => (
                         <FormItem
                             className={cn(
-                                form.getValues("email") ? "visible" : "hidden "
+                                form.getValues("email")
+                                    ? "visible"
+                                    : "hidden sm:block"
                             )}
                         >
                             <FormControl>
@@ -102,7 +106,7 @@ export function SignUpForm() {
                             className={cn(
                                 form.getValues("password")
                                     ? "visible"
-                                    : "hidden "
+                                    : "hidden sm:block"
                             )}
                         >
                             <FormControl>
