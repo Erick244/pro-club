@@ -1,11 +1,11 @@
-import { SignUpForm } from "@/components/auth/forms/SignUpForm";
+import { SignInFormForm } from "@/components/auth/forms/SignInForm";
 import { AuthAuthFormSection } from "@/components/auth/sections/AuthFormSection";
 import { IntroductionCardSection } from "@/components/auth/sections/IntroductionCardSection";
 import { IntroductionSection } from "@/components/auth/sections/IntroductionSection";
 
 const introductionTexts = {
-    h1: "REGISTER",
-    muted: "Sign in with an account or fill in the information to register an account.",
+    h1: "LOGIN",
+    muted: "Enter with an account or fill in the information to log in your account.",
 };
 
 export default function Page() {
@@ -22,7 +22,7 @@ export default function Page() {
             />
 
             <AuthAuthFormSection className="lg:max-w-4xl lg:w-full">
-                <SignUpForm />
+                <SignInFormForm />
             </AuthAuthFormSection>
         </div>
     );
