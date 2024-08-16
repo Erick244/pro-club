@@ -3,6 +3,7 @@
         "auth/signup",
         "gitignore",
         "auth/login",
-        "dependencies"
+        "dependencies",
+        "pages"
     ]
 }
