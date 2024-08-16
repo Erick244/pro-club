@@ -16,10 +16,10 @@ import {
     InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { FormRedirectLink } from "@/components/utils/forms/FormRedirectLink";
 import { SubmitButton } from "@/components/utils/forms/SubmitButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 const emailConformationFormSchema = z.object({
@@ -85,15 +85,11 @@ export function EmailConfirmationForm() {
 
                 <div className="flex flex-col gap-5 items-center w-full">
                     <SubmitButton>Continue</SubmitButton>
-                    <Link
+                    <FormRedirectLink
                         href="/auth/signup"
-                        className="text-center text-sm space-x-1 hover:underline"
-                    >
-                        <span>Do you want to</span>
-                        <span className="text-primary underline">
-                            modify the email?
-                        </span>
-                    </Link>
+                        initialSentence="Do you want to modify the email?"
+                        flashyText="Click here"
+                    />
                 </div>
             </form>
         </Form>

@@ -8,10 +8,10 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { AnimatedInput } from "@/components/utils/forms/AnimatedInput";
+import { FormRedirectLink } from "@/components/utils/forms/FormRedirectLink";
 import { SubmitButton } from "@/components/utils/forms/SubmitButton";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -73,13 +73,11 @@ export function SignInFormForm() {
                 />
                 <div className="flex flex-col gap-5 items-center">
                     <SubmitButton>Continue</SubmitButton>
-                    <Link
+                    <FormRedirectLink
                         href="/auth/signup"
-                        className="text-center text-sm space-x-1 hover:underline"
-                    >
-                        <span>Don&apos;t have an account?</span>
-                        <span className="text-primary underline">Register</span>
-                    </Link>
+                        initialSentence="Don't have an account?"
+                        flashyText="Register"
+                    />
                 </div>
             </form>
         </Form>
