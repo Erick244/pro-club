@@ -9,7 +9,7 @@ interface TemplateProps {
 export default function Template({ children }: TemplateProps) {
     return (
         <motion.div
-            initial={{ y: 20, opacity: 0, shadow: "10px, 10px, 10px, #ffff" }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{
                 ease: "easeInOut",

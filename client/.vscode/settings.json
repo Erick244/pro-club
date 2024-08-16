@@ -4,6 +4,7 @@
         "gitignore",
         "auth/login",
         "dependencies",
-        "pages"
+        "pages",
+        "auth"
     ]
 }
