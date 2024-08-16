@@ -5,6 +5,7 @@
         "auth/login",
         "dependencies",
         "pages",
-        "auth"
+        "auth",
+        "auth/email-confirmation"
     ]
 }

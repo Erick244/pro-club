@@ -24,7 +24,7 @@ export default function Page() {
                 </Muted>
             </IntroductionCardSection>
 
-            <FormContainer className="flex flex-col sm:flex-row sm:justify-between sm:items-center sm:gap-5">
+            <FormContainer className="flex flex-col sm:flex-row sm:justify-between sm:items-center sm:gap-5 max-w-xl w-full m-auto lg:m-0">
                 <EmailConfirmationForm />
             </FormContainer>
         </div>
