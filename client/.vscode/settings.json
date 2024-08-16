@@ -1,3 +1,8 @@
 {
-    "conventionalCommits.scopes": ["auth/signup", "gitignore", "auth/login"]
+    "conventionalCommits.scopes": [
+        "auth/signup",
+        "gitignore",
+        "auth/login",
+        "dependencies"
+    ]
 }
