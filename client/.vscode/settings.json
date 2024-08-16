@@ -6,6 +6,7 @@
         "dependencies",
         "pages",
         "auth",
-        "auth/email-confirmation"
+        "auth/email-confirmation",
+        "forms"
     ]
 }

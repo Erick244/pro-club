@@ -1,7 +1,6 @@
 "use client";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -17,6 +16,7 @@ import {
     InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { SubmitButton } from "@/components/utils/forms/SubmitButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import Link from "next/link";
@@ -84,9 +84,7 @@ export function EmailConfirmationForm() {
                 />
 
                 <div className="flex flex-col gap-5 items-center w-full">
-                    <Button type="submit" className="w-4/5 h-12">
-                        Continue
-                    </Button>
+                    <SubmitButton>Continue</SubmitButton>
                     <Link
                         href="/auth/signup"
                         className="text-center text-sm space-x-1 hover:underline"

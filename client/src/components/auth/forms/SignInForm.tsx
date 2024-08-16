@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -9,6 +8,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { AnimatedInput } from "@/components/utils/forms/AnimatedInput";
+import { SubmitButton } from "@/components/utils/forms/SubmitButton";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -72,9 +72,7 @@ export function SignInFormForm() {
                     )}
                 />
                 <div className="flex flex-col gap-5 items-center">
-                    <Button type="submit" className="w-4/5 h-12">
-                        Continue
-                    </Button>
+                    <SubmitButton>Continue</SubmitButton>
                     <Link
                         href="/auth/signup"
                         className="text-center text-sm space-x-1 hover:underline"
