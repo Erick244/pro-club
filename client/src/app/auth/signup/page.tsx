@@ -1,5 +1,5 @@
 import { SignUpForm } from "@/components/auth/forms/SignUpForm";
-import { AuthAuthFormSection } from "@/components/auth/sections/AuthFormSection";
+import { AuthFormSection } from "@/components/auth/sections/AuthFormSection";
 import { IntroductionCardSection } from "@/components/auth/sections/IntroductionCardSection";
 import { IntroductionSection } from "@/components/auth/sections/IntroductionSection";
 import { H1 } from "@/components/typography/H1";
@@ -29,9 +29,9 @@ export default function Page() {
                 </Muted>
             </IntroductionCardSection>
 
-            <AuthAuthFormSection className="lg:max-w-4xl lg:w-full">
+            <AuthFormSection className="lg:max-w-4xl lg:w-full">
                 <SignUpForm />
-            </AuthAuthFormSection>
+            </AuthFormSection>
         </div>
     );
 }

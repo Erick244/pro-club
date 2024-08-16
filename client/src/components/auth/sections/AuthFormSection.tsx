@@ -9,10 +9,7 @@ interface AuthFormSectionProps extends HTMLAttributes<HTMLElement> {
     children: React.ReactNode;
 }
 
-export function AuthAuthFormSection({
-    children,
-    ...props
-}: AuthFormSectionProps) {
+export function AuthFormSection({ children, ...props }: AuthFormSectionProps) {
     return (
         <section {...props} className={cn("space-y-3", props.className)}>
             <OAuthGroupButtons className="max-w-md m-auto sm:hidden" />
