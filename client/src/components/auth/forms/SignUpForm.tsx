@@ -16,7 +16,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-// TODO: Corrigir/Separa as mensagens dos forms em um arquivo
 const signUpFormSchema = z
     .object({
         name: z

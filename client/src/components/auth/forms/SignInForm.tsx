@@ -11,13 +11,17 @@ import { AnimatedInput } from "@/components/utils/forms/AnimatedInput";
 import { FormRedirectLink } from "@/components/utils/forms/FormRedirectLink";
 import { SubmitButton } from "@/components/utils/forms/SubmitButton";
 import { cn } from "@/lib/utils";
+import { signInMessages } from "@/messages/SignInForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const signInFormFormSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8).max(16),
+    email: z.string().email(signInMessages.email),
+    password: z
+        .string()
+        .min(8, signInMessages.password.min)
+        .max(16, signInMessages.password.max),
 });
 
 type SignInFormFormData = z.infer<typeof signInFormFormSchema>;
