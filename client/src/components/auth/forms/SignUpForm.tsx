@@ -11,19 +11,30 @@ import { AnimatedInput } from "@/components/utils/forms/AnimatedInput";
 import { FormRedirectLink } from "@/components/utils/forms/FormRedirectLink";
 import { SubmitButton } from "@/components/utils/forms/SubmitButton";
 import { cn } from "@/lib/utils";
+import { signUpMessages } from "@/messages/SignUpForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+// TODO: Corrigir/Separa as mensagens dos forms em um arquivo
 const signUpFormSchema = z
     .object({
-        name: z.string().min(2).max(50),
-        email: z.string().email(),
-        password: z.string().min(8).max(16),
-        confirmPassword: z.string().min(8).max(16),
+        name: z
+            .string()
+            .min(2, signUpMessages.name.min)
+            .max(50, signUpMessages.name.max),
+        email: z.string().email(signUpMessages.email),
+        password: z
+            .string()
+            .min(8, signUpMessages.password.min)
+            .max(16, signUpMessages.password.max),
+        confirmPassword: z
+            .string()
+            .min(8, signUpMessages.password.min)
+            .max(16, signUpMessages.password.max),
     })
     .refine(({ confirmPassword, password }) => confirmPassword === password, {
-        message: "Passwords don't match",
+        message: signUpMessages.confirmPassword,
         path: ["confirmPassword"],
     });
 
