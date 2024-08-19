@@ -18,14 +18,13 @@ import {
 } from "@/components/ui/input-otp";
 import { FormRedirectLink } from "@/components/utils/forms/FormRedirectLink";
 import { SubmitButton } from "@/components/utils/forms/SubmitButton";
+import { emailConfirmationMessages } from "@/messages/EmailConfirmationForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { useForm } from "react-hook-form";
 
 const emailConformationFormSchema = z.object({
-    code: z.string().min(6, {
-        message: "Your code confirmation must be 6 characters.",
-    }),
+    code: z.string().min(6, emailConfirmationMessages.code),
 });
 
 type EmailConfirmationFormData = z.infer<typeof emailConformationFormSchema>;
