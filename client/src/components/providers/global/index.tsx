@@ -1,3 +1,4 @@
+import { Provider as JotaiProvider } from "jotai";
 import { ThemeProvider } from "./ThemeProvider";
 
 interface GlobalProvidersProps {
@@ -7,7 +8,7 @@ interface GlobalProvidersProps {
 export function GlobalProviders({ children }: GlobalProvidersProps) {
     return (
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-            {children}
+            <JotaiProvider>{children}</JotaiProvider>
         </ThemeProvider>
     );
 }
