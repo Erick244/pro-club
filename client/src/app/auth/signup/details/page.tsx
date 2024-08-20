@@ -1,3 +1,4 @@
+import { SignUpDetailsForm } from "@/components/auth/forms/SignUpDetailsForm";
 import { IntroductionCardSection } from "@/components/auth/sections/IntroductionCardSection";
 import { IntroductionSection } from "@/components/auth/sections/IntroductionSection";
 import { H1 } from "@/components/typography/H1";
@@ -28,8 +29,8 @@ export default function Page() {
                 </Muted>
             </IntroductionCardSection>
 
-            <FormContainer className="m-auto sm:min-h-[500px] sm:max-w-xl lg:max-w-2xl lg:w-full lg:m-0">
-                SIGNUP DETAILS FORM
+            <FormContainer className="m-auto sm:max-w-xl lg:max-w-2xl lg:w-full lg:m-0">
+                <SignUpDetailsForm />
             </FormContainer>
         </div>
     );
