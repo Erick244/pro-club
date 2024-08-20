@@ -1,9 +1,11 @@
 import { LayoutProps } from "@/app/layout";
+import { CustomUserGradient } from "./CustomUserGradient";
 import { UserLayoutHeader } from "./UserLayoutHeader";
 
 export function UserLayout({ children }: LayoutProps) {
     return (
-        <div className="min-h-screen bg-gradient-to-bl from-background from-60% to-primary to-100% p-5">
+        <div className="min-h-screen p-5">
+            <CustomUserGradient />
             <UserLayoutHeader />
             <main className="h-full">{children}</main>
         </div>
