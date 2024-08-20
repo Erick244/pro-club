@@ -1,3 +1,3 @@
 import { atom } from "jotai";
 
-export const profileColor = atom<string>("");
+export const profileColorAtom = atom<string>("");
