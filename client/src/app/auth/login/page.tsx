@@ -1,4 +1,4 @@
-import { SignInFormForm } from "@/components/auth/forms/SignInForm";
+import { SignInFormForm } from "@/components/auth/forms/sign-in/SignInForm";
 import { AuthFormSection } from "@/components/auth/sections/AuthFormSection";
 import { IntroductionCardSection } from "@/components/auth/sections/IntroductionCardSection";
 import { IntroductionSection } from "@/components/auth/sections/IntroductionSection";
