@@ -115,7 +115,7 @@ export function SignUpDetailsForm() {
                                 <Textarea
                                     rows={6}
                                     cols={200}
-                                    className="max-w-[400px] w-full self-stretch"
+                                    className="max-w-[400px] w-full self-stretch resize-none"
                                     placeholder="Hello. My name is..."
                                     {...field}
                                 />
