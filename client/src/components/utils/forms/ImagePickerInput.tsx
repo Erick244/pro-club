@@ -18,7 +18,7 @@ export const ImagePickerInput = forwardRef<HTMLInputElement, InputProps>(
         }
 
         return (
-            <div className="transition-all relative rounded-full w-24 h-24 overflow-hidden flex flex-col justify-center items-center border-2 border-foreground hover:bg-foreground/30 group">
+            <div className="transition-all relative rounded-full w-24 h-24 overflow-hidden flex flex-col justify-center items-center border-2 border-foreground hover:bg-foreground/50 group">
                 <Input
                     {...props}
                     ref={ref}
@@ -27,7 +27,7 @@ export const ImagePickerInput = forwardRef<HTMLInputElement, InputProps>(
                     type="file"
                     onChange={handleOnChange}
                     className={cn(
-                        "absolute w-full h-full opacity-0 cursor-pointer",
+                        "absolute w-full h-full opacity-0 cursor-pointer z-10",
                         props.className
                     )}
                 />
@@ -46,7 +46,7 @@ export const ImagePickerInput = forwardRef<HTMLInputElement, InputProps>(
                         </span>
                     )}
                 </div>
-                <EditIcon className="transition-all absolute w-4 h-4 group-hover:visible invisible text-background" />
+                <EditIcon className="z-0 absolute group-hover:visible invisible text-background" />
             </div>
         );
     }
