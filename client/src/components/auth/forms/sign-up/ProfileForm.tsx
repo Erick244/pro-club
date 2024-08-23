@@ -1,5 +1,6 @@
 "use client";
 
+import { profileColorAtom } from "@/atoms/user.atoms";
 import {
     Form,
     FormControl,
@@ -13,6 +14,7 @@ import { SubmitButton } from "@/components/utils/forms/SubmitButton";
 import { cn } from "@/lib/utils";
 import { SocialMedia } from "@/models/interfaces/social-media.interface";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSetAtom } from "jotai";
 import { CheckIcon, PipetteIcon } from "lucide-react";
 import { ChangeEvent, HTMLAttributes, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -46,6 +48,8 @@ export function ProfileForm() {
         console.log(data);
     }
 
+    const setProfileColor = useSetAtom(profileColorAtom);
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -77,9 +81,10 @@ export function ProfileForm() {
                         <FormItem>
                             <FormControl>
                                 <SelectColor
-                                    onSelectColor={(color) =>
-                                        form.setValue("color", color)
-                                    }
+                                    onSelectColor={(color) => {
+                                        form.setValue("color", color);
+                                        setProfileColor(color);
+                                    }}
                                 />
                             </FormControl>
                             <FormMessage />

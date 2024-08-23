@@ -13,7 +13,7 @@ export function CustomUserGradient() {
     return (
         <div
             style={{ background: customGradient }}
-            className="-z-10 absolute h-screen w-screen top-0 left-0"
+            className="transition-all duration-300 -z-10 absolute h-screen w-screen top-0 left-0"
         />
     );
 }
