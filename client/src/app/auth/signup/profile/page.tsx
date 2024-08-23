@@ -1,3 +1,4 @@
+import { ProfileForm } from "@/components/auth/forms/sign-up/ProfileForm";
 import { IntroductionCardSection } from "@/components/auth/sections/IntroductionCardSection";
 import { IntroductionSection } from "@/components/auth/sections/IntroductionSection";
 import { H1 } from "@/components/typography/H1";
@@ -29,7 +30,7 @@ export default function Page() {
             </IntroductionCardSection>
 
             <FormContainer className="m-auto sm:max-w-xl lg:max-w-2xl lg:w-full lg:m-0 bg-foreground/15 border-foreground">
-                Profile
+                <ProfileForm />
             </FormContainer>
         </div>
     );
