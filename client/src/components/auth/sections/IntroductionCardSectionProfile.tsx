@@ -20,14 +20,7 @@ export function IntroductionCardSectionProfile({
             style={{
                 backgroundColor: profileColor,
             }}
-            logoclassname={cn(
-                profileColor && "grayscale brightness-150",
-                props.logoclassname
-            )}
-            className={cn(
-                profileColor && "border border-foreground",
-                props.className
-            )}
+            className={cn("border border-primary", props.className)}
         >
             {children}
         </IntroductionCardSection>

@@ -5,7 +5,6 @@ import { HTMLAttributes } from "react";
 export interface IntroductionCardSectionProps
     extends HTMLAttributes<HTMLElement> {
     children: React.ReactNode;
-    logoclassname?: string | undefined;
 }
 
 export function IntroductionCardSection({
@@ -20,13 +19,7 @@ export function IntroductionCardSection({
                 props.className
             )}
         >
-            <BlockLogo
-                invert
-                className={cn(
-                    "border border-primary rounded",
-                    props.logoclassname
-                )}
-            />
+            <BlockLogo invert className="border border-primary rounded" />
             <div className="flex flex-col justify-center items-center">
                 {children}
             </div>
