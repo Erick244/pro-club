@@ -1,5 +1,5 @@
 import { ProfileForm } from "@/components/auth/forms/sign-up/ProfileForm";
-import { IntroductionCardSection } from "@/components/auth/sections/IntroductionCardSection";
+import { IntroductionCardSectionProfile } from "@/components/auth/sections/IntroductionCardSectionProfile";
 import { IntroductionSection } from "@/components/auth/sections/IntroductionSection";
 import { H1 } from "@/components/typography/H1";
 import { Muted } from "@/components/typography/Muted";
@@ -20,14 +20,14 @@ export default function Page() {
                 </Muted>
             </IntroductionSection>
 
-            <IntroductionCardSection className="hidden lg:flex">
-                <H1 className="dark:text-background text-foreground">
+            <IntroductionCardSectionProfile className="hidden lg:flex">
+                <H1 className="dark:text-background text-foreground bg-primary p-2 rounded border border-primary">
                     {introductionTexts.h1}
                 </H1>
-                <Muted className="text-center text-xs dark:text-background text-foreground">
+                <Muted className="text-center text-xs dark:bg-background bg-foreground text-primary p-2 rounded mt-0.5">
                     {introductionTexts.muted}
                 </Muted>
-            </IntroductionCardSection>
+            </IntroductionCardSectionProfile>
 
             <FormContainer className="m-auto sm:max-w-xl lg:max-w-2xl lg:w-full lg:m-0 bg-foreground/15 border-foreground">
                 <ProfileForm />

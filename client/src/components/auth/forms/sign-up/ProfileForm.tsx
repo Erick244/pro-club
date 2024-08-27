@@ -4,6 +4,7 @@ import { profileColorAtom } from "@/atoms/user.atoms";
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormMessage,
@@ -52,7 +53,10 @@ export function ProfileForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6 flex flex-col justify-center items-center"
+            >
                 <FormField
                     control={form.control}
                     name="profileImage"
@@ -87,6 +91,9 @@ export function ProfileForm() {
                                     }}
                                 />
                             </FormControl>
+                            <FormDescription>
+                                Select a color that suits your profile
+                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
@@ -148,7 +155,7 @@ function SelectColor({ onSelectColor }: SelectColorProps) {
     }
 
     return (
-        <div className="border-2 border-foreground rounded p-2 flex gap-2 flex-wrap">
+        <div className="border-2 border-foreground rounded p-2 flex gap-2 flex-wrap max-w-[400px] justify-between">
             {predefinedColors.map((color, i) => (
                 <SelectColorOption
                     color={color}

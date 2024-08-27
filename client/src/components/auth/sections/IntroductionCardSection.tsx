@@ -2,8 +2,10 @@ import { BlockLogo } from "@/components/utils/app-logos/BlockLogo";
 import { cn } from "@/lib/utils";
 import { HTMLAttributes } from "react";
 
-interface IntroductionCardSectionProps extends HTMLAttributes<HTMLElement> {
+export interface IntroductionCardSectionProps
+    extends HTMLAttributes<HTMLElement> {
     children: React.ReactNode;
+    logoclassname?: string | undefined;
 }
 
 export function IntroductionCardSection({
@@ -18,7 +20,13 @@ export function IntroductionCardSection({
                 props.className
             )}
         >
-            <BlockLogo invert />
+            <BlockLogo
+                invert
+                className={cn(
+                    "border border-primary rounded",
+                    props.logoclassname
+                )}
+            />
             <div className="flex flex-col justify-center items-center">
                 {children}
             </div>
