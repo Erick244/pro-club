@@ -14,7 +14,7 @@ import { SubmitButton } from "@/components/utils/forms/SubmitButton";
 import { cn } from "@/lib/utils";
 import { SocialMedia } from "@/models/interfaces/social-media.interface";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { CheckIcon, PipetteIcon } from "lucide-react";
 import { ChangeEvent, HTMLAttributes, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -48,7 +48,7 @@ export function ProfileForm() {
         console.log(data);
     }
 
-    const setProfileColor = useSetAtom(profileColorAtom);
+    const [profileColor, setProfileColor] = useAtom(profileColorAtom);
 
     return (
         <Form {...form}>
@@ -91,7 +91,16 @@ export function ProfileForm() {
                         </FormItem>
                     )}
                 />
-                <SubmitButton className="mt-20">Continue</SubmitButton>
+                <SubmitButton
+                    style={{
+                        backgroundColor: profileColor,
+                    }}
+                    className="mt-20"
+                >
+                    <span className="bg-background text-foreground p-1 rounded">
+                        Continue
+                    </span>
+                </SubmitButton>
             </form>
         </Form>
     );
