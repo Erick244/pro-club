@@ -21,7 +21,7 @@ export default function Page() {
             </IntroductionSection>
 
             <IntroductionCardSectionProfile className="hidden lg:flex">
-                <H1 className="dark:text-background text-foreground bg-primary p-2 rounded border border-primary">
+                <H1 className="dark:text-background text-foreground bg-primary p-2 rounded">
                     {introductionTexts.h1}
                 </H1>
                 <Muted className="text-center text-xs dark:bg-background bg-foreground text-primary p-2 rounded mt-0.5">

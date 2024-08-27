@@ -8,6 +8,7 @@
         "auth",
         "auth/email-confirmation",
         "forms",
-        "auth/signup/details"
+        "auth/signup/details",
+        "auth/signup/profile"
     ]
 }
