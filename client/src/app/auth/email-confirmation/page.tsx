@@ -3,7 +3,7 @@ import { IntroductionCardSection } from "@/components/auth/sections/Introduction
 import { IntroductionSection } from "@/components/auth/sections/IntroductionSection";
 import { H1 } from "@/components/typography/H1";
 import { Muted } from "@/components/typography/Muted";
-import { FormContainer } from "@/components/utils/forms/FormContainer";
+import { FormContainer } from "@/components/utils/forms/containers/FormContainer";
 
 export default function Page() {
     return (

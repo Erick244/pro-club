@@ -16,8 +16,8 @@ import {
     InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { FormRedirectLink } from "@/components/utils/forms/FormRedirectLink";
-import { SubmitButton } from "@/components/utils/forms/SubmitButton";
+import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
+import { FormRedirectLink } from "@/components/utils/forms/links/FormRedirectLink";
 import { emailConfirmationMessages } from "@/messages/EmailConfirmationForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";

@@ -29,7 +29,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import { SubmitButton } from "@/components/utils/forms/SubmitButton";
+import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { countries } from "@/data/countries";
 import { cn } from "@/lib/utils";
 import { signUpDetailsMessages } from "@/messages/SignUpDetailsForm.messages";

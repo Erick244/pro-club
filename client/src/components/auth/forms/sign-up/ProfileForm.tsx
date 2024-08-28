@@ -10,8 +10,8 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ImagePickerInput } from "@/components/utils/forms/ImagePickerInput";
-import { SubmitButton } from "@/components/utils/forms/SubmitButton";
+import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
+import { ImagePickerInput } from "@/components/utils/forms/inputs/ImagePickerInput";
 import { cn } from "@/lib/utils";
 import { SocialMedia } from "@/models/interfaces/social-media.interface";
 import { zodResolver } from "@hookform/resolvers/zod";

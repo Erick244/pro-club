@@ -3,7 +3,7 @@ import { IntroductionCardSectionProfile } from "@/components/auth/sections/Intro
 import { IntroductionSection } from "@/components/auth/sections/IntroductionSection";
 import { H1 } from "@/components/typography/H1";
 import { Muted } from "@/components/typography/Muted";
-import { FormContainer } from "@/components/utils/forms/FormContainer";
+import { FormContainer } from "@/components/utils/forms/containers/FormContainer";
 
 const introductionTexts = {
     h1: "PROFILE",

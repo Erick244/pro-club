@@ -1,6 +1,6 @@
 import { Divisor } from "@/components/typography/Divisor";
 import { H2 } from "@/components/typography/H2";
-import { FormContainer } from "@/components/utils/forms/FormContainer";
+import { FormContainer } from "@/components/utils/forms/containers/FormContainer";
 import { cn } from "@/lib/utils";
 import { HTMLAttributes } from "react";
 import { OAuthGroupButtons } from "../oauth/buttons/OAuthGroupButtons";

@@ -7,9 +7,9 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
-import { AnimatedInput } from "@/components/utils/forms/AnimatedInput";
-import { FormRedirectLink } from "@/components/utils/forms/FormRedirectLink";
-import { SubmitButton } from "@/components/utils/forms/SubmitButton";
+import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
+import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
+import { FormRedirectLink } from "@/components/utils/forms/links/FormRedirectLink";
 import { cn } from "@/lib/utils";
 import { signUpMessages } from "@/messages/SignUpForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
