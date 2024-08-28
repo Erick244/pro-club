@@ -29,7 +29,7 @@ export default function Page() {
                 </Muted>
             </IntroductionCardSectionProfile>
 
-            <FormContainer className="m-auto sm:max-w-xl lg:max-w-2xl lg:w-full lg:m-0 bg-foreground/15 border-foreground">
+            <FormContainer className="m-auto sm:max-w-xl lg:max-w-2xl lg:w-full lg:m-0">
                 <ProfileForm />
             </FormContainer>
         </div>

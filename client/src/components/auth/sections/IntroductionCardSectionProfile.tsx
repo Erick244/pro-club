@@ -18,9 +18,17 @@ export function IntroductionCardSectionProfile({
         <IntroductionCardSection
             {...props}
             style={{
-                backgroundColor: profileColor,
+                background: `linear-gradient(225deg, hsl(var(--primary)) , ${
+                    profileColor ? profileColor : "hsl(var(--primary))"
+                })`,
+                boxShadow: profileColor
+                    ? `0px 0px 10px ${profileColor}`
+                    : "none",
             }}
-            className={cn("border border-primary", props.className)}
+            className={cn(
+                "border border-primary transition-all",
+                props.className
+            )}
         >
             {children}
         </IntroductionCardSection>

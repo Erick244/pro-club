@@ -98,13 +98,16 @@ export function ProfileForm() {
                 />
                 <SubmitButton
                     style={{
-                        backgroundColor: profileColor,
+                        background: `linear-gradient(200deg, hsl(var(--primary)) 40%, ${
+                            profileColor ? profileColor : "hsl(var(--primary))"
+                        })`,
+                        boxShadow: profileColor
+                            ? `0px 0px 10px ${profileColor}`
+                            : "none",
                     }}
                     className="mt-20"
                 >
-                    <span className="bg-background text-primary p-1 rounded">
-                        Continue
-                    </span>
+                    Continue
                 </SubmitButton>
             </form>
         </Form>
