@@ -78,7 +78,7 @@ export function ProfileForm() {
                 <FormField
                     control={form.control}
                     name="color"
-                    render={({ field }) => (
+                    render={() => (
                         <FormItem>
                             <FormControl>
                                 <ColorSelect
@@ -102,7 +102,7 @@ export function ProfileForm() {
                     }}
                     className="mt-20"
                 >
-                    <span className="bg-background text-foreground p-1 rounded">
+                    <span className="bg-background text-primary p-1 rounded">
                         Continue
                     </span>
                 </SubmitButton>
@@ -125,6 +125,6 @@ const predefinedColors = [
     "#7E00FF",
     "#FEA101",
     "#FAE905",
-    "#03cFC83",
+    "#03FC83",
     "#0589FA",
 ];
