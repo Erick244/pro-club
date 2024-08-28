@@ -1,4 +1,4 @@
-import { BlockLogo } from "@/components/utils/app-logos/BlockLogo";
+import { BlockLogo } from "@/components/utils/logos/app/BlockLogo";
 import { cn } from "@/lib/utils";
 import { HTMLAttributes } from "react";
 

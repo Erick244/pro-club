@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import { HTMLAttributes } from "react";
-import { DiscordLogo } from "../providers-logo/DiscordLogo";
-import { FacebookLogo } from "../providers-logo/FacebookLogo";
-import { GoogleLogo } from "../providers-logo/GoogleLogo";
-import { RedditLogo } from "../providers-logo/RedditLogo";
+import { DiscordLogo } from "../../../utils/logos/third-party/DiscordLogo";
+import { FacebookLogo } from "../../../utils/logos/third-party/FacebookLogo";
+import { GoogleLogo } from "../../../utils/logos/third-party/GoogleLogo";
+import { RedditLogo } from "../../../utils/logos/third-party/RedditLogo";
 import { OAuthButton } from "./OAuthButton";
 
 export function OAuthGroupButtons(props: HTMLAttributes<HTMLDivElement>) {
