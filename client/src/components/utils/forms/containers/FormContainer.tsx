@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { HTMLAttributes } from "react";
 
-interface FormContainerProps extends HTMLAttributes<HTMLDivElement> {
+export interface FormContainerProps extends HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
 }
 
