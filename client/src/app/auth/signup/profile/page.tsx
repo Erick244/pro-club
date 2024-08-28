@@ -1,5 +1,5 @@
-import { FormContainerProfile } from "@/components/auth/forms/sign-up/FormContainerProfile";
-import { ProfileForm } from "@/components/auth/forms/sign-up/ProfileForm";
+import { FormContainerProfile } from "@/components/auth/forms/sign-up/profile/FormContainerProfile";
+import { ProfileForm } from "@/components/auth/forms/sign-up/profile/ProfileForm";
 import { IntroductionCardSectionProfile } from "@/components/auth/sections/IntroductionCardSectionProfile";
 import { IntroductionSection } from "@/components/auth/sections/IntroductionSection";
 import { H1 } from "@/components/typography/H1";
