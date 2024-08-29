@@ -1,7 +1,7 @@
 "use client";
-
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
+import { HTMLMotionProps, motion } from "framer-motion";
 import * as React from "react";
 import {
     Controller,
@@ -145,7 +145,7 @@ FormDescription.displayName = "FormDescription";
 
 const FormMessage = React.forwardRef<
     HTMLParagraphElement,
-    React.HTMLAttributes<HTMLParagraphElement>
+    HTMLMotionProps<"p">
 >(({ className, children, ...props }, ref) => {
     const { error, formMessageId } = useFormField();
     const body = error ? String(error?.message) : children;
@@ -155,9 +155,12 @@ const FormMessage = React.forwardRef<
     }
 
     return (
-        <p
+        <motion.p
             ref={ref}
             id={formMessageId}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
             className={cn(
                 "text-xs font-light text-white bg-destructive p-1 rounded",
                 className
@@ -165,7 +168,7 @@ const FormMessage = React.forwardRef<
             {...props}
         >
             {body}
-        </p>
+        </motion.p>
     );
 });
 FormMessage.displayName = "FormMessage";
