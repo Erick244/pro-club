@@ -1,9 +1,9 @@
 export enum SocialMediaNames {
-    Discord,
-    Telegram,
-    Twitter,
-    Instagram,
-    Tiktok,
-    Twitch,
-    Youtube,
+    Discord = "Discord",
+    Telegram = "Telegram",
+    X = "X",
+    Instagram = "Instagram",
+    Tiktok = "Tiktok",
+    TwitchTV = "Twitch",
+    Youtube = "Youtube",
 }
