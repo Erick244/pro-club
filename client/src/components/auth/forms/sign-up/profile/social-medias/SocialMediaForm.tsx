@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
+import { socialMediaFormMessages } from "@/messages/SocialMediaForm.messages";
 import { SocialMediaNames } from "@/models/enums/social-media-names.enum";
 import { SocialMedia } from "@/models/interfaces/social-media.interface";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,7 +29,7 @@ const socialMediaFormSchema = z.object({
         .optional()
         .refine(
             (url) => url?.startsWith("https://") || url?.length === 0,
-            "Enter a valid URL"
+            socialMediaFormMessages.profileLink.url
         ),
 });
 
