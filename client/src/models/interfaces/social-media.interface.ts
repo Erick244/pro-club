@@ -1,6 +1,6 @@
 import { SocialMediaNames } from "../enums/social-media-names.enum";
 
-export class SocialMedia {
+export interface SocialMedia {
     name: SocialMediaNames;
 
     tag?: string;
