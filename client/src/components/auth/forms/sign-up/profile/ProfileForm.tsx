@@ -104,7 +104,6 @@ export function ProfileForm() {
                                 <ColorSelect
                                     predefinedColors={predefinedColors}
                                     onSelectColor={(color) => {
-                                        //TODO: Add timer to update here
                                         form.setValue("color", color);
                                         setProfileColor(color);
                                     }}
