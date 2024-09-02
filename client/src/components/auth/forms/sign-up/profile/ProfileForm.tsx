@@ -19,6 +19,7 @@ import { TiktokLogo } from "@/components/utils/logos/third-party/TiktokLogo";
 import { TwitchTVLogo } from "@/components/utils/logos/third-party/TwitchTVLogo";
 import { XLogo } from "@/components/utils/logos/third-party/XLogo";
 import { YoutubeLogo } from "@/components/utils/logos/third-party/YoutubeLogo";
+import { profileFormMessages } from "@/messages/ProfileForm.messages";
 import { SocialMediaNames } from "@/models/enums/social-media-names.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtom } from "jotai";
@@ -31,17 +32,22 @@ const profileFormSchema = z.object({
         .instanceof(File)
         .refine(
             (file) => file.type.startsWith("image"),
-            "Please select a image"
+            profileFormMessages.profileImage
         )
         .optional(),
     color: z.string(),
-    socialMedias: z.array(
-        z.object({
-            name: z.nativeEnum(SocialMediaNames),
-            tag: z.string().optional(),
-            profileLink: z.string().optional(),
-        })
-    ),
+    socialMedias: z
+        .array(
+            z.object({
+                name: z.nativeEnum(SocialMediaNames),
+                tag: z.string().optional(),
+                profileLink: z.string().optional(),
+            })
+        )
+        .refine(
+            (socialMedias) => socialMedias.length > 0,
+            profileFormMessages.socialMedias
+        ),
 });
 
 type ProfileFormData = z.infer<typeof profileFormSchema>;
@@ -116,8 +122,6 @@ export function ProfileForm() {
                     name="socialMedias"
                     render={(field) => (
                         <FormItem>
-                            {JSON.stringify(field.fieldState.error)}
-
                             <FormControl>
                                 <SocialMediaInput
                                     socialMediasRenderData={
