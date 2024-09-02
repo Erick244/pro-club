@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { CheckIcon, PipetteIcon } from "lucide-react";
 import { ChangeEvent, HTMLAttributes, useState } from "react";
 
+import { useDebouncedCallback } from "use-debounce";
+
 interface ColorSelectProps {
     onSelectColor: (color: string) => void;
     predefinedColors: string[];
@@ -18,10 +20,10 @@ export function ColorSelect({
         undefined
     );
 
-    function changeColor(color: string) {
+    const handleChangeColor = useDebouncedCallback((color: string) => {
         onSelectColor(color);
         setColorSelected(color);
-    }
+    }, 10);
 
     return (
         <div className="border-2 border-foreground rounded p-2 flex gap-2 flex-wrap max-w-[400px] justify-between">
@@ -29,13 +31,13 @@ export function ColorSelect({
                 <ColorSelectOption
                     color={color}
                     selected={color === colorSelected}
-                    onClick={() => changeColor(color)}
+                    onClick={() => handleChangeColor(color)}
                     key={i}
                 />
             ))}
             <ColorSelectCustomColor
                 colorSelected={colorSelected}
-                onChangeCustomColor={changeColor}
+                onChangeCustomColor={handleChangeColor}
             />
         </div>
     );
