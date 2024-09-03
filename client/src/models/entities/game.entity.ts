@@ -5,4 +5,5 @@ export interface Game {
     name: string;
     distributor: string;
     platforms: GamePlatform[];
+    capeImageUrl: string;
 }
