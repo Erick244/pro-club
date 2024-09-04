@@ -1,5 +1,6 @@
 "use client";
 
+import { Muted } from "@/components/typography/Muted";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -108,6 +109,9 @@ export function ProfileGamesForm() {
                                             );
                                         })}
                                     </GameSelectOptions>
+                                    <Muted className="text-primary text-center">
+                                        {form.getValues("games").length}
+                                    </Muted>
                                 </GamesSelect>
                             </FormControl>
                             <FormMessage />
