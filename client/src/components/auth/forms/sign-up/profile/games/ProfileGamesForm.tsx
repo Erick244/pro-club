@@ -3,14 +3,16 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { cn } from "@/lib/utils";
 import { Game } from "@/models/entities/game.entity";
 import { GamePlatform } from "@/models/enums/game-platform.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SearchIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 
 const profileGamesFormSchema = z.object({
@@ -38,7 +40,7 @@ export function ProfileGamesForm() {
         console.log(data);
     }
 
-    function removeGame(gameName: string) {
+    function removeGameByName(gameName: string) {
         const updatedGames = form
             .getValues("games")
             .filter((g) => g.name !== gameName);
@@ -48,44 +50,53 @@ export function ProfileGamesForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex flex-col space-y-5 items-center"
+            >
                 <FormField
                     control={form.control}
                     name="games"
                     render={(field) => (
                         <FormControl>
                             <GamesSelect>
-                                {gamesSelectTempData.map((game, i) => {
-                                    const currentGames =
-                                        form.getValues("games");
+                                <GameSelectSearch onSearch={console.log} />
+                                <GameSelectOptions>
+                                    {gamesSelectTempData.map((game, i) => {
+                                        const currentGames =
+                                            form.getValues("games");
 
-                                    const isSelected = currentGames.some(
-                                        (value) => value.name === game.name
-                                    );
+                                        const isSelected = currentGames.some(
+                                            (g) => g.name === game.name
+                                        );
 
-                                    return (
-                                        <GameSelectOption
-                                            key={i}
-                                            capeImageUrl={game.capeImageUrl}
-                                            name={game.name}
-                                            selected={isSelected}
-                                            onGameSelect={() => {
-                                                if (isSelected) {
-                                                    removeGame(game.name);
-                                                } else {
-                                                    form.setValue("games", [
-                                                        ...currentGames,
-                                                        game,
-                                                    ]);
-                                                }
-                                            }}
-                                        />
-                                    );
-                                })}
+                                        return (
+                                            <GameSelectOption
+                                                key={i}
+                                                capeImageUrl={game.capeImageUrl}
+                                                name={game.name}
+                                                selected={isSelected}
+                                                onGameSelect={() => {
+                                                    if (isSelected) {
+                                                        removeGameByName(
+                                                            game.name
+                                                        );
+                                                    } else {
+                                                        form.setValue("games", [
+                                                            ...currentGames,
+                                                            game,
+                                                        ]);
+                                                    }
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </GameSelectOptions>
                             </GamesSelect>
                         </FormControl>
                     )}
                 />
+                <SubmitButton>Finish</SubmitButton>
             </form>
         </Form>
     );
@@ -160,25 +171,51 @@ interface GamesSelectProps {
 }
 
 function GamesSelect({ children }: GamesSelectProps) {
-    return (
-        <div className="space-y-5">
-            <GameSelectSearch />
+    return <div className="space-y-5">{children}</div>;
+}
 
-            <div className="overflow-y-scroll max-h-[400px] p-5 flex justify-between flex-wrap gap-5">
-                {children}
-            </div>
+interface GameSelectOptionsProps {
+    children: React.ReactNode;
+}
+
+function GameSelectOptions({ children }: GameSelectOptionsProps) {
+    return (
+        <div className="overflow-y-scroll max-h-[400px] p-5 flex justify-between flex-wrap gap-5">
+            {children}
         </div>
     );
 }
 
-export function GameSelectSearch() {
+interface GameSelectSearchProps {
+    onSearch: (query: string) => void;
+}
+
+export function GameSelectSearch({ onSearch }: GameSelectSearchProps) {
+    const [query, setQuery] = useState<string>("");
+
+    function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
+        e.preventDefault();
+
+        setQuery(e.target.value);
+        handleSearch();
+    }
+
+    const handleSearch = useDebouncedCallback(() => onSearch(query), 300);
+
     return (
-        <div className="flex items-center gap-2">
+        <div className="mt-5 flex items-center gap-2">
             <Input
+                onChange={handleOnChange}
                 className="bg-transparent border-2 border-primary"
                 placeholder="Search by games..."
             />
-            <Button size="icon">
+            <Button
+                size="icon"
+                onClick={(e) => {
+                    e.preventDefault();
+                    handleSearch();
+                }}
+            >
                 <SearchIcon className="text-foreground" />
             </Button>
         </div>
