@@ -75,7 +75,7 @@ export function SocialMediaInput({
                 return (
                     <Popover key={i}>
                         <PopoverTrigger asChild>
-                            <SocialMediaInputItem
+                            <SocialMediaInputButton
                                 filed={itemIsFiled}
                                 style={{
                                     backgroundColor:
@@ -83,7 +83,7 @@ export function SocialMediaInput({
                                 }}
                             >
                                 <socialMediaRender.Icon />
-                            </SocialMediaInputItem>
+                            </SocialMediaInputButton>
                         </PopoverTrigger>
                         <PopoverContent>
                             <SocialMediaForm
@@ -98,13 +98,13 @@ export function SocialMediaInput({
     );
 }
 
-interface SocialMediaInputItemProps extends ButtonProps {
+interface SocialMediaInputButtonProps extends ButtonProps {
     filed?: boolean;
 }
 
-const SocialMediaInputItem = forwardRef<
+const SocialMediaInputButton = forwardRef<
     HTMLButtonElement,
-    SocialMediaInputItemProps
+    SocialMediaInputButtonProps
 >(({ children, filed, ...props }, ref) => {
     return (
         <Button
@@ -123,4 +123,4 @@ const SocialMediaInputItem = forwardRef<
     );
 });
 
-SocialMediaInputItem.displayName = "SocialMediaInputItem";
+SocialMediaInputButton.displayName = "SocialMediaInputButton";
