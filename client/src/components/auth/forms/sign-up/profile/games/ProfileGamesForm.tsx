@@ -1,7 +1,6 @@
 "use client";
 
 import { Muted } from "@/components/typography/Muted";
-import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -9,18 +8,18 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
-import { cn } from "@/lib/utils";
+import {
+    ImageCardSelect,
+    ImageCardSelectOption,
+    ImageCardSelectOptions,
+    ImageCardSelectSearch,
+} from "@/components/utils/forms/selects/ImageCardSelect";
 import { profileGamesMessages } from "@/messages/ProfileGamesForm.messages";
 import { Game } from "@/models/entities/game.entity";
 import { GamePlatform } from "@/models/enums/game-platform.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SearchIcon } from "lucide-react";
-import Image from "next/image";
-import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 
 const profileGamesFormSchema = z.object({
@@ -70,9 +69,12 @@ export function ProfileGamesForm() {
                     render={(field) => (
                         <FormItem>
                             <FormControl>
-                                <GamesSelect>
-                                    <GameSelectSearch onSearch={console.log} />
-                                    <GameSelectOptions>
+                                <ImageCardSelect>
+                                    <ImageCardSelectSearch
+                                        onSearch={console.log}
+                                        placeholder="Search by games..."
+                                    />
+                                    <ImageCardSelectOptions>
                                         {gamesSelectTempData.map((game, i) => {
                                             const currentGames =
                                                 form.getValues("games");
@@ -83,14 +85,14 @@ export function ProfileGamesForm() {
                                                 );
 
                                             return (
-                                                <GameSelectOption
+                                                <ImageCardSelectOption
                                                     key={i}
                                                     capeImageUrl={
                                                         game.capeImageUrl
                                                     }
                                                     name={game.name}
                                                     selected={isSelected}
-                                                    onGameSelect={() => {
+                                                    onImageCardSelect={() => {
                                                         if (isSelected) {
                                                             removeGameByName(
                                                                 game.name
@@ -108,11 +110,11 @@ export function ProfileGamesForm() {
                                                 />
                                             );
                                         })}
-                                    </GameSelectOptions>
+                                    </ImageCardSelectOptions>
                                     <Muted className="text-primary text-center">
                                         {form.getValues("games").length}
                                     </Muted>
-                                </GamesSelect>
+                                </ImageCardSelect>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -187,103 +189,3 @@ const gamesSelectTempData: Game[] = [
             "https://fastly.picsum.photos/id/721/100/150.jpg?hmac=d-gXIqgypukJWzyReLkQt00quWB74gp3EA30ZYOT2pI",
     },
 ];
-
-interface GamesSelectProps {
-    children: React.ReactNode;
-}
-
-function GamesSelect({ children }: GamesSelectProps) {
-    return <div className="space-y-5">{children}</div>;
-}
-
-interface GameSelectOptionsProps {
-    children: React.ReactNode;
-}
-
-function GameSelectOptions({ children }: GameSelectOptionsProps) {
-    return (
-        <div className="overflow-y-scroll max-h-[400px] p-5 flex justify-between flex-wrap gap-5">
-            {children}
-        </div>
-    );
-}
-
-interface GameSelectSearchProps {
-    onSearch: (query: string) => void;
-}
-
-export function GameSelectSearch({ onSearch }: GameSelectSearchProps) {
-    const [query, setQuery] = useState<string>("");
-
-    function handleOnChange(e: ChangeEvent<HTMLInputElement>) {
-        e.preventDefault();
-
-        setQuery(e.target.value);
-        handleSearch();
-    }
-
-    const handleSearch = useDebouncedCallback(() => onSearch(query), 300);
-
-    return (
-        <div className="mt-5 flex items-center gap-2">
-            <Input
-                onChange={handleOnChange}
-                className="bg-transparent border-2 border-primary"
-                placeholder="Search by games..."
-            />
-            <Button
-                size="icon"
-                onClick={(e) => {
-                    e.preventDefault();
-                    handleSearch();
-                }}
-            >
-                <SearchIcon className="text-foreground" />
-            </Button>
-        </div>
-    );
-}
-
-interface GameSelectOptionProps {
-    name: string;
-    capeImageUrl: string;
-    selected?: boolean;
-    onGameSelect: () => void;
-}
-
-export function GameSelectOption({
-    capeImageUrl,
-    name,
-    selected = false,
-    onGameSelect,
-}: GameSelectOptionProps) {
-    const [isSelected, setIsSelected] = useState<boolean>(selected);
-
-    function handlerClick() {
-        setIsSelected(!isSelected);
-
-        onGameSelect();
-    }
-
-    return (
-        <div
-            className="space-y-1 cursor-pointer select-none group"
-            onClick={handlerClick}
-        >
-            <Image
-                priority
-                className={cn(
-                    "rounded-lg w-[100px] h-[150px] border-2 transition-all group-hover:scale-105 group-active:scale-100",
-                    selected
-                        ? "border-primary shadow-lg shadow-primary"
-                        : "border-foreground"
-                )}
-                src={capeImageUrl}
-                width={100}
-                height={150}
-                alt="Game Cape Image"
-            />
-            <p className="text-xs text-center w-full max-w-[100px]">{name}</p>
-        </div>
-    );
-}
