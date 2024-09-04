@@ -35,7 +35,7 @@ export const AnimatedInput = forwardRef(
         }
 
         return (
-            <div className="relative">
+            <div className="relative w-full">
                 <Label
                     className={cn(
                         "uppercase pl-1 font-light absolute transition-all rounded-sm select-none text-xs",
