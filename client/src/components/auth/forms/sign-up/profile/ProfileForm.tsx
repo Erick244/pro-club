@@ -173,7 +173,6 @@ const predefinedColors = [
     "#7E00FF",
     "#FEA101",
     "#FAE905",
-    "#03FC83",
     "#0589FA",
 ];
 
