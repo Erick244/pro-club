@@ -72,7 +72,7 @@ export function ProfileGamesForm() {
                                 <ImageCardSelect>
                                     <ImageCardSelectSearch
                                         onSearch={console.log}
-                                        placeholder="Search by games..."
+                                        placeholder="Search by games"
                                     />
                                     <ImageCardSelectOptions>
                                         {gamesSelectTempData.map((game, i) => {

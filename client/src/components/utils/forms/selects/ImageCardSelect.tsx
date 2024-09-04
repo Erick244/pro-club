@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { AnimatedInput } from "../inputs/AnimatedInput";
 
 interface ImageCardSelectProps {
     children: React.ReactNode;
@@ -50,10 +50,16 @@ export function ImageCardSelectSearch({
 
     return (
         <div className="mt-5 flex items-center gap-2">
-            <Input
+            {/* <Input
                 onChange={handleOnChange}
                 className="bg-transparent border-2 border-primary"
-                placeholder={placeholder ? placeholder : "Search..."}
+                placeholder={ placeholder || "Search..."}
+            /> */}
+
+            <AnimatedInput
+                className="grow"
+                label={placeholder || "Search..."}
+                onChange={handleOnChange}
             />
             <Button
                 size="icon"
