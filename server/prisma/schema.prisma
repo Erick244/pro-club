@@ -66,8 +66,7 @@ model Game {
 enum GamePlatform {
     PC
     Console
-    NintendoSwitch
-    Android
-    iOS
+    Portable
+    Mobile
     Browser
 }
