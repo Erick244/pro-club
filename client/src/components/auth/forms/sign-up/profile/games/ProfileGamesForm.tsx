@@ -1,10 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField } from "@/components/ui/form";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { cn } from "@/lib/utils";
+import { profileGamesMessages } from "@/messages/ProfileGamesForm.messages";
 import { Game } from "@/models/entities/game.entity";
 import { GamePlatform } from "@/models/enums/game-platform.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,14 +23,16 @@ import { useDebouncedCallback } from "use-debounce";
 import { z } from "zod";
 
 const profileGamesFormSchema = z.object({
-    games: z.array(
-        z.object({
-            name: z.string(),
-            distributor: z.string(),
-            platforms: z.array(z.nativeEnum(GamePlatform)),
-            capeImageUrl: z.string(),
-        })
-    ),
+    games: z
+        .array(
+            z.object({
+                name: z.string(),
+                distributor: z.string(),
+                platforms: z.array(z.nativeEnum(GamePlatform)),
+                capeImageUrl: z.string(),
+            })
+        )
+        .refine((games) => games.length > 0, profileGamesMessages.games),
 });
 
 type ProfileGamesFormData = z.infer<typeof profileGamesFormSchema>;
@@ -58,42 +67,51 @@ export function ProfileGamesForm() {
                     control={form.control}
                     name="games"
                     render={(field) => (
-                        <FormControl>
-                            <GamesSelect>
-                                <GameSelectSearch onSearch={console.log} />
-                                <GameSelectOptions>
-                                    {gamesSelectTempData.map((game, i) => {
-                                        const currentGames =
-                                            form.getValues("games");
+                        <FormItem>
+                            <FormControl>
+                                <GamesSelect>
+                                    <GameSelectSearch onSearch={console.log} />
+                                    <GameSelectOptions>
+                                        {gamesSelectTempData.map((game, i) => {
+                                            const currentGames =
+                                                form.getValues("games");
 
-                                        const isSelected = currentGames.some(
-                                            (g) => g.name === game.name
-                                        );
+                                            const isSelected =
+                                                currentGames.some(
+                                                    (g) => g.name === game.name
+                                                );
 
-                                        return (
-                                            <GameSelectOption
-                                                key={i}
-                                                capeImageUrl={game.capeImageUrl}
-                                                name={game.name}
-                                                selected={isSelected}
-                                                onGameSelect={() => {
-                                                    if (isSelected) {
-                                                        removeGameByName(
-                                                            game.name
-                                                        );
-                                                    } else {
-                                                        form.setValue("games", [
-                                                            ...currentGames,
-                                                            game,
-                                                        ]);
+                                            return (
+                                                <GameSelectOption
+                                                    key={i}
+                                                    capeImageUrl={
+                                                        game.capeImageUrl
                                                     }
-                                                }}
-                                            />
-                                        );
-                                    })}
-                                </GameSelectOptions>
-                            </GamesSelect>
-                        </FormControl>
+                                                    name={game.name}
+                                                    selected={isSelected}
+                                                    onGameSelect={() => {
+                                                        if (isSelected) {
+                                                            removeGameByName(
+                                                                game.name
+                                                            );
+                                                        } else {
+                                                            form.setValue(
+                                                                "games",
+                                                                [
+                                                                    ...currentGames,
+                                                                    game,
+                                                                ]
+                                                            );
+                                                        }
+                                                    }}
+                                                />
+                                            );
+                                        })}
+                                    </GameSelectOptions>
+                                </GamesSelect>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
                     )}
                 />
                 <SubmitButton>Finish</SubmitButton>
@@ -226,7 +244,7 @@ interface GameSelectOptionProps {
     name: string;
     capeImageUrl: string;
     selected?: boolean;
-    onGameSelect?: () => void;
+    onGameSelect: () => void;
 }
 
 export function GameSelectOption({
@@ -240,9 +258,7 @@ export function GameSelectOption({
     function handlerClick() {
         setIsSelected(!isSelected);
 
-        if (onGameSelect) {
-            onGameSelect();
-        }
+        onGameSelect();
     }
 
     return (
@@ -251,6 +267,7 @@ export function GameSelectOption({
             onClick={handlerClick}
         >
             <Image
+                priority
                 className={cn(
                     "rounded-lg w-[100px] h-[150px] border-2 transition-all group-hover:scale-105 group-active:scale-100",
                     selected
