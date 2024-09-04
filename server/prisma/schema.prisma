@@ -5,10 +5,69 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id            Int         @id @default(autoincrement())
+    name          String
+    email         String      @unique
+    password      String
+    country       String
+    biography     String?
+    usersWithLike User[]      @relation("UserLikes")
+    likeBy        User[]      @relation("UserLikes")
+    roles         UserRoles[] @default([user])
+    profile       UserPofile  @relation(fields: [userPofileId], references: [id])
+    userPofileId  Int
+}
+
+enum UserRoles {
+    user
+    admin
+    owner
+}
+
+model UserPofile {
+    id                  Int          @id @default(autoincrement())
+    User                User[]
+    likes               Int          @default(0)
+    color               String
+    avaliabletimeToPlay String
+    profileImageUrl     String
+    socialMedias        Json
+    gamingSetup         Json
+    gamesConfig         GameConfig[]
+}
+
+model GameConfig {
+    id           Int         @id @default(autoincrement())
+    config       Json
+    game         Game        @relation(fields: [gameId], references: [id])
+    gameId       Int
+    UserPofile   UserPofile? @relation(fields: [userPofileId], references: [id])
+    userPofileId Int?
+}
+
+model Game {
+    id           Int            @id @default(autoincrement())
+    name         String         @unique
+    distributor  String         @unique
+    capeImageUrl String
+    platforms    GamePlatform[]
+    GameConfig   GameConfig[]
+}
+
+enum GamePlatform {
+    PC
+    Console
+    NintendoSwitch
+    Android
+    iOS
+    Browser
 }
