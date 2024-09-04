@@ -1,11 +1,7 @@
 export enum GamePlatform {
-    Xbox = "Xbox",
-    PlayStation = "PlayStation",
-    NintendoSwitch = "Nintendo Switch",
-    Android = "Android",
-    iOS = "iOS",
-    Windows = "Windows",
-    Mac = "Mac",
-    Linux = "Linux",
+    PC = "PC",
+    Console = "Console",
+    Portable = "Portable",
+    Mobile = "Mobile",
     Browser = "Browser",
 }

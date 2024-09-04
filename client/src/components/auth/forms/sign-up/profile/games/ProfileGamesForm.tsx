@@ -131,11 +131,7 @@ const gamesSelectTempData: Game[] = [
         id: 1,
         name: "Valorant",
         distributor: "Riot Games",
-        platforms: [
-            GamePlatform.Windows,
-            GamePlatform.PlayStation,
-            GamePlatform.Xbox,
-        ],
+        platforms: [GamePlatform.PC, GamePlatform.Console],
         capeImageUrl:
             "https://fastly.picsum.photos/id/817/100/150.jpg?hmac=95KqP-J4-91R9N_iTHLBOpytNH3IPKoOIuVtkbr0Cqk",
     },
@@ -143,7 +139,7 @@ const gamesSelectTempData: Game[] = [
         id: 2,
         name: "Counter-Strike 2",
         distributor: "Valve",
-        platforms: [GamePlatform.Windows, GamePlatform.Linux, GamePlatform.Mac],
+        platforms: [GamePlatform.PC],
         capeImageUrl:
             "https://fastly.picsum.photos/id/517/100/150.jpg?hmac=j8S7uR5hdOd1Cth4qplFAqEecCb0QWngnyD_0LvYogU",
     },
@@ -151,11 +147,7 @@ const gamesSelectTempData: Game[] = [
         id: 3,
         name: "League of Legends",
         distributor: "Riot Games",
-        platforms: [
-            GamePlatform.Windows,
-            GamePlatform.Android,
-            GamePlatform.iOS,
-        ],
+        platforms: [GamePlatform.PC, GamePlatform.Mobile],
         capeImageUrl:
             "https://fastly.picsum.photos/id/500/100/150.jpg?hmac=3XIuSuaiNiu6xjn4TcFEdSV62GfluxB69sYiIJvqbyQ",
     },
@@ -163,13 +155,7 @@ const gamesSelectTempData: Game[] = [
         id: 4,
         name: "Call of Duty",
         distributor: "Activision",
-        platforms: [
-            GamePlatform.Windows,
-            GamePlatform.Linux,
-            GamePlatform.Android,
-            GamePlatform.iOS,
-            GamePlatform.Xbox,
-        ],
+        platforms: [GamePlatform.PC, GamePlatform.Mobile],
         capeImageUrl:
             "https://fastly.picsum.photos/id/957/100/150.jpg?hmac=1rYziBEU6G8EapRCWh5QKdr9VvS3UzWHsOVXFHX93xQ",
     },
@@ -177,14 +163,7 @@ const gamesSelectTempData: Game[] = [
         id: 5,
         name: "Fotnite",
         distributor: "Epic Games",
-        platforms: [
-            GamePlatform.Windows,
-            GamePlatform.Linux,
-            GamePlatform.iOS,
-            GamePlatform.Android,
-            GamePlatform.PlayStation,
-            GamePlatform.Xbox,
-        ],
+        platforms: [GamePlatform.PC, GamePlatform.Mobile, GamePlatform.Console],
         capeImageUrl:
             "https://fastly.picsum.photos/id/721/100/150.jpg?hmac=d-gXIqgypukJWzyReLkQt00quWB74gp3EA30ZYOT2pI",
     },
