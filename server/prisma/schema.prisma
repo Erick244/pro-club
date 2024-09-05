@@ -14,17 +14,26 @@ datasource db {
 }
 
 model User {
-    id            Int         @id @default(autoincrement())
+    id            Int            @id @default(autoincrement())
     name          String
-    email         String      @unique
-    password      String
-    country       String
+    email         String         @unique
+    password      String?
+    oauth         Boolean        @default(false)
+    oauthProvider OAuthProvider?
+    country       String?
     biography     String?
-    usersWithLike User[]      @relation("UserLikes")
-    likeBy        User[]      @relation("UserLikes")
-    roles         UserRoles[] @default([user])
-    profile       UserPofile  @relation(fields: [userPofileId], references: [id])
-    userPofileId  Int
+    usersWithLike User[]         @relation("UserLikes")
+    likeBy        User[]         @relation("UserLikes")
+    roles         UserRoles[]    @default([user])
+    profile       UserProfile?   @relation(fields: [userProfileId], references: [id])
+    userProfileId Int?
+}
+
+enum OAuthProvider {
+    Google
+    Facebook
+    Reddit
+    Discord
 }
 
 enum UserRoles {
@@ -33,12 +42,12 @@ enum UserRoles {
     owner
 }
 
-model UserPofile {
+model UserProfile {
     id                  Int          @id @default(autoincrement())
     User                User[]
     likes               Int          @default(0)
     color               String
-    avaliabletimeToPlay String
+    availableTimeToPlay String
     profileImageUrl     String
     socialMedias        Json
     gamingSetup         Json
@@ -46,12 +55,12 @@ model UserPofile {
 }
 
 model GameConfig {
-    id           Int         @id @default(autoincrement())
-    config       Json
-    game         Game        @relation(fields: [gameId], references: [id])
-    gameId       Int
-    UserPofile   UserPofile? @relation(fields: [userPofileId], references: [id])
-    userPofileId Int?
+    id            Int          @id @default(autoincrement())
+    config        Json
+    game          Game         @relation(fields: [gameId], references: [id])
+    gameId        Int
+    UserProfile   UserProfile? @relation(fields: [userProfileId], references: [id])
+    userProfileId Int?
 }
 
 model Game {
