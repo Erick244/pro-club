@@ -1,6 +1,6 @@
 import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { AuthGuard } from "@nestjs/passport";
+import { AuthGuard as OAuthGuard } from "@nestjs/passport";
 import { Request, Response } from "express";
 import { ONE_MONTH_IN_SECONDS } from "src/constants";
 import { OAuthDto } from "../models/dtos/oauth.dto";
@@ -14,11 +14,11 @@ export class OAuthController {
     ) {}
 
     @Get("/google")
-    @UseGuards(AuthGuard("google"))
+    @UseGuards(OAuthGuard("google"))
     async googleAuth() {}
 
     @Get("/google/callback")
-    @UseGuards(AuthGuard("google"))
+    @UseGuards(OAuthGuard("google"))
     async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
