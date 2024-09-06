@@ -1,13 +1,17 @@
-import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { AuthGuard } from "@nestjs/passport";
-import { User } from "@prisma/client";
-import { Request } from "express";
+import { Request, Response } from "express";
+import { ONE_MONTH_IN_SECONDS } from "src/constants";
 import { OAuthDto } from "../models/dtos/oauth.dto";
 import { OAuthService } from "../services/oauth.service";
 
 @Controller("/oauth")
 export class OAuthController {
-    constructor(private oAuthService: OAuthService) {}
+    constructor(
+        private oAuthService: OAuthService,
+        private configService: ConfigService,
+    ) {}
 
     @Get("/google")
     @UseGuards(AuthGuard("google"))
@@ -15,15 +19,18 @@ export class OAuthController {
 
     @Get("/google/callback")
     @UseGuards(AuthGuard("google"))
-    googleAuthRedirect(@Req() req: Request) {
-        const { email, name } = req.user as User;
+    async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
+        const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
-        const dto: OAuthDto = {
-            email,
-            name,
-            provider: "Google",
-        };
+        const authTokenName = await this.configService.get("AUTH_TOKEN_NAME");
+        res.cookie(authTokenName, authToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            maxAge: ONE_MONTH_IN_SECONDS,
+        });
 
-        return this.oAuthService.auth(dto);
+        const redirectUrl = await this.configService.get("FRONTEND_URL");
+        return res.redirect(redirectUrl);
     }
 }

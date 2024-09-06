@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 
-export class SignInDto {
+export class SignInResponseDto {
     user: User;
 
     authToken: string;
