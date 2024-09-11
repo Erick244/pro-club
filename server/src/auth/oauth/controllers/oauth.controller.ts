@@ -33,4 +33,25 @@ export class OAuthController {
         const redirectUrl = await this.configService.get("FRONTEND_URL");
         return res.redirect(redirectUrl);
     }
+
+    @Get("/facebook")
+    @UseGuards(OAuthGuard("facebook"))
+    async facebookAuth() {}
+
+    @Get("/facebook/callback")
+    @UseGuards(OAuthGuard("facebook"))
+    async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
+        const authToken = await this.oAuthService.auth(req.user as OAuthDto);
+
+        const authTokenName = await this.configService.get("AUTH_TOKEN_NAME");
+        res.cookie(authTokenName, authToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            maxAge: ONE_MONTH_IN_SECONDS,
+        });
+
+        const redirectUrl = await this.configService.get("FRONTEND_URL");
+        return res.redirect(redirectUrl);
+    }
 }
