@@ -22,14 +22,23 @@ export class OAuthController {
     async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
+        await this.setAuthTokenInCookies(authToken, res);
+
+        return this.redirectToFrontend(res);
+    }
+
+    private async setAuthTokenInCookies(token: string, res: Response) {
         const authTokenName = await this.configService.get("AUTH_TOKEN_NAME");
-        res.cookie(authTokenName, authToken, {
+
+        res.cookie(authTokenName, token, {
             httpOnly: true,
             secure: true,
             sameSite: "strict",
             maxAge: ONE_MONTH_IN_SECONDS,
         });
+    }
 
+    private async redirectToFrontend(res: Response) {
         const redirectUrl = await this.configService.get("FRONTEND_URL");
         return res.redirect(redirectUrl);
     }
@@ -43,15 +52,8 @@ export class OAuthController {
     async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
-        const authTokenName = await this.configService.get("AUTH_TOKEN_NAME");
-        res.cookie(authTokenName, authToken, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "strict",
-            maxAge: ONE_MONTH_IN_SECONDS,
-        });
+        await this.setAuthTokenInCookies(authToken, res);
 
-        const redirectUrl = await this.configService.get("FRONTEND_URL");
-        return res.redirect(redirectUrl);
+        return this.redirectToFrontend(res);
     }
 }
