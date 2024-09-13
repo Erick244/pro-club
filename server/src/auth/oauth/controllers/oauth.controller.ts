@@ -24,7 +24,7 @@ export class OAuthController {
 
     @Get(["/google", "/google/callback"])
     @UseGuards(OAuthGuard("google"))
-    async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    async googleAuth(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
         await this.setAuthTokenInCookies(authToken, res);
@@ -50,7 +50,7 @@ export class OAuthController {
 
     @Get(["/facebook", "/facebook/callback"])
     @UseGuards(OAuthGuard("facebook"))
-    async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    async facebookAuth(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
         await this.setAuthTokenInCookies(authToken, res);
