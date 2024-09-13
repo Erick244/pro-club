@@ -22,11 +22,7 @@ export class OAuthController {
         private configService: ConfigService,
     ) {}
 
-    @Get("/google")
-    @UseGuards(OAuthGuard("google"))
-    async googleAuth() {}
-
-    @Get("/google/callback")
+    @Get(["/google", "/google/callback"])
     @UseGuards(OAuthGuard("google"))
     async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
@@ -52,11 +48,7 @@ export class OAuthController {
         return res.redirect(redirectUrl);
     }
 
-    @Get("/facebook")
-    @UseGuards(OAuthGuard("facebook"))
-    async facebookAuth() {}
-
-    @Get("/facebook/callback")
+    @Get(["/facebook", "/facebook/callback"])
     @UseGuards(OAuthGuard("facebook"))
     async facebookAuthRedirect(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
