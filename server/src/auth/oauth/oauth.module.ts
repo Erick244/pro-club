@@ -4,6 +4,7 @@ import { PrismaService } from "src/db/prisma.service";
 import { OAuthController } from "./controllers/oauth.controller";
 import { OAuthExceptionFilter } from "./filters/oauth-exception.filter";
 import { OAuthService } from "./services/oauth.service";
+import { DiscordStrategy } from "./strategies/discord.strategy";
 import { FacebookStrategy } from "./strategies/facebook.strategy";
 import { GoogleStrategy } from "./strategies/google.strategy";
 
@@ -14,6 +15,7 @@ import { GoogleStrategy } from "./strategies/google.strategy";
         OAuthService,
         GoogleStrategy,
         FacebookStrategy,
+        DiscordStrategy,
         PrismaService,
         OAuthExceptionFilter,
     ],

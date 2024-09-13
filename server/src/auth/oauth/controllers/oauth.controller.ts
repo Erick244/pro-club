@@ -57,4 +57,14 @@ export class OAuthController {
 
         return this.redirectToFrontend(res);
     }
+
+    @Get(["/discord", "/discord/callback"])
+    @UseGuards(OAuthGuard("discord"))
+    async discordAuth(@Req() req: Request, @Res() res: Response) {
+        const authToken = await this.oAuthService.auth(req.user as OAuthDto);
+
+        await this.setAuthTokenInCookies(authToken, res);
+
+        return this.redirectToFrontend(res);
+    }
 }
