@@ -22,7 +22,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "facebook") {
         refreshToken: string,
         profile: any,
         done: VerifyCallback,
-    ) {
+    ): Promise<void> {
         console.log(profile);
         const { displayName, emails } = profile;
         const email = emails[0].value;
