@@ -1,12 +1,21 @@
-import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
+import {
+    Controller,
+    Get,
+    Req,
+    Res,
+    UseFilters,
+    UseGuards,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AuthGuard as OAuthGuard } from "@nestjs/passport";
 import { Request, Response } from "express";
 import { ONE_MONTH_IN_SECONDS } from "src/constants";
+import { OAuthExceptionFilter } from "../filters/oauth-exception.filter";
 import { OAuthDto } from "../models/dtos/oauth.dto";
 import { OAuthService } from "../services/oauth.service";
 
 @Controller("/oauth")
+@UseFilters(OAuthExceptionFilter)
 export class OAuthController {
     constructor(
         private oAuthService: OAuthService,
