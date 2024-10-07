@@ -8,7 +8,7 @@ interface TemplateProps {
 
 export default function Template({ children }: TemplateProps) {
     return (
-        <motion.div
+        <motion.main
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{
@@ -17,6 +17,6 @@ export default function Template({ children }: TemplateProps) {
             }}
         >
             {children}
-        </motion.div>
+        </motion.main>
     );
 }
