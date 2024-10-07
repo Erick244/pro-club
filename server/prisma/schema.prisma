@@ -32,7 +32,7 @@ model User {
 enum OAuthProvider {
     Google
     Facebook
-    Reddit
+    Github
     Discord
 }
 

@@ -6,6 +6,7 @@ import { OAuthExceptionFilter } from "./filters/oauth-exception.filter";
 import { OAuthService } from "./services/oauth.service";
 import { DiscordStrategy } from "./strategies/discord.strategy";
 import { FacebookStrategy } from "./strategies/facebook.strategy";
+import { GithubStrategy } from "./strategies/github.strategy";
 import { GoogleStrategy } from "./strategies/google.strategy";
 
 @Module({
@@ -16,6 +17,7 @@ import { GoogleStrategy } from "./strategies/google.strategy";
         GoogleStrategy,
         FacebookStrategy,
         DiscordStrategy,
+        GithubStrategy,
         PrismaService,
         OAuthExceptionFilter,
     ],
