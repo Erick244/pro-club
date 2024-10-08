@@ -9,7 +9,7 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { AuthGuard as OAuthGuard } from "@nestjs/passport";
 import { Request, Response } from "express";
-import { ONE_MONTH_IN_SECONDS } from "src/constants";
+import { ONE_MONTH_IN_SECONDS } from "../../../constants";
 import { OAuthExceptionFilter } from "../filters/oauth-exception.filter";
 import { OAuthDto } from "../models/dtos/oauth.dto";
 import { OAuthService } from "../services/oauth.service";
@@ -32,7 +32,7 @@ export class OAuthController {
         return this.redirectToFrontend(res);
     }
 
-    private async setAuthTokenInCookies(token: string, res: Response) {
+    async setAuthTokenInCookies(token: string, res: Response) {
         const authTokenName = await this.configService.get("AUTH_TOKEN_NAME");
 
         res.cookie(authTokenName, token, {
@@ -43,7 +43,7 @@ export class OAuthController {
         });
     }
 
-    private async redirectToFrontend(res: Response) {
+    async redirectToFrontend(res: Response) {
         const redirectUrl = await this.configService.get("FRONTEND_URL");
         return res.redirect(redirectUrl);
     }

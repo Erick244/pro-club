@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "@prisma/client";
-import { PrismaService } from "src/db/prisma.service";
+import { PrismaService } from "../../../db/prisma.service";
 import { OAuthDto } from "../models/dtos/oauth.dto";
 
 @Injectable()
