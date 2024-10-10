@@ -9,7 +9,7 @@ import { OAuthService } from "../services/oauth.service";
 import { OAuthController } from "./oauth.controller";
 
 describe("OAuthController", () => {
-    let oAuthController: OAuthController;
+    let controller: OAuthController;
     let oAuthService: OAuthService;
     let configService: ConfigService;
 
@@ -19,13 +19,13 @@ describe("OAuthController", () => {
             providers: [OAuthService, PrismaService, JwtService, ConfigService],
         }).compile();
 
-        oAuthController = module.get(OAuthController);
+        controller = module.get(OAuthController);
         oAuthService = module.get(OAuthService);
         configService = module.get(ConfigService);
     });
 
     it("should be defined", () => {
-        expect(oAuthController).toBeDefined();
+        expect(controller).toBeDefined();
     });
 
     const mockRes = {
@@ -43,7 +43,7 @@ describe("OAuthController", () => {
                 async () => authTokenName,
             );
 
-            await oAuthController.setAuthTokenInCookies(mockToken, mockRes);
+            await controller.setAuthTokenInCookies(mockToken, mockRes);
 
             expect(configService.get).toHaveBeenCalledWith("AUTH_TOKEN_NAME");
             expect(mockRes.cookie).toHaveBeenCalledWith(
@@ -65,7 +65,7 @@ describe("OAuthController", () => {
                 async () => redirectUrl,
             );
 
-            await oAuthController.redirectToFrontend(mockRes);
+            await controller.redirectToFrontend(mockRes);
 
             expect(configService.get).toHaveBeenCalledWith("FRONTEND_URL");
             expect(mockRes.redirect).toHaveBeenCalledWith(redirectUrl);
@@ -85,25 +85,21 @@ describe("OAuthController", () => {
             jest.spyOn(oAuthService, "auth").mockImplementation(
                 async () => mockToken,
             );
-            jest.spyOn(
-                oAuthController,
-                "setAuthTokenInCookies",
-            ).mockImplementation(async () => Promise.resolve());
-            jest.spyOn(
-                oAuthController,
-                "redirectToFrontend",
-            ).mockImplementation(async () => mockRes.redirect("URL"));
+            jest.spyOn(controller, "setAuthTokenInCookies").mockImplementation(
+                async () => Promise.resolve(),
+            );
+            jest.spyOn(controller, "redirectToFrontend").mockImplementation(
+                async () => mockRes.redirect("URL"),
+            );
 
-            await oAuthController.googleAuth(mockReq, mockRes);
+            await controller.googleAuth(mockReq, mockRes);
 
             expect(oAuthService.auth).toHaveBeenCalledWith(mockUser);
-            expect(oAuthController.setAuthTokenInCookies).toHaveBeenCalledWith(
+            expect(controller.setAuthTokenInCookies).toHaveBeenCalledWith(
                 mockToken,
                 mockRes,
             );
-            expect(oAuthController.redirectToFrontend).toHaveBeenCalledWith(
-                mockRes,
-            );
+            expect(controller.redirectToFrontend).toHaveBeenCalledWith(mockRes);
         });
     });
 
@@ -120,25 +116,21 @@ describe("OAuthController", () => {
             jest.spyOn(oAuthService, "auth").mockImplementation(
                 async () => mockToken,
             );
-            jest.spyOn(
-                oAuthController,
-                "setAuthTokenInCookies",
-            ).mockImplementation(async () => Promise.resolve());
-            jest.spyOn(
-                oAuthController,
-                "redirectToFrontend",
-            ).mockImplementation(async () => mockRes.redirect("URL"));
+            jest.spyOn(controller, "setAuthTokenInCookies").mockImplementation(
+                async () => Promise.resolve(),
+            );
+            jest.spyOn(controller, "redirectToFrontend").mockImplementation(
+                async () => mockRes.redirect("URL"),
+            );
 
-            await oAuthController.facebookAuth(mockReq, mockRes);
+            await controller.facebookAuth(mockReq, mockRes);
 
             expect(oAuthService.auth).toHaveBeenCalledWith(mockUser);
-            expect(oAuthController.setAuthTokenInCookies).toHaveBeenCalledWith(
+            expect(controller.setAuthTokenInCookies).toHaveBeenCalledWith(
                 mockToken,
                 mockRes,
             );
-            expect(oAuthController.redirectToFrontend).toHaveBeenCalledWith(
-                mockRes,
-            );
+            expect(controller.redirectToFrontend).toHaveBeenCalledWith(mockRes);
         });
     });
 
@@ -155,25 +147,21 @@ describe("OAuthController", () => {
             jest.spyOn(oAuthService, "auth").mockImplementation(
                 async () => mockToken,
             );
-            jest.spyOn(
-                oAuthController,
-                "setAuthTokenInCookies",
-            ).mockImplementation(async () => Promise.resolve());
-            jest.spyOn(
-                oAuthController,
-                "redirectToFrontend",
-            ).mockImplementation(async () => mockRes.redirect("URL"));
+            jest.spyOn(controller, "setAuthTokenInCookies").mockImplementation(
+                async () => Promise.resolve(),
+            );
+            jest.spyOn(controller, "redirectToFrontend").mockImplementation(
+                async () => mockRes.redirect("URL"),
+            );
 
-            await oAuthController.discordAuth(mockReq, mockRes);
+            await controller.discordAuth(mockReq, mockRes);
 
             expect(oAuthService.auth).toHaveBeenCalledWith(mockUser);
-            expect(oAuthController.setAuthTokenInCookies).toHaveBeenCalledWith(
+            expect(controller.setAuthTokenInCookies).toHaveBeenCalledWith(
                 mockToken,
                 mockRes,
             );
-            expect(oAuthController.redirectToFrontend).toHaveBeenCalledWith(
-                mockRes,
-            );
+            expect(controller.redirectToFrontend).toHaveBeenCalledWith(mockRes);
         });
     });
 
@@ -190,25 +178,21 @@ describe("OAuthController", () => {
             jest.spyOn(oAuthService, "auth").mockImplementation(
                 async () => mockToken,
             );
-            jest.spyOn(
-                oAuthController,
-                "setAuthTokenInCookies",
-            ).mockImplementation(async () => Promise.resolve());
-            jest.spyOn(
-                oAuthController,
-                "redirectToFrontend",
-            ).mockImplementation(async () => mockRes.redirect("URL"));
+            jest.spyOn(controller, "setAuthTokenInCookies").mockImplementation(
+                async () => Promise.resolve(),
+            );
+            jest.spyOn(controller, "redirectToFrontend").mockImplementation(
+                async () => mockRes.redirect("URL"),
+            );
 
-            await oAuthController.githubAuth(mockReq, mockRes);
+            await controller.githubAuth(mockReq, mockRes);
 
             expect(oAuthService.auth).toHaveBeenCalledWith(mockUser);
-            expect(oAuthController.setAuthTokenInCookies).toHaveBeenCalledWith(
+            expect(controller.setAuthTokenInCookies).toHaveBeenCalledWith(
                 mockToken,
                 mockRes,
             );
-            expect(oAuthController.redirectToFrontend).toHaveBeenCalledWith(
-                mockRes,
-            );
+            expect(controller.redirectToFrontend).toHaveBeenCalledWith(mockRes);
         });
     });
 });

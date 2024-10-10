@@ -38,7 +38,7 @@ export class OAuthService {
         }
     }
 
-    private async signIn(user: User): Promise<string> {
+    async signIn(user: User): Promise<string> {
         const payload = { userId: user.id, email: user.email };
         const authToken = await this.jwtService.signAsync(payload);
 
