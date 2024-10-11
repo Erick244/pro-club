@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-facebook";
-import { OAuthDto } from "../models/dtos/oauth.dto";
-import { VerifyCallback } from "../models/types/verify-callback.type";
+import { OAuthDto } from "../../models/dtos/oauth.dto";
+import { VerifyCallback } from "../../models/types/verify-callback.type";
 
 @Injectable()
 export class FacebookStrategy extends PassportStrategy(Strategy, "facebook") {
