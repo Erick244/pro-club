@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-github";
 import { VerifyCallback } from "passport-google-oauth20";
-import { OAuthDto } from "../../models/dtos/oauth.dto";
+import { OAuthDto } from "../models/dtos/oauth.dto";
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy, "github") {

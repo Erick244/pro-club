@@ -1,6 +1,6 @@
 import { ConfigService } from "@nestjs/config";
 import { OAuthDto } from "../../models/dtos/oauth.dto";
-import { GoogleStrategy } from "../google.strategy";
+import { GoogleStrategy } from "./google.strategy";
 
 describe("GoogleStrategy", () => {
     let strategy: GoogleStrategy;
