@@ -17,6 +17,10 @@ describe("PrismaService", () => {
     });
 
     it("should connect to prisma", async () => {
-        expect(service.$connect()).resolves.not.toThrow();
+        jest.spyOn(service, "$connect").mockImplementation(() =>
+            Promise.resolve(),
+        );
+
+        await expect(service.onModuleInit()).resolves.not.toThrow();
     });
 });
