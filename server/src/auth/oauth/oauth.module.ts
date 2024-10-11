@@ -6,8 +6,8 @@ import { OAuthExceptionFilter } from "./filters/oauth-exception.filter";
 import { OAuthService } from "./services/oauth.service";
 import { DiscordStrategy } from "./strategies/discord/discord.strategy";
 import { FacebookStrategy } from "./strategies/facebook/facebook.strategy";
-import { GithubStrategy } from "./strategies/github.strategy";
 import { GoogleStrategy } from "./strategies/google.strategy";
+import { GithubStrategy } from "./strategies/google/github.strategy";
 
 @Module({
     imports: [PassportModule.register({ defaultStrategy: "google" })],
