@@ -13,7 +13,7 @@ export class OAuthService {
 
     async auth(dto: OAuthDto): Promise<string> {
         try {
-            const user = await this.prismaService.user.findFirst({
+            const user = await this.prismaService.user.findUnique({
                 where: {
                     email: dto.email,
                 },

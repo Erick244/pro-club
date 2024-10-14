@@ -13,7 +13,7 @@ describe("OAuthService", () => {
 
     const mockPrismaService = {
         user: {
-            findFirst: jest.fn(),
+            findUnique: jest.fn(),
             create: jest.fn(),
         },
     };
@@ -69,7 +69,7 @@ describe("OAuthService", () => {
         });
 
         it("should create and sign in oauth user", async () => {
-            jest.spyOn(mockPrismaService.user, "findFirst").mockResolvedValue(
+            jest.spyOn(mockPrismaService.user, "findUnique").mockResolvedValue(
                 null,
             );
             jest.spyOn(mockPrismaService.user, "create").mockResolvedValue(
@@ -77,7 +77,7 @@ describe("OAuthService", () => {
             );
 
             expect(typeof (await service.auth(mockDto))).toBe("string");
-            expect(prismaService.user.findFirst).toHaveBeenCalledWith({
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: {
                     email: mockDto.email,
                 },
@@ -93,12 +93,12 @@ describe("OAuthService", () => {
         });
 
         it("should sign in a exist oauth user", async () => {
-            jest.spyOn(mockPrismaService.user, "findFirst").mockResolvedValue(
+            jest.spyOn(mockPrismaService.user, "findUnique").mockResolvedValue(
                 mockUser,
             );
 
             expect(typeof (await service.auth(mockDto))).toBe("string");
-            expect(prismaService.user.findFirst).toHaveBeenCalledWith({
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: {
                     email: mockDto.email,
                 },
@@ -106,7 +106,7 @@ describe("OAuthService", () => {
         });
 
         it("should throws ForbiddenException if an error occurs", async () => {
-            jest.spyOn(prismaService.user, "findFirst").mockRejectedValue(
+            jest.spyOn(prismaService.user, "findUnique").mockRejectedValue(
                 new Error("test error"),
             );
 
