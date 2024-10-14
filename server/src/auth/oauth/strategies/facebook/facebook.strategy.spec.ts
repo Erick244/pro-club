@@ -1,5 +1,4 @@
 import { ConfigService } from "@nestjs/config";
-import { OAuthDto } from "../../models/dtos/oauth.dto";
 import { FacebookStrategy } from "./facebook.strategy";
 
 describe("FacebookStrategy", () => {
@@ -18,6 +17,8 @@ describe("FacebookStrategy", () => {
     });
 
     it("should validate passport facebook oauth", async () => {
+        const accessToken = "access-token";
+        const refreshToken = "refresh-token";
         const profile = {
             displayName: "test",
             emails: [
@@ -26,24 +27,14 @@ describe("FacebookStrategy", () => {
                 },
             ],
         };
-
-        const dto: OAuthDto = {
-            name: profile.displayName,
-            email: profile.emails[0].value,
-            provider: "Facebook",
-        };
-
-        const accessToken = "access-token";
-        const refreshToken = "refresh-token";
         const done = jest.fn();
-
-        jest.spyOn(done, "call").mockImplementation((err, result) => {
-            expect(err).toBeNull();
-            expect(result).toEqual(dto);
-        });
 
         await strategy.validate(accessToken, refreshToken, profile, done);
 
-        expect(done).toHaveBeenCalledWith(null, dto);
+        expect(done).toHaveBeenCalledWith(null, {
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            provider: "Facebook",
+        });
     });
 });

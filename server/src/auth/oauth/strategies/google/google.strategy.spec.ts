@@ -1,5 +1,4 @@
 import { ConfigService } from "@nestjs/config";
-import { OAuthDto } from "../../models/dtos/oauth.dto";
 import { GoogleStrategy } from "./google.strategy";
 
 describe("GoogleStrategy", () => {
@@ -17,6 +16,8 @@ describe("GoogleStrategy", () => {
     });
 
     it("should validate passport google oauth", async () => {
+        const accessToken = "access-token";
+        const refreshToken = "refresh-token";
         const profile = {
             name: {
                 givenName: "Test",
@@ -27,24 +28,14 @@ describe("GoogleStrategy", () => {
                 },
             ],
         };
-
-        const dto: OAuthDto = {
-            name: profile.name.givenName,
-            email: profile.emails[0].value,
-            provider: "Google",
-        };
-
-        const accessToken = "access-token";
-        const refreshToken = "refresh-token";
         const done = jest.fn();
-
-        jest.spyOn(done, "call").mockImplementation((err, result) => {
-            expect(err).toBeNull();
-            expect(result).toEqual(dto);
-        });
 
         await strategy.validate(accessToken, refreshToken, profile, done);
 
-        expect(done).toHaveBeenCalledWith(null, dto);
+        expect(done).toHaveBeenCalledWith(null, {
+            name: profile.name.givenName,
+            email: profile.emails[0].value,
+            provider: "Google",
+        });
     });
 });
