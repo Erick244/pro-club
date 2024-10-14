@@ -10,7 +10,7 @@ describe("AuthService", () => {
     let prismaService: PrismaService;
     const mockPrismaService = {
         user: {
-            findFirst: jest.fn(),
+            findUnique: jest.fn(),
             create: jest.fn(),
         },
     };
@@ -43,7 +43,7 @@ describe("AuthService", () => {
                 confirmPassword: "password",
             };
 
-            jest.spyOn(mockPrismaService.user, "findFirst").mockReturnValue(
+            jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue(
                 null,
             );
             jest.spyOn(bcrypt, "genSalt").mockImplementation(() =>
@@ -58,7 +58,7 @@ describe("AuthService", () => {
 
             await service.signUp(dto);
 
-            expect(prismaService.user.findFirst).toHaveBeenCalledWith({
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: {
                     email: dto.email,
                 },
@@ -82,7 +82,7 @@ describe("AuthService", () => {
                 confirmPassword: "password",
             };
 
-            jest.spyOn(mockPrismaService.user, "findFirst").mockReturnValue(
+            jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue(
                 {} as unknown as User,
             );
 
@@ -91,7 +91,7 @@ describe("AuthService", () => {
                     "This email is already in use, try logging in.",
                 ),
             );
-            expect(prismaService.user.findFirst).toHaveBeenCalledWith({
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: {
                     email: dto.email,
                 },
