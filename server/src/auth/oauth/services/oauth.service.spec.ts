@@ -88,6 +88,7 @@ describe("OAuthService", () => {
                     email: mockDto.email,
                     oauth: true,
                     oauthProvider: mockDto.provider,
+                    emailConfirmed: true,
                 },
             });
         });
