@@ -29,6 +29,7 @@ export class OAuthService {
                     email: dto.email,
                     oauth: true,
                     oauthProvider: dto.provider,
+                    emailConfirmed: true,
                 },
             });
 
