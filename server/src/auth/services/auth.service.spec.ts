@@ -43,8 +43,7 @@ describe("AuthService", () => {
                 password: "password",
                 confirmPassword: "password",
             };
-            const hashedPassword = "hashedPassword";
-            const newUser: User = {
+            const responseDto: SignUpResponseDto = {
                 id: 123,
                 name: requestDto.name,
                 email: requestDto.email,
@@ -55,10 +54,12 @@ describe("AuthService", () => {
                 biography: null,
                 roles: ["user"],
                 userProfileId: null,
-                password: hashedPassword,
             };
-            const responseDto: SignUpResponseDto = {
-                ...newUser,
+
+            const hashedPassword = "hashedPassword";
+            const newUser: User = {
+                ...responseDto,
+                password: hashedPassword,
             };
 
             jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue(

@@ -25,13 +25,17 @@ export class AuthService {
             const salt = await bcrypt.genSalt();
             const passwordHashed = await bcrypt.hash(dto.password, salt);
 
-            return await this.prismaService.user.create({
+            const newUser = await this.prismaService.user.create({
                 data: {
                     name: dto.name,
                     email: dto.email,
                     password: passwordHashed,
                 },
             });
+
+            delete newUser.password;
+
+            return newUser;
         } catch (error: any) {
             throw new ForbiddenException(error.message);
         }
