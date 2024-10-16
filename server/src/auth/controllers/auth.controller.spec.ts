@@ -1,5 +1,6 @@
 import { Test } from "@nestjs/testing";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
+import { SignUpResponseDto } from "../models/dtos/sign-up/sign-up-response.dto";
 import { AuthService } from "../services/auth.service";
 import { AuthController } from "./auth.controller";
 
@@ -31,19 +32,33 @@ describe("AuthController", () => {
 
     describe("sign up", () => {
         it("should sign up user", async () => {
-            const dto: SignUpRequestDto = {
+            const requestDto: SignUpRequestDto = {
                 name: "John Doe",
                 email: "john.doe@example.com",
                 password: "password",
                 confirmPassword: "password",
             };
+            const responseDto: SignUpResponseDto = {
+                id: 123,
+                name: requestDto.name,
+                email: requestDto.email,
+                oauth: false,
+                oauthProvider: null,
+                country: null,
+                emailConfirmed: false,
+                biography: null,
+                roles: ["user"],
+                userProfileId: null,
+            };
 
-            jest.spyOn(mockAuthService, "signUp").mockReturnValue(
-                Promise.resolve(),
+            jest.spyOn(mockAuthService, "signUp").mockReturnValueOnce(
+                responseDto,
             );
 
-            expect(await controller.signUp(dto)).toBe(undefined);
-            expect(authService.signUp).toHaveBeenCalledWith(dto);
+            expect(await controller.signUp(requestDto)).toStrictEqual(
+                responseDto,
+            );
+            expect(authService.signUp).toHaveBeenCalledWith(requestDto);
         });
     });
 });
