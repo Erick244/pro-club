@@ -4,6 +4,7 @@ import { User } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../../db/prisma.service";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
+import { SignUpResponseDto } from "../models/dtos/sign-up/sign-up-response.dto";
 import { AuthService } from "./auth.service";
 describe("AuthService", () => {
     let service: AuthService;
@@ -35,12 +36,29 @@ describe("AuthService", () => {
     });
 
     describe("sign up", () => {
-        it("should sign up user", async () => {
-            const dto: SignUpRequestDto = {
+        it("should sign up a new user", async () => {
+            const requestDto: SignUpRequestDto = {
                 name: "John Doe",
                 email: "john.doe@example.com",
                 password: "password",
                 confirmPassword: "password",
+            };
+            const hashedPassword = "hashedPassword";
+            const newUser: User = {
+                id: 123,
+                name: requestDto.name,
+                email: requestDto.email,
+                oauth: false,
+                oauthProvider: null,
+                country: null,
+                emailConfirmed: false,
+                biography: null,
+                roles: ["user"],
+                userProfileId: null,
+                password: hashedPassword,
+            };
+            const responseDto: SignUpResponseDto = {
+                ...newUser,
             };
 
             jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue(
@@ -50,26 +68,28 @@ describe("AuthService", () => {
                 Promise.resolve("salt"),
             );
             jest.spyOn(bcrypt, "hash").mockImplementation(() =>
-                Promise.resolve("hashedPassword"),
+                Promise.resolve(hashedPassword),
             );
-            jest.spyOn(mockPrismaService.user, "create").mockImplementation(
-                () => Promise.resolve(),
+            jest.spyOn(mockPrismaService.user, "create").mockReturnValueOnce(
+                newUser,
             );
 
-            await service.signUp(dto);
-
+            expect(await service.signUp(requestDto)).toStrictEqual(responseDto);
             expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: {
-                    email: dto.email,
+                    email: requestDto.email,
                 },
             });
             expect(bcrypt.genSalt).toHaveBeenCalled();
-            expect(bcrypt.hash).toHaveBeenCalledWith(dto.password, "salt");
+            expect(bcrypt.hash).toHaveBeenCalledWith(
+                requestDto.password,
+                "salt",
+            );
             expect(prismaService.user.create).toHaveBeenCalledWith({
                 data: {
-                    name: dto.name,
-                    email: dto.email,
-                    password: "hashedPassword",
+                    name: requestDto.name,
+                    email: requestDto.email,
+                    password: hashedPassword,
                 },
             });
         });

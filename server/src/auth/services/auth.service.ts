@@ -2,12 +2,13 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../../db/prisma.service";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
+import { SignUpResponseDto } from "../models/dtos/sign-up/sign-up-response.dto";
 
 @Injectable()
 export class AuthService {
     constructor(private prismaService: PrismaService) {}
 
-    async signUp(dto: SignUpRequestDto): Promise<void> {
+    async signUp(dto: SignUpRequestDto): Promise<SignUpResponseDto> {
         try {
             const userExist = await this.prismaService.user.findUnique({
                 where: {
@@ -24,7 +25,7 @@ export class AuthService {
             const salt = await bcrypt.genSalt();
             const passwordHashed = await bcrypt.hash(dto.password, salt);
 
-            await this.prismaService.user.create({
+            return await this.prismaService.user.create({
                 data: {
                     name: dto.name,
                     email: dto.email,
