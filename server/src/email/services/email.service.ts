@@ -1,5 +1,5 @@
 import { MailerService } from "@nestjs-modules/mailer";
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { CodeService } from "./code.service";
 
 @Injectable()
@@ -10,14 +10,18 @@ export class EmailService {
     ) {}
 
     sendEmailConfirmation(email: string) {
-        const CODE_LENGTH = 6;
-        const code = this.codeService.newCode(CODE_LENGTH, email);
+        try {
+            const CODE_LENGTH = 6;
+            const code = this.codeService.newCode(CODE_LENGTH, email);
 
-        this.mailerService.sendMail({
-            from: "Pro Club",
-            to: email,
-            subject: "Your Pro Club e-mail code confirmation",
-            text: code,
-        });
+            this.mailerService.sendMail({
+                from: "Pro Club",
+                to: email,
+                subject: "Your Pro Club e-mail code confirmation",
+                text: code,
+            });
+        } catch (error: any) {
+            throw new InternalServerErrorException(error.message);
+        }
     }
 }
