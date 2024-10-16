@@ -10,7 +10,8 @@ export class EmailService {
     ) {}
 
     sendEmailConfirmation(email: string) {
-        const code = this.codeService.newCode(6, email);
+        const CODE_LENGTH = 6;
+        const code = this.codeService.newCode(CODE_LENGTH, email);
 
         this.mailerService.sendMail({
             from: "Pro Club",
