@@ -1,4 +1,5 @@
 import { MailerModule, MailerService } from "@nestjs-modules/mailer";
+import { InternalServerErrorException } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { CodeService } from "./code.service";
 import { EmailService } from "./email.service";
@@ -56,6 +57,20 @@ describe("EmailService", () => {
                 subject: "Your Pro Club e-mail code confirmation",
                 text: mockCode,
             });
+        });
+
+        it("should throw InternalServerErrorException on some error occurs", () => {
+            const email = "invalid-email";
+            const mockCode = "123456";
+
+            jest.spyOn(codeService, "newCode").mockReturnValue(mockCode);
+            jest.spyOn(mailerService, "sendMail").mockImplementation(() => {
+                throw new Error("error message");
+            });
+
+            expect(() => service.sendEmailConfirmation(email)).toThrow(
+                InternalServerErrorException,
+            );
         });
     });
 });
