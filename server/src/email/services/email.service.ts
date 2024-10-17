@@ -14,8 +14,9 @@ export class EmailService {
             const CODE_LENGTH = 6;
             const code = this.codeService.newCode(CODE_LENGTH, email);
 
+            // Temp
             this.mailerService.sendMail({
-                from: "Pro Club",
+                from: "proclub@email.com",
                 to: email,
                 subject: "Your Pro Club e-mail code confirmation",
                 text: code,

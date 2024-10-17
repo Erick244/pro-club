@@ -1,5 +1,6 @@
 import { MailerModule } from "@nestjs-modules/mailer";
 import { Module } from "@nestjs/common";
+import { PrismaService } from "../db/prisma.service";
 import { EmailController } from "./controllers/email.controller";
 import { CodeService } from "./services/code.service";
 import { EmailService } from "./services/email.service";
@@ -16,7 +17,7 @@ import { EmailService } from "./services/email.service";
             },
         }),
     ],
-    providers: [EmailService, CodeService],
+    providers: [EmailService, CodeService, PrismaService],
     controllers: [EmailController],
 })
 export class EmailModule {}

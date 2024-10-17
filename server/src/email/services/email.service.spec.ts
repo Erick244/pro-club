@@ -52,7 +52,7 @@ describe("EmailService", () => {
                 email,
             );
             expect(mailerService.sendMail).toHaveBeenCalledWith({
-                from: "Pro Club",
+                from: "proclub@email.com",
                 to: email,
                 subject: "Your Pro Club e-mail code confirmation",
                 text: mockCode,
