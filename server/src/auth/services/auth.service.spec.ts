@@ -1,19 +1,27 @@
-import { ForbiddenException } from "@nestjs/common";
+import { ForbiddenException, NotFoundException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../../db/prisma.service";
+import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
 import { SignUpResponseDto } from "../models/dtos/sign-up/sign-up-response.dto";
 import { AuthService } from "./auth.service";
 describe("AuthService", () => {
     let service: AuthService;
     let prismaService: PrismaService;
+    let jwtService: JwtService;
+
     const mockPrismaService = {
         user: {
             findUnique: jest.fn(),
             create: jest.fn(),
         },
+    };
+
+    const mockJwtService = {
+        signAsync: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -24,11 +32,16 @@ describe("AuthService", () => {
                     provide: PrismaService,
                     useValue: mockPrismaService,
                 },
+                {
+                    provide: JwtService,
+                    useValue: mockJwtService,
+                },
             ],
         }).compile();
 
         service = module.get(AuthService);
         prismaService = module.get(PrismaService);
+        jwtService = module.get(JwtService);
     });
 
     it("should be defined", () => {
@@ -117,6 +130,99 @@ describe("AuthService", () => {
                     email: dto.email,
                 },
             });
+        });
+    });
+
+    describe("sign in", () => {
+        it("should sign in a user", async () => {
+            const dto: SignInRequestDto = {
+                email: "john.doe@example.com",
+                password: "password",
+            };
+            const mockToken = "token";
+            const mockHashedPassword = "hashedPassword";
+
+            jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue({
+                id: 123,
+                email: dto.email,
+                password: mockHashedPassword,
+            });
+            jest.spyOn(bcrypt, "compare").mockImplementation(() =>
+                Promise.resolve(true),
+            );
+            jest.spyOn(mockJwtService, "signAsync").mockImplementation(() =>
+                Promise.resolve(mockToken),
+            );
+
+            expect(await service.signIn(dto)).toStrictEqual({
+                user: {
+                    id: 123,
+                    email: dto.email,
+                },
+                authToken: mockToken,
+            });
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email: dto.email,
+                },
+            });
+            expect(bcrypt.compare).toHaveBeenCalledWith(
+                dto.password,
+                mockHashedPassword,
+            );
+            expect(jwtService.signAsync).toHaveBeenCalledWith({
+                userId: 123,
+                email: dto.email,
+            });
+        });
+
+        it("should throw NotFoundException if the user not exist", async () => {
+            const dto: SignInRequestDto = {
+                email: "john.doe@example.com",
+                password: "password",
+            };
+
+            jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue(
+                null,
+            );
+
+            await expect(service.signIn(dto)).rejects.toThrow(
+                NotFoundException,
+            );
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email: dto.email,
+                },
+            });
+        });
+
+        it("should throw ForbiddenException if the password is incorrect", async () => {
+            const dto: SignInRequestDto = {
+                email: "john.doe@example.com",
+                password: "incorrect-password",
+            };
+            const mockHashedPassword = "hashedPassword";
+
+            jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue({
+                id: 123,
+                password: mockHashedPassword,
+            });
+            jest.spyOn(bcrypt, "compare").mockImplementation(() =>
+                Promise.resolve(false),
+            );
+
+            await expect(service.signIn(dto)).rejects.toThrow(
+                ForbiddenException,
+            );
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email: dto.email,
+                },
+            });
+            expect(bcrypt.compare).toHaveBeenCalledWith(
+                dto.password,
+                mockHashedPassword,
+            );
         });
     });
 });

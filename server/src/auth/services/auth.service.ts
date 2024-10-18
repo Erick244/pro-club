@@ -1,12 +1,22 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import {
+    ForbiddenException,
+    Injectable,
+    NotFoundException,
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../../db/prisma.service";
+import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
+import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
 import { SignUpResponseDto } from "../models/dtos/sign-up/sign-up-response.dto";
 
 @Injectable()
 export class AuthService {
-    constructor(private prismaService: PrismaService) {}
+    constructor(
+        private prismaService: PrismaService,
+        private jwtService: JwtService,
+    ) {}
 
     async signUp(dto: SignUpRequestDto): Promise<SignUpResponseDto> {
         try {
@@ -36,6 +46,40 @@ export class AuthService {
             delete newUser.password;
 
             return newUser;
+        } catch (error: any) {
+            throw new ForbiddenException(error.message);
+        }
+    }
+
+    async signIn(dto: SignInRequestDto): Promise<SignInResponseDto> {
+        const user = await this.prismaService.user.findUnique({
+            where: {
+                email: dto.email,
+            },
+        });
+
+        if (!user) {
+            throw new NotFoundException("User not found. Try signing up.");
+        }
+
+        try {
+            const passwordIsMatch = await bcrypt.compare(
+                dto.password,
+                user.password,
+            );
+            if (!passwordIsMatch) {
+                throw new ForbiddenException("Password is incorrect.");
+            }
+
+            const payload = { userId: user.id, email: user.email };
+            const authToken = await this.jwtService.signAsync(payload);
+
+            delete user.password;
+
+            return {
+                user,
+                authToken,
+            };
         } catch (error: any) {
             throw new ForbiddenException(error.message);
         }
