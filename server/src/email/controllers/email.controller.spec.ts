@@ -1,29 +1,22 @@
-import { NotAcceptableException, NotFoundException } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
-import { PrismaService } from "../../db/prisma.service";
 import { ConfirmCodeDto } from "../models/dtos/confirm-code.dto";
 import { SendCodeDto } from "../models/dtos/send-code.dto";
-import { CodeService } from "../services/code.service";
+import { EmailConfirmationService } from "../services/email-confirmation.service";
 import { EmailService } from "./../services/email.service";
 import { EmailController } from "./email.controller";
 
 describe("EmailController", () => {
     let controller: EmailController;
     let emailService: EmailService;
-    let codeService: CodeService;
-    let prismaService: PrismaService;
+    let emailConfirmationService: EmailConfirmationService;
+
+    const mockEmailConfirmationService = {
+        confirmEmailCode: jest.fn(),
+    };
 
     const mockEmailService = {
         sendEmailConfirmation: jest.fn(),
-    };
-    const mockCodeService = {
-        getCode: jest.fn(),
-    };
-    const mockPrismaService = {
-        user: {
-            update: jest.fn(),
-        },
     };
 
     beforeEach(async () => {
@@ -34,12 +27,8 @@ describe("EmailController", () => {
                     useValue: mockEmailService,
                 },
                 {
-                    provide: CodeService,
-                    useValue: mockCodeService,
-                },
-                {
-                    provide: PrismaService,
-                    useValue: mockPrismaService,
+                    provide: EmailConfirmationService,
+                    useValue: mockEmailConfirmationService,
                 },
             ],
             controllers: [EmailController],
@@ -47,8 +36,7 @@ describe("EmailController", () => {
 
         controller = module.get(EmailController);
         emailService = module.get(EmailService);
-        codeService = module.get(CodeService);
-        prismaService = module.get(PrismaService);
+        emailConfirmationService = module.get(EmailConfirmationService);
     });
 
     it("should be defined", () => {
@@ -79,56 +67,15 @@ describe("EmailController", () => {
                 emailConfirmed: true,
             } as unknown as User;
 
-            jest.spyOn(mockCodeService, "getCode").mockReturnValue(dto.code);
-            jest.spyOn(mockPrismaService.user, "update").mockReturnValue(
-                updatedUser,
-            );
+            jest.spyOn(
+                mockEmailConfirmationService,
+                "confirmEmailCode",
+            ).mockReturnValue(Promise.resolve(updatedUser));
 
             expect(await controller.confirmCode(dto)).toBe(updatedUser);
-            expect(codeService.getCode).toHaveBeenCalledWith(dto.email);
-            expect(prismaService.user.update).toHaveBeenCalledWith({
-                where: {
-                    email: dto.email,
-                },
-                data: {
-                    emailConfirmed: true,
-                },
-            });
-        });
-
-        it("should throw NotAcceptableException if the code is invalid or not is the real code", async () => {
-            const dto: ConfirmCodeDto = {
-                code: "123456",
-                email: "example@email.com",
-            };
-
-            const realCode = "789012";
-
-            jest.spyOn(mockCodeService, "getCode").mockReturnValue(realCode);
-
-            await expect(controller.confirmCode(dto)).rejects.toThrow(
-                NotAcceptableException,
-            );
-            expect(codeService.getCode).toHaveBeenCalledWith(dto.email);
-        });
-
-        it("should throw NotFoundException if the email is not associated with a user", async () => {
-            const dto: ConfirmCodeDto = {
-                code: "123456",
-                email: "example@email.com",
-            };
-
-            jest.spyOn(mockCodeService, "getCode").mockReturnValue(dto.code);
-            jest.spyOn(mockPrismaService.user, "update").mockImplementation(
-                () => {
-                    throw new Error("error-message");
-                },
-            );
-
-            await expect(controller.confirmCode(dto)).rejects.toThrow(
-                NotFoundException,
-            );
-            expect(codeService.getCode).toHaveBeenCalledWith(dto.email);
+            expect(
+                emailConfirmationService.confirmEmailCode,
+            ).toHaveBeenCalledWith(dto);
         });
     });
 });

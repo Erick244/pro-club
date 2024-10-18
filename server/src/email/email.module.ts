@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { PrismaService } from "../db/prisma.service";
 import { EmailController } from "./controllers/email.controller";
 import { CodeService } from "./services/code.service";
+import { EmailConfirmationService } from "./services/email-confirmation.service";
 import { EmailService } from "./services/email.service";
 
 @Module({
@@ -17,7 +18,12 @@ import { EmailService } from "./services/email.service";
             },
         }),
     ],
-    providers: [EmailService, CodeService, PrismaService],
+    providers: [
+        EmailService,
+        CodeService,
+        PrismaService,
+        EmailConfirmationService,
+    ],
     controllers: [EmailController],
 })
 export class EmailModule {}
