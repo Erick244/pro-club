@@ -1,6 +1,10 @@
 import { MailerModule, MailerService } from "@nestjs-modules/mailer";
-import { InternalServerErrorException } from "@nestjs/common";
+import {
+    InternalServerErrorException,
+    NotAcceptableException,
+} from "@nestjs/common";
 import { Test } from "@nestjs/testing";
+import { PrismaService } from "../../db/prisma.service";
 import { CodeService } from "./code.service";
 import { EmailService } from "./email.service";
 
@@ -8,6 +12,13 @@ describe("EmailService", () => {
     let service: EmailService;
     let mailerService: MailerService;
     let codeService: CodeService;
+    let prismaService: PrismaService;
+
+    const mockPrismaService = {
+        user: {
+            findUnique: jest.fn(),
+        },
+    };
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -22,12 +33,20 @@ describe("EmailService", () => {
                     },
                 }),
             ],
-            providers: [CodeService, EmailService],
+            providers: [
+                CodeService,
+                EmailService,
+                {
+                    provide: PrismaService,
+                    useValue: mockPrismaService,
+                },
+            ],
         }).compile();
 
         service = module.get(EmailService);
         mailerService = module.get(MailerService);
         codeService = module.get(CodeService);
+        prismaService = module.get(PrismaService);
     });
 
     it("should be defined", () => {
@@ -35,18 +54,26 @@ describe("EmailService", () => {
     });
 
     describe("sendEmailConfirmation", () => {
-        it("should send the email confirmation with code", () => {
+        it("should send the email confirmation with code", async () => {
             const email = "example@email.com";
             const CODE_LENGTH = 6;
             const mockCode = "123456";
 
+            jest.spyOn(mockPrismaService.user, "findUnique").mockResolvedValue({
+                emailConfirmed: false,
+            });
             jest.spyOn(codeService, "newCode").mockReturnValue(mockCode);
             jest.spyOn(mailerService, "sendMail").mockImplementation(() =>
                 Promise.resolve(),
             );
 
-            service.sendEmailConfirmation(email);
+            await service.sendEmailConfirmation(email);
 
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email,
+                },
+            });
             expect(codeService.newCode).toHaveBeenCalledWith(
                 CODE_LENGTH,
                 email,
@@ -59,18 +86,43 @@ describe("EmailService", () => {
             });
         });
 
-        it("should throw InternalServerErrorException on some error occurs", () => {
+        it("should throw InternalServerErrorException on some error occurs", async () => {
             const email = "invalid-email";
             const mockCode = "123456";
 
+            jest.spyOn(mockPrismaService.user, "findUnique").mockResolvedValue({
+                emailConfirmed: false,
+            });
             jest.spyOn(codeService, "newCode").mockReturnValue(mockCode);
             jest.spyOn(mailerService, "sendMail").mockImplementation(() => {
                 throw new Error("error message");
             });
 
-            expect(() => service.sendEmailConfirmation(email)).toThrow(
+            await expect(service.sendEmailConfirmation(email)).rejects.toThrow(
                 InternalServerErrorException,
             );
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email,
+                },
+            });
+        });
+
+        it("should throw NotAcceptableException if the email already confirmed", async () => {
+            const email = "example@email.com";
+
+            jest.spyOn(mockPrismaService.user, "findUnique").mockResolvedValue({
+                emailConfirmed: true,
+            });
+
+            await expect(service.sendEmailConfirmation(email)).rejects.toThrow(
+                NotAcceptableException,
+            );
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email,
+                },
+            });
         });
     });
 });

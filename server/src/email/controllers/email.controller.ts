@@ -13,8 +13,8 @@ export class EmailController {
     ) {}
 
     @Post("/sendCode")
-    sendCode(@Body() dto: SendCodeDto): void {
-        return this.emailService.sendEmailConfirmation(dto.email);
+    async sendCode(@Body() dto: SendCodeDto): Promise<void> {
+        await this.emailService.sendEmailConfirmation(dto.email);
     }
 
     @Post("/confirmCode")

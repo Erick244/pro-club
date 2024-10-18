@@ -44,11 +44,11 @@ describe("EmailController", () => {
     });
 
     describe("sendCode", () => {
-        it("should send email to user with confirmation code", () => {
+        it("should send email to user with confirmation code", async () => {
             const dto: SendCodeDto = { email: "example@email.com" };
 
             jest.spyOn(mockEmailService, "sendEmailConfirmation");
-            controller.sendCode(dto);
+            await controller.sendCode(dto);
 
             expect(emailService.sendEmailConfirmation).toHaveBeenCalledWith(
                 dto.email,
