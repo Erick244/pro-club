@@ -56,7 +56,7 @@ describe("EmailConfirmedGuard", () => {
                 emailConfirmed: true,
             } as unknown as User;
 
-            jest.spyOn(prismaService.user, "findUnique").mockResolvedValue(
+            jest.spyOn(mockPrismaService.user, "findUnique").mockResolvedValue(
                 user,
             );
 
@@ -75,7 +75,7 @@ describe("EmailConfirmedGuard", () => {
                 emailConfirmed: false,
             } as unknown as User;
 
-            jest.spyOn(prismaService.user, "findUnique").mockResolvedValue(
+            jest.spyOn(mockPrismaService.user, "findUnique").mockResolvedValue(
                 user,
             );
 
@@ -92,7 +92,7 @@ describe("EmailConfirmedGuard", () => {
         it("should throw NotFoundException if user not exist", async () => {
             req.body.email = "test@example.com";
 
-            jest.spyOn(prismaService.user, "findUnique").mockResolvedValue(
+            jest.spyOn(mockPrismaService.user, "findUnique").mockResolvedValue(
                 null,
             );
 
