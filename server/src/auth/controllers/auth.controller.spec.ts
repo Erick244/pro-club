@@ -1,5 +1,6 @@
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
+import { PrismaService } from "../../db/prisma.service";
 import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
@@ -23,6 +24,7 @@ describe("AuthController", () => {
                     provide: AuthService,
                     useValue: mockAuthService,
                 },
+                PrismaService,
             ],
         }).compile();
 
