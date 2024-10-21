@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { EmailConfirmedGuard } from "../../email/guards/email-confirmed.guard";
 import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
@@ -14,6 +15,7 @@ export class AuthController {
         return await this.authService.signUp(dto);
     }
 
+    @UseGuards(EmailConfirmedGuard)
     @Post("/signin")
     async signIn(@Body() dto: SignInRequestDto): Promise<SignInResponseDto> {
         return await this.authService.signIn(dto);
