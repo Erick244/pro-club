@@ -1,5 +1,7 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Request } from "express";
 import { EmailConfirmedGuard } from "../../email/guards/email-confirmed.guard";
+import { AuthGuard } from "../guards/auth.guard";
 import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
@@ -19,5 +21,11 @@ export class AuthController {
     @Post("/signin")
     async signIn(@Body() dto: SignInRequestDto): Promise<SignInResponseDto> {
         return await this.authService.signIn(dto);
+    }
+
+    @UseGuards(AuthGuard)
+    @Get("/userByToken")
+    userByToken(@Req() req: Request) {
+        return req.user;
     }
 }
