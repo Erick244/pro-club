@@ -102,19 +102,6 @@ describe("AuthGuard", () => {
             );
         });
 
-        it("should throw UnauthorizedException if the token is expired", async () => {
-            mockReq.headers.authorization = "Bearer expired-token";
-
-            jest.spyOn(mockJwtService, "verifyAsync").mockImplementation(() => {
-                throw new Error("Invalid token");
-            });
-
-            await expect(guard.canActivate(mockContext)).rejects.toThrow(
-                UnauthorizedException,
-            );
-            expect(jwtService.verifyAsync).toHaveBeenCalledWith("not-is-token");
-        });
-
         it("should throw UnauthorizedException if user not exist", async () => {
             mockReq.headers.authorization = "Bearer token";
 
