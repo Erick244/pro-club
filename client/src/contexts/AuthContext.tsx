@@ -2,7 +2,7 @@
 
 import { AuthorizationFetch } from "@/api/AuthorizationFetch";
 import { API_BASE_URL, AUTH_TOKEN_NAME } from "@/constants";
-import { getCookie } from "@/functions/cookie-store";
+import { getCookie } from "@/functions/client-cookie-store";
 import { User } from "@/models/interfaces/user.interface";
 import {
     createContext,
@@ -24,7 +24,6 @@ export default function AuthContextProvider({
     children: React.ReactNode;
 }) {
     const [user, setUser] = useState<User | null>(null);
-
     const recoverUser = useCallback(async () => {
         const authToken = await getCookie(AUTH_TOKEN_NAME);
 

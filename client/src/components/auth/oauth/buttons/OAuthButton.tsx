@@ -10,6 +10,7 @@ export function OAuthButton({ children, ...props }: OAuthButtonProps) {
         <Button
             {...props}
             className={cn("w-full border border-foreground", props.className)}
+            asChild
         >
             {children}
         </Button>
