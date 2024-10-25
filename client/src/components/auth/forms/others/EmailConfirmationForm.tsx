@@ -1,4 +1,5 @@
 "use client";
+
 import { z } from "zod";
 
 import {
@@ -16,8 +17,10 @@ import {
     InputOTPSeparator,
     InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { FormRedirectLink } from "@/components/utils/forms/links/FormRedirectLink";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { emailConfirmationMessages } from "@/messages/EmailConfirmationForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
@@ -37,8 +40,23 @@ export function EmailConfirmationForm() {
         },
     });
 
-    function onSubmit(data: EmailConfirmationFormData) {
-        console.log(data);
+    const { confirmEmailCode } = useAuthContext();
+
+    async function onSubmit(data: EmailConfirmationFormData) {
+        try {
+            await confirmEmailCode(data.code);
+
+            toast({
+                title: "Email confirmed!",
+                description: "You can now sign in.",
+            });
+        } catch (error: any) {
+            toast({
+                title: "Error",
+                description: error.message,
+                variant: "destructive",
+            });
+        }
     }
 
     return (

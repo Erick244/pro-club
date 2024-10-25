@@ -14,12 +14,13 @@ import {
 
 interface AnimatedInputProps extends HTMLAttributes<HTMLInputElement> {
     label: string;
+    value?: string;
 }
 
 export const AnimatedInput = forwardRef(
     ({ label, ...props }: AnimatedInputProps, ref: Ref<any>) => {
         const inputId = useId();
-        const [isFocused, setIsFocused] = useState<boolean>(false);
+        const [isFocused, setIsFocused] = useState<boolean>(!!props.value);
 
         function onFocus(e: FocusEvent<HTMLInputElement>) {
             props.onFocus ? props.onFocus(e) : null;

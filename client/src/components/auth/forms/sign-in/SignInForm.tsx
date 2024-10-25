@@ -15,6 +15,7 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { signInMessages } from "@/messages/SignInForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -29,10 +30,12 @@ const signInFormFormSchema = z.object({
 export type SignInFormFormData = z.infer<typeof signInFormFormSchema>;
 
 export function SignInFormForm() {
+    const searchParams = useSearchParams();
+
     const form = useForm<SignInFormFormData>({
         resolver: zodResolver(signInFormFormSchema),
         defaultValues: {
-            email: "",
+            email: new URLSearchParams(searchParams).get("email") ?? "",
             password: "",
         },
     });

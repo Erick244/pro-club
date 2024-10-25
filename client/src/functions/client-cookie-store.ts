@@ -13,3 +13,7 @@ export async function setCookie(
 ) {
     cookies().set(name, value, cookie);
 }
+
+export async function delCookie(name: string) {
+    cookies().delete(name);
+}

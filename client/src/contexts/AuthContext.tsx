@@ -4,7 +4,11 @@ import { AuthorizationFetch } from "@/api/AuthorizationFetch";
 import { SignInFormFormData } from "@/components/auth/forms/sign-in/SignInForm";
 import { SignUpFormData } from "@/components/auth/forms/sign-up/SignUpForm";
 import { API_BASE_URL, AUTH_TOKEN_NAME } from "@/constants";
-import { getCookie, setCookie } from "@/functions/client-cookie-store";
+import {
+    delCookie,
+    getCookie,
+    setCookie,
+} from "@/functions/client-cookie-store";
 import { User } from "@/models/interfaces/user.interface";
 import { useRouter } from "next/navigation";
 import {
@@ -19,6 +23,7 @@ interface AuthContextProps {
     user: User | null;
     signUp: (data: SignUpFormData) => Promise<void>;
     signIn: (data: SignInFormFormData) => Promise<void>;
+    confirmEmailCode: (code: string) => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -61,9 +66,10 @@ export default function AuthContextProvider({
             await throwDefaultError(resp);
         }
 
-        const { email } = await resp.json();
+        const newUser = await resp.json();
+        setUser(newUser);
 
-        await sendEmailConfirmation(email);
+        await sendEmailConfirmation(newUser.email);
     }
 
     async function throwDefaultError(resp: Response) {
@@ -91,6 +97,26 @@ export default function AuthContextProvider({
         router.push("/auth/email-confirmation");
     }
 
+    async function confirmEmailCode(code: string) {
+        const resp = await fetch(`${API_BASE_URL}/email/confirmCode`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: user?.email, code }),
+        });
+
+        if (!resp.ok) {
+            await throwDefaultError(resp);
+        }
+
+        await delCookie("emailConfirmationPending");
+
+        const { email } = await resp.json();
+
+        router.push(`/auth/signin?email=${encodeURIComponent(email)}`);
+    }
+
     async function signIn(data: SignInFormFormData) {
         const resp = await fetch(`${API_BASE_URL}/auth/signin`, {
             method: "POST",
@@ -104,11 +130,23 @@ export default function AuthContextProvider({
             await throwDefaultError(resp);
         }
 
+        const { user, authToken } = await resp.json();
+
+        setUser(user);
+        await setCookie(AUTH_TOKEN_NAME, authToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+            path: "/",
+        });
+
         router.push("/");
     }
 
     return (
-        <AuthContext.Provider value={{ user, signUp, signIn }}>
+        <AuthContext.Provider
+            value={{ user, signUp, signIn, confirmEmailCode }}
+        >
             {children}
         </AuthContext.Provider>
     );
