@@ -7,9 +7,11 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { FormRedirectLink } from "@/components/utils/forms/links/FormRedirectLink";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { signInMessages } from "@/messages/SignInForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,7 +26,7 @@ const signInFormFormSchema = z.object({
         .max(16, signInMessages.password.max),
 });
 
-type SignInFormFormData = z.infer<typeof signInFormFormSchema>;
+export type SignInFormFormData = z.infer<typeof signInFormFormSchema>;
 
 export function SignInFormForm() {
     const form = useForm<SignInFormFormData>({
@@ -35,8 +37,23 @@ export function SignInFormForm() {
         },
     });
 
-    function onSubmit(data: SignInFormFormData) {
-        console.log(data);
+    const { signIn } = useAuthContext();
+
+    async function onSubmit(data: SignInFormFormData) {
+        try {
+            await signIn(data);
+
+            toast({
+                title: "Success. Welcome back!",
+                description: "You're now logged in.",
+            });
+        } catch (error: any) {
+            toast({
+                title: "Error",
+                description: error.message,
+                variant: "destructive",
+            });
+        }
     }
 
     return (
