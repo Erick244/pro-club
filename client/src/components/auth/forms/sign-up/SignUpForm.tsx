@@ -7,9 +7,11 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { FormRedirectLink } from "@/components/utils/forms/links/FormRedirectLink";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { signUpMessages } from "@/messages/SignUpForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,7 +39,7 @@ const signUpFormSchema = z
         path: ["confirmPassword"],
     });
 
-type SignUpFormData = z.infer<typeof signUpFormSchema>;
+export type SignUpFormData = z.infer<typeof signUpFormSchema>;
 
 export function SignUpForm() {
     const form = useForm<SignUpFormData>({
@@ -50,8 +52,23 @@ export function SignUpForm() {
         },
     });
 
-    function onSubmit(data: SignUpFormData) {
-        console.log(data);
+    const { signUp } = useAuthContext();
+
+    async function onSubmit(data: SignUpFormData) {
+        try {
+            await signUp(data);
+
+            toast({
+                title: "Success. You have successfully signed up!",
+                description: "Please check your email to verify your account.",
+            });
+        } catch (error: any) {
+            toast({
+                title: "Error",
+                description: error.message,
+                variant: "destructive",
+            });
+        }
     }
 
     return (
