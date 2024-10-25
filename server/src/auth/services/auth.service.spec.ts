@@ -196,6 +196,28 @@ describe("AuthService", () => {
             });
         });
 
+        it("should throw ForbiddenException if the user is signed with oauth2 system", async () => {
+            const dto: SignInRequestDto = {
+                email: "john.doe@example.com",
+                password: "incorrect-password",
+            };
+
+            jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue({
+                id: 123,
+                password: null,
+                oauth: true,
+            });
+
+            await expect(service.signIn(dto)).rejects.toThrow(
+                ForbiddenException,
+            );
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email: dto.email,
+                },
+            });
+        });
+
         it("should throw ForbiddenException if the password is incorrect", async () => {
             const dto: SignInRequestDto = {
                 email: "john.doe@example.com",

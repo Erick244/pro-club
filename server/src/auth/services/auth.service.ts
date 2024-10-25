@@ -62,6 +62,12 @@ export class AuthService {
             throw new NotFoundException("User not found. Try signing up.");
         }
 
+        if (user.oauth) {
+            throw new ForbiddenException(
+                `This email is signed up with ${user.oauthProvider}. Try signing again with ${user.oauthProvider}.`,
+            );
+        }
+
         try {
             const passwordIsMatch = await bcrypt.compare(
                 dto.password,
