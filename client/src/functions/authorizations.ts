@@ -28,8 +28,6 @@ function isFalseCookieOrRedirectTo(path: string, cookieKey: string) {
 
 export const Authorization = {
     "/": () => {
-        existCookieOrRedirectTo("/auth/signup", cookieNames.AUTH_TOKEN);
-
         isFalseCookieOrRedirectTo(
             "/auth/email-confirmation",
             cookieNames.EMAIL_CONFIRMATION_PENDING
@@ -39,16 +37,15 @@ export const Authorization = {
             "/auth/signup/details",
             cookieNames.SIGN_UP_DETAILS_PENDING
         );
+
+        existCookieOrRedirectTo("/auth/signup", cookieNames.AUTH_TOKEN);
     },
     "/auth/signup": () => {
-        isFalseCookieOrRedirectTo(
-            "/auth/signup/details",
-            cookieNames.SIGN_UP_DETAILS_PENDING
-        );
-
         notExistCookieOrRedirectTo("/", cookieNames.AUTH_TOKEN);
     },
     "/auth/signup/details": () => {
+        existCookieOrRedirectTo("/auth/signup", cookieNames.AUTH_TOKEN);
+
         isFalseCookieOrRedirectTo(
             "/auth/email-confirmation",
             cookieNames.EMAIL_CONFIRMATION_PENDING
@@ -61,5 +58,8 @@ export const Authorization = {
         );
 
         existCookieOrRedirectTo("/auth/signup", cookieNames.AUTH_TOKEN);
+    },
+    "/auth/email-confirmation": () => {
+        notExistCookieOrRedirectTo("/", cookieNames.AUTH_TOKEN);
     },
 };
