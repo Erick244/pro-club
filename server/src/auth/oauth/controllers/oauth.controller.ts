@@ -33,14 +33,19 @@ export class OAuthController {
     }
 
     async setAuthTokenInCookies(token: string, res: Response) {
-        const authTokenName = await this.configService.get("AUTH_TOKEN_NAME");
-
-        res.cookie(authTokenName, token, {
+        const authTokenCookie =
+            await this.configService.get("COOKIE_AUTH_TOKEN");
+        res.cookie(authTokenCookie, token, {
             httpOnly: true,
             secure: true,
             sameSite: "strict",
             maxAge: ONE_MONTH_IN_SECONDS,
         });
+
+        const emailConfirmationPendingCookie = await this.configService.get(
+            "COOKIE_EMAIL_CONFIRMATION_PENDING",
+        );
+        res.cookie(emailConfirmationPendingCookie, "false");
     }
 
     async redirectToFrontend(res: Response) {
