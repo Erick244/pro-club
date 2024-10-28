@@ -3,7 +3,8 @@
 import { AuthorizationFetch } from "@/api/AuthorizationFetch";
 import { SignInFormFormData } from "@/components/auth/forms/sign-in/SignInForm";
 import { SignUpFormData } from "@/components/auth/forms/sign-up/SignUpForm";
-import { API_BASE_URL, AUTH_TOKEN_NAME } from "@/constants";
+import { API_BASE_URL } from "@/constants";
+import { cookieNames } from "@/cookies/names";
 import {
     delCookie,
     getCookie,
@@ -35,7 +36,7 @@ export default function AuthContextProvider({
 }) {
     const [user, setUser] = useState<User | null>(null);
     const recoverUser = useCallback(async () => {
-        const authToken = await getCookie(AUTH_TOKEN_NAME);
+        const authToken = await getCookie(cookieNames.AUTH_TOKEN);
 
         if (!authToken) {
             setUser(null);
@@ -67,7 +68,7 @@ export default function AuthContextProvider({
         }
 
         const newUser = await resp.json();
-        await setCookie("sign-up-user", JSON.stringify(newUser));
+        await setCookie(cookieNames.SIGN_UP_USER, JSON.stringify(newUser));
 
         await sendEmailConfirmation(newUser.email);
     }
@@ -80,7 +81,7 @@ export default function AuthContextProvider({
     const router = useRouter();
 
     async function sendEmailConfirmation(email: string) {
-        await setCookie("email-confirmation-pending", "true");
+        await setCookie(cookieNames.EMAIL_CONFIRMATION_PENDING, "true");
 
         const resp = await fetch(`${API_BASE_URL}/email/sendCode`, {
             method: "POST",
@@ -98,7 +99,7 @@ export default function AuthContextProvider({
     }
 
     async function confirmEmailCode(code: string) {
-        const signUpUser = await getCookie("sign-up-user");
+        const signUpUser = await getCookie(cookieNames.SIGN_UP_USER);
         const email = JSON.parse(signUpUser ?? "").email;
 
         console.log(email);
@@ -118,10 +119,10 @@ export default function AuthContextProvider({
         const updatedUser: User = await resp.json();
 
         if (!updatedUser.country) {
-            await setCookie("sign-up-details-pending", "true");
+            await setCookie(cookieNames.SIGN_UP_DETAILS_PENDING, "true");
         }
 
-        await delCookie("email-confirmation-pending");
+        await delCookie(cookieNames.EMAIL_CONFIRMATION_PENDING);
 
         router.push(`/auth/signin?email=${encodeURIComponent(email ?? "")}`);
     }
@@ -142,7 +143,7 @@ export default function AuthContextProvider({
         const { user, authToken } = await resp.json();
 
         setUser(user);
-        await setCookie(AUTH_TOKEN_NAME, authToken, {
+        await setCookie(cookieNames.AUTH_TOKEN, authToken, {
             httpOnly: true,
             secure: true,
             sameSite: "strict",
