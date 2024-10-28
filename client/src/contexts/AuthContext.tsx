@@ -51,17 +51,20 @@ export default function AuthContextProvider({
     }, []);
 
     const setPendingCookies = useCallback(async () => {
-        const emailConfirmationIsPending = !user?.emailConfirmed;
-        await setCookie(
-            cookieNames.EMAIL_CONFIRMATION_PENDING,
-            JSON.stringify(emailConfirmationIsPending)
-        );
+        const cookiesPendingIssues = [
+            {
+                cookieName: cookieNames.EMAIL_CONFIRMATION_PENDING,
+                pendingIssue: !user?.emailConfirmed,
+            },
+            {
+                cookieName: cookieNames.SIGN_UP_DETAILS_PENDING,
+                pendingIssue: !user?.country,
+            },
+        ];
 
-        const signUpDetailsIsPending = !user?.country;
-        await setCookie(
-            cookieNames.SIGN_UP_DETAILS_PENDING,
-            JSON.stringify(signUpDetailsIsPending)
-        );
+        cookiesPendingIssues.forEach(({ cookieName, pendingIssue }) => {
+            setCookie(cookieName, JSON.stringify(pendingIssue));
+        });
     }, [user?.country, user?.emailConfirmed]);
 
     useEffect(() => {
