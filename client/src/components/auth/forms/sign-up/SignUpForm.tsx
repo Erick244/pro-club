@@ -149,7 +149,7 @@ export function SignUpForm() {
                 <div className="flex flex-col gap-5 items-center">
                     <SubmitButton>Continue</SubmitButton>
                     <FormRedirectLink
-                        href="/auth/login"
+                        href="/auth/signin"
                         initialSentence="Already have an account?"
                         flashyText="Login"
                     />
