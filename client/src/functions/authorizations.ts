@@ -54,4 +54,12 @@ export const Authorization = {
             cookieNames.EMAIL_CONFIRMATION_PENDING
         );
     },
+    "/auth/signin": () => {
+        isFalseCookieOrRedirectTo(
+            "/auth/email-confirmation",
+            cookieNames.EMAIL_CONFIRMATION_PENDING
+        );
+
+        existCookieOrRedirectTo("/auth/signup", cookieNames.AUTH_TOKEN);
+    },
 };
