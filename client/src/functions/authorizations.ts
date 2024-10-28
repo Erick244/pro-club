@@ -48,4 +48,10 @@ export const Authorization = {
 
         notExistCookieOrRedirectTo("/", cookieNames.AUTH_TOKEN);
     },
+    "/auth/signup/details": () => {
+        isFalseCookieOrRedirectTo(
+            "/auth/email-confirmation",
+            cookieNames.EMAIL_CONFIRMATION_PENDING
+        );
+    },
 };

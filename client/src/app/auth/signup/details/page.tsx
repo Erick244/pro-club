@@ -4,6 +4,7 @@ import { IntroductionSection } from "@/components/auth/sections/IntroductionSect
 import { H1 } from "@/components/typography/H1";
 import { Muted } from "@/components/typography/Muted";
 import { FormContainer } from "@/components/utils/forms/containers/FormContainer";
+import { Authorization } from "@/functions/authorizations";
 
 const introductionTexts = {
     h1: "USERNAME",
@@ -11,6 +12,8 @@ const introductionTexts = {
 };
 
 export default function Page() {
+    Authorization["/auth/signup/details"]();
+
     return (
         <div className="mt-5 space-y-10 lg:flex lg:justify-center lg:items-center lg:gap-10">
             <IntroductionSection className="lg:hidden">
