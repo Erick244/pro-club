@@ -40,4 +40,12 @@ export const Authorization = {
             cookieNames.SIGN_UP_DETAILS_PENDING
         );
     },
+    "/auth/signup": () => {
+        isFalseCookieOrRedirectTo(
+            "/auth/signup/details",
+            cookieNames.SIGN_UP_DETAILS_PENDING
+        );
+
+        notExistCookieOrRedirectTo("/", cookieNames.AUTH_TOKEN);
+    },
 };
