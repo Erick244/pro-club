@@ -5,11 +5,7 @@ import { SignInFormFormData } from "@/components/auth/forms/sign-in/SignInForm";
 import { SignUpFormData } from "@/components/auth/forms/sign-up/SignUpForm";
 import { API_BASE_URL } from "@/constants";
 import { cookieNames } from "@/cookies/names";
-import {
-    delCookie,
-    getCookie,
-    setCookie,
-} from "@/functions/client-cookie-store";
+import { getCookie, setCookie } from "@/functions/client-cookie-store";
 import { User } from "@/models/interfaces/user.interface";
 import { useRouter } from "next/navigation";
 import {
@@ -141,7 +137,7 @@ export default function AuthContextProvider({
             await setCookie(cookieNames.SIGN_UP_DETAILS_PENDING, "true");
         }
 
-        await delCookie(cookieNames.EMAIL_CONFIRMATION_PENDING);
+        await setCookie(cookieNames.EMAIL_CONFIRMATION_PENDING, "false");
 
         router.push(`/auth/signin?email=${encodeURIComponent(email ?? "")}`);
     }
