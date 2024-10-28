@@ -30,7 +30,10 @@ export default function AuthContextProvider({
 }: {
     children: React.ReactNode;
 }) {
+    const router = useRouter();
+
     const [user, setUser] = useState<User | null>(null);
+
     const recoverUser = useCallback(async () => {
         const authToken = await getCookie(cookieNames.AUTH_TOKEN);
 
@@ -47,10 +50,12 @@ export default function AuthContextProvider({
     }, []);
 
     const setPendingCookies = useCallback(async () => {
+        const authToken = await getCookie(cookieNames.AUTH_TOKEN);
+
         const cookiesPendingIssues = [
             {
                 cookieName: cookieNames.EMAIL_CONFIRMATION_PENDING,
-                pendingIssue: !user?.emailConfirmed,
+                pendingIssue: !authToken,
             },
             {
                 cookieName: cookieNames.SIGN_UP_DETAILS_PENDING,
@@ -58,10 +63,10 @@ export default function AuthContextProvider({
             },
         ];
 
-        cookiesPendingIssues.forEach(({ cookieName, pendingIssue }) => {
-            setCookie(cookieName, JSON.stringify(pendingIssue));
+        cookiesPendingIssues.forEach(async ({ cookieName, pendingIssue }) => {
+            await setCookie(cookieName, JSON.stringify(pendingIssue));
         });
-    }, [user?.country, user?.emailConfirmed]);
+    }, [user?.country]);
 
     useEffect(() => {
         recoverUser();
@@ -93,8 +98,6 @@ export default function AuthContextProvider({
         throw new Error(error.message);
     }
 
-    const router = useRouter();
-
     async function sendEmailConfirmation(email: string) {
         await setCookie(cookieNames.EMAIL_CONFIRMATION_PENDING, "true");
 
@@ -116,8 +119,6 @@ export default function AuthContextProvider({
     async function confirmEmailCode(code: string) {
         const signUpUser = await getCookie(cookieNames.SIGN_UP_USER);
         const email = JSON.parse(signUpUser ?? "").email;
-
-        console.log(email);
 
         const resp = await fetch(`${API_BASE_URL}/email/confirmCode`, {
             method: "POST",
