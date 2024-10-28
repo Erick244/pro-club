@@ -50,9 +50,25 @@ export default function AuthContextProvider({
         setUser(userByToken);
     }, []);
 
+    const setPendingCookies = useCallback(async () => {
+        const emailConfirmationIsPending = !user?.emailConfirmed;
+        await setCookie(
+            cookieNames.EMAIL_CONFIRMATION_PENDING,
+            JSON.stringify(emailConfirmationIsPending)
+        );
+
+        const signUpDetailsIsPending = !user?.country;
+        await setCookie(
+            cookieNames.SIGN_UP_DETAILS_PENDING,
+            JSON.stringify(signUpDetailsIsPending)
+        );
+    }, [user?.country, user?.emailConfirmed]);
+
     useEffect(() => {
         recoverUser();
-    }, [recoverUser]);
+
+        setPendingCookies();
+    }, [recoverUser, setPendingCookies]);
 
     async function signUp(data: SignUpFormData) {
         const resp = await fetch(`${API_BASE_URL}/auth/signup`, {
