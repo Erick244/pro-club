@@ -67,7 +67,7 @@ export default function AuthContextProvider({
         }
 
         const newUser = await resp.json();
-        setUser(newUser);
+        await setCookie("sign-up-user", JSON.stringify(newUser));
 
         await sendEmailConfirmation(newUser.email);
     }
@@ -80,7 +80,7 @@ export default function AuthContextProvider({
     const router = useRouter();
 
     async function sendEmailConfirmation(email: string) {
-        await setCookie("emailConfirmationPending", "true");
+        await setCookie("email-confirmation-pending", "true");
 
         const resp = await fetch(`${API_BASE_URL}/email/sendCode`, {
             method: "POST",
@@ -98,23 +98,32 @@ export default function AuthContextProvider({
     }
 
     async function confirmEmailCode(code: string) {
+        const signUpUser = await getCookie("sign-up-user");
+        const email = JSON.parse(signUpUser ?? "").email;
+
+        console.log(email);
+
         const resp = await fetch(`${API_BASE_URL}/email/confirmCode`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ email: user?.email, code }),
+            body: JSON.stringify({ email, code }),
         });
 
         if (!resp.ok) {
             await throwDefaultError(resp);
         }
 
-        await delCookie("emailConfirmationPending");
+        const updatedUser: User = await resp.json();
 
-        const { email } = await resp.json();
+        if (!updatedUser.country) {
+            await setCookie("sign-up-details-pending", "true");
+        }
 
-        router.push(`/auth/signin?email=${encodeURIComponent(email)}`);
+        await delCookie("email-confirmation-pending");
+
+        router.push(`/auth/signin?email=${encodeURIComponent(email ?? "")}`);
     }
 
     async function signIn(data: SignInFormFormData) {
