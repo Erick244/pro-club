@@ -3,10 +3,13 @@ import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
 import * as bcrypt from "bcrypt";
+import { Response } from "express";
 import { PrismaService } from "../../db/prisma.service";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
+import { SignOutDto } from "../models/dtos/sign-out/sign-out.dto";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
 import { SignUpResponseDto } from "../models/dtos/sign-up/sign-up-response.dto";
+import { CookiesNames } from "../oauth/models/enums/cookies.enum";
 import { AuthService } from "./auth.service";
 describe("AuthService", () => {
     let service: AuthService;
@@ -244,6 +247,46 @@ describe("AuthService", () => {
             expect(bcrypt.compare).toHaveBeenCalledWith(
                 dto.password,
                 mockHashedPassword,
+            );
+        });
+    });
+
+    describe("sign out", () => {
+        it("should sign out a user", async () => {
+            const dto: SignOutDto = {
+                redirectPath: "url",
+            };
+
+            const mockRes = {
+                clearCookie: jest.fn(),
+                redirect: jest.fn(),
+            } as unknown as Response;
+
+            service.signOut(dto, mockRes);
+
+            expect(mockRes.clearCookie).toHaveBeenCalledWith(
+                CookiesNames.AUTH_TOKEN,
+            );
+            expect(mockRes.clearCookie).toHaveBeenCalledWith(
+                CookiesNames.PENDING,
+            );
+            expect(mockRes.redirect).toHaveBeenCalledWith(dto.redirectPath);
+        });
+
+        it("should throw ForbiddenException if an error occurs", async () => {
+            const dto: SignOutDto = {
+                redirectPath: "url",
+            };
+
+            const mockRes = {
+                clearCookie: jest.fn().mockImplementation(() => {
+                    throw Error("error");
+                }),
+                redirect: jest.fn(),
+            } as unknown as Response;
+
+            expect(() => service.signOut(dto, mockRes)).toThrow(
+                ForbiddenException,
             );
         });
     });
