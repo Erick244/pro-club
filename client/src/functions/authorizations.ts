@@ -1,65 +1,78 @@
-import { cookieNames } from "@/cookies/names";
+import { PendingCookie } from "@/contexts/AuthContext";
+import { CookieNames } from "@/models/enums/cookies.enum";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 function existCookieOrRedirectTo(path: string, cookieKey: string) {
-    const cookie = cookies().get(cookieKey)?.value;
-
-    if (!cookie) {
+    if (!getCookieValue(cookieKey)) {
         redirect(path);
     }
+}
+
+function getCookieValue(key: string) {
+    const cookie = cookies().get(key)?.value;
+
+    return cookie;
 }
 
 function notExistCookieOrRedirectTo(path: string, cookieKey: string) {
-    const cookie = cookies().get(cookieKey)?.value;
-
-    if (cookie) {
+    if (getCookieValue(cookieKey)) {
         redirect(path);
     }
 }
 
-function isFalseCookieOrRedirectTo(path: string, cookieKey: string) {
-    const cookie = cookies().get(cookieKey)?.value;
+function getPendingCookies(): PendingCookie[] | undefined {
+    const pendingCookies = getCookieValue(CookieNames.PENDING);
 
-    if (JSON.parse(cookie || "true")) {
-        redirect(path);
+    if (!pendingCookies) {
+        return;
     }
+
+    return JSON.parse(pendingCookies);
+}
+
+function redirectToPendingCookie(currentPath: string) {
+    const pendingCookies = getPendingCookies();
+
+    if (!pendingCookies && currentPath !== "/auth/signup") {
+        // TODO: fetch signOut
+        redirect("/auth/signup");
+    }
+
+    pendingCookies?.forEach((pendingCookie) => {
+        if (
+            pendingCookie.isPending &&
+            currentPath !== pendingCookie.redirectPath
+        ) {
+            redirect(pendingCookie.redirectPath);
+        }
+    });
 }
 
 export const Authorization = {
     "/": () => {
-        isFalseCookieOrRedirectTo(
-            "/auth/email-confirmation",
-            cookieNames.EMAIL_CONFIRMATION_PENDING
-        );
+        redirectToPendingCookie("/");
 
-        isFalseCookieOrRedirectTo(
-            "/auth/signup/details",
-            cookieNames.SIGN_UP_DETAILS_PENDING
-        );
-
-        existCookieOrRedirectTo("/auth/signup", cookieNames.AUTH_TOKEN);
+        existCookieOrRedirectTo("/auth/signup", CookieNames.AUTH_TOKEN);
     },
     "/auth/signup": () => {
-        notExistCookieOrRedirectTo("/", cookieNames.AUTH_TOKEN);
+        redirectToPendingCookie("/auth/signup");
+
+        notExistCookieOrRedirectTo("/", CookieNames.AUTH_TOKEN);
     },
     "/auth/signup/details": () => {
-        existCookieOrRedirectTo("/auth/signup", cookieNames.AUTH_TOKEN);
+        redirectToPendingCookie("/auth/signup/details");
 
-        isFalseCookieOrRedirectTo(
-            "/auth/email-confirmation",
-            cookieNames.EMAIL_CONFIRMATION_PENDING
-        );
+        existCookieOrRedirectTo("/auth/signup", CookieNames.AUTH_TOKEN);
     },
     "/auth/signin": () => {
-        isFalseCookieOrRedirectTo(
-            "/auth/email-confirmation",
-            cookieNames.EMAIL_CONFIRMATION_PENDING
-        );
+        redirectToPendingCookie("/auth/signin");
 
-        existCookieOrRedirectTo("/auth/signup", cookieNames.AUTH_TOKEN);
+        notExistCookieOrRedirectTo("/auth/signup", CookieNames.AUTH_TOKEN);
     },
     "/auth/email-confirmation": () => {
-        notExistCookieOrRedirectTo("/", cookieNames.AUTH_TOKEN);
+        redirectToPendingCookie("/auth/email-confirmation");
+
+        notExistCookieOrRedirectTo("/", CookieNames.AUTH_TOKEN);
     },
 };
