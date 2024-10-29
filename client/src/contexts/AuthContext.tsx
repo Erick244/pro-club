@@ -57,7 +57,16 @@ export default function AuthContextProvider({
 
     useEffect(() => {
         recoverUser();
-    }, [recoverUser]);
+
+        const isOAuthAndNotHaveCountry = user?.oauth && !user?.country;
+        if (isOAuthAndNotHaveCountry) {
+            setPendingCookie({
+                label: PendingCookiesLabels.SIGN_UP_DETAILS,
+                isPending: true,
+                redirectPath: "/auth/signup/details",
+            });
+        }
+    }, [recoverUser, user?.country, user?.oauth]);
 
     async function signUp(data: SignUpFormData) {
         const resp = await fetch(`${API_BASE_URL}/auth/signup`, {
@@ -144,15 +153,11 @@ export default function AuthContextProvider({
             await throwDefaultError(resp);
         }
 
-        const updatedUser: User = await resp.json();
-
-        if (updatedUser.oauth && !updatedUser.country) {
-            await setPendingCookie({
-                label: PendingCookiesLabels.SIGN_UP_DETAILS,
-                isPending: true,
-                redirectPath: "/auth/signup/details",
-            });
-        }
+        await setPendingCookie({
+            label: PendingCookiesLabels.SIGN_UP_DETAILS,
+            isPending: true,
+            redirectPath: "/auth/signup/details",
+        });
 
         await setPendingCookie({
             label: PendingCookiesLabels.EMAIL_CONFIRMATION,
