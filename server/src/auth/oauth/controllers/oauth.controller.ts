@@ -12,10 +12,7 @@ import { Request, Response } from "express";
 import { ONE_MONTH_IN_SECONDS } from "../../../constants";
 import { OAuthExceptionFilter } from "../filters/oauth-exception.filter";
 import { OAuthDto } from "../models/dtos/oauth.dto";
-import {
-    CookiesNames,
-    PendingCookiesLabels,
-} from "../models/enums/cookies.enum";
+import { CookiesNames } from "../models/enums/cookies.enum";
 import { OAuthService } from "../services/oauth.service";
 
 @Controller("/oauth")
@@ -31,28 +28,18 @@ export class OAuthController {
     async googleAuth(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
-        await this.setCookiesToRedirect(authToken, res);
+        await this.setAuthTokenInCookies(authToken, res);
 
         return this.redirectToFrontend(res);
     }
 
-    private async setCookiesToRedirect(token: string, res: Response) {
+    private async setAuthTokenInCookies(token: string, res: Response) {
         res.cookie(CookiesNames.AUTH_TOKEN, token, {
             httpOnly: true,
             secure: true,
             sameSite: "strict",
             maxAge: ONE_MONTH_IN_SECONDS,
         });
-
-        const pendingCookies = [
-            {
-                label: PendingCookiesLabels.EMAIL_CONFIRMATION,
-                isPending: false,
-                redirectPath: "/auth/email-confirmation",
-            },
-        ];
-
-        res.cookie(CookiesNames.PENDING, JSON.stringify(pendingCookies));
     }
 
     private async redirectToFrontend(res: Response) {
@@ -65,7 +52,7 @@ export class OAuthController {
     async facebookAuth(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
-        await this.setCookiesToRedirect(authToken, res);
+        await this.setAuthTokenInCookies(authToken, res);
 
         return this.redirectToFrontend(res);
     }
@@ -75,7 +62,7 @@ export class OAuthController {
     async discordAuth(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
-        await this.setCookiesToRedirect(authToken, res);
+        await this.setAuthTokenInCookies(authToken, res);
 
         return this.redirectToFrontend(res);
     }
@@ -85,7 +72,7 @@ export class OAuthController {
     async githubAuth(@Req() req: Request, @Res() res: Response) {
         const authToken = await this.oAuthService.auth(req.user as OAuthDto);
 
-        await this.setCookiesToRedirect(authToken, res);
+        await this.setAuthTokenInCookies(authToken, res);
 
         return this.redirectToFrontend(res);
     }
