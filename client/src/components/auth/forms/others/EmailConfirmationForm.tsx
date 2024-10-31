@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -21,6 +22,7 @@ import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { FormRedirectLink } from "@/components/utils/forms/links/FormRedirectLink";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { useTimer } from "@/hooks/useTimer";
 import { emailConfirmationMessages } from "@/messages/EmailConfirmationForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
@@ -33,6 +35,13 @@ const emailConformationFormSchema = z.object({
 type EmailConfirmationFormData = z.infer<typeof emailConformationFormSchema>;
 
 export function EmailConfirmationForm() {
+    const FIVE_MINUTES_IN_SECONDS = 60 * 5;
+
+    const { formattedTimer, timer, resetTimer } = useTimer(
+        FIVE_MINUTES_IN_SECONDS,
+        "email-confirmation-timer"
+    );
+
     const form = useForm<EmailConfirmationFormData>({
         resolver: zodResolver(emailConformationFormSchema),
         defaultValues: {
@@ -40,7 +49,7 @@ export function EmailConfirmationForm() {
         },
     });
 
-    const { confirmEmailCode } = useAuthContext();
+    const { confirmEmailCode, sendEmailConfirmation, user } = useAuthContext();
 
     async function onSubmit(data: EmailConfirmationFormData) {
         try {
@@ -49,6 +58,28 @@ export function EmailConfirmationForm() {
             toast({
                 title: "Success",
                 description: "Your email has been confirmed.",
+            });
+        } catch (error: any) {
+            toast({
+                title: "Error",
+                description: error.message,
+                variant: "destructive",
+            });
+        }
+    }
+
+    async function resendEmailConfirmation() {
+        try {
+            if (!user?.email || timer) return;
+
+            await sendEmailConfirmation(user?.email);
+
+            resetTimer();
+
+            toast({
+                title: "Success",
+                description:
+                    "Email sent successfully. Please check your inbox.",
             });
         } catch (error: any) {
             toast({
@@ -101,7 +132,25 @@ export function EmailConfirmationForm() {
                 />
 
                 <div className="flex flex-col gap-5 items-center w-full">
-                    <SubmitButton>Continue</SubmitButton>
+                    <SubmitButton disabled={!timer}>Continue</SubmitButton>
+
+                    <Button
+                        disabled={!!timer}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            resendEmailConfirmation();
+                        }}
+                    >
+                        {timer ? formattedTimer : "Resend"}
+                    </Button>
+
+                    {!timer && (
+                        <FormMessage>
+                            Your code has expired. Please try resend a new
+                            e-mail.
+                        </FormMessage>
+                    )}
+
                     <FormRedirectLink
                         href="/auth/signup"
                         initialSentence="Do you want to modify the email?"

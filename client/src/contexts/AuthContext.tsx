@@ -9,11 +9,11 @@ import { CookieNames, PendingCookiesLabels } from "@/models/enums/cookies.enum";
 import { User } from "@/models/interfaces/user.interface";
 import { useRouter } from "next/navigation";
 import {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useState,
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
 } from "react";
 
 interface AuthContextProps {
@@ -21,6 +21,7 @@ interface AuthContextProps {
     signUp: (data: SignUpFormData) => Promise<void>;
     signIn: (data: SignInFormFormData) => Promise<void>;
     confirmEmailCode: (code: string) => Promise<void>;
+    sendEmailConfirmation: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -146,7 +147,13 @@ export default function AuthContextProvider({
 
     return (
         <AuthContext.Provider
-            value={{ user, signUp, signIn, confirmEmailCode }}
+            value={{
+                user,
+                signUp,
+                signIn,
+                confirmEmailCode,
+                sendEmailConfirmation,
+            }}
         >
             {children}
         </AuthContext.Provider>
