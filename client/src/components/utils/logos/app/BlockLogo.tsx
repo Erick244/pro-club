@@ -13,8 +13,8 @@ export function BlockLogo({ invert, ...props }: BlockLogoProps) {
                 className="w-auto h-auto rounded-lg"
                 src={
                     invert
-                        ? "/logos/logo-block_invert.png"
-                        : "/logos/logo-block.png"
+                        ? "/images/logos/logo-block_invert.png"
+                        : "/images/logos/logo-block.png"
                 }
                 alt="ProClub block logo"
                 width={231}

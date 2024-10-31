@@ -45,11 +45,6 @@ export function SignInFormForm() {
     async function onSubmit(data: SignInFormFormData) {
         try {
             await signIn(data);
-
-            toast({
-                title: "Success. Welcome back!",
-                description: "You're now logged in.",
-            });
         } catch (error: any) {
             toast({
                 title: "Error",

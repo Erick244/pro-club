@@ -57,11 +57,6 @@ export function SignUpForm() {
     async function onSubmit(data: SignUpFormData) {
         try {
             await signUp(data);
-
-            toast({
-                title: "Success. You have successfully signed up!",
-                description: "Please check your email to verify your account.",
-            });
         } catch (error: any) {
             toast({
                 title: "Error",

@@ -57,16 +57,7 @@ export default function AuthContextProvider({
 
     useEffect(() => {
         recoverUser();
-
-        const isOAuthAndNotHaveCountry = user?.oauth && !user?.country;
-        if (isOAuthAndNotHaveCountry) {
-            setPendingCookie({
-                label: PendingCookiesLabels.SIGN_UP_DETAILS,
-                isPending: true,
-                redirectPath: "/auth/signup/details",
-            });
-        }
-    }, [recoverUser, user?.country, user?.oauth]);
+    }, [recoverUser]);
 
     async function signUp(data: SignUpFormData) {
         const resp = await fetch(`${API_BASE_URL}/auth/signup`, {
@@ -81,91 +72,12 @@ export default function AuthContextProvider({
             await throwDefaultError(resp);
         }
 
-        const newUser = await resp.json();
-        await setCookie(CookieNames.SIGN_UP_USER, JSON.stringify(newUser));
-
-        await sendEmailConfirmation(newUser.email);
+        await signIn({ email: data.email, password: data.password });
     }
 
     async function throwDefaultError(resp: Response) {
         const error = await resp.json();
         throw new Error(error.message);
-    }
-
-    async function sendEmailConfirmation(email: string) {
-        await setPendingCookie({
-            label: PendingCookiesLabels.EMAIL_CONFIRMATION,
-            isPending: true,
-            redirectPath: "/auth/email-confirmation",
-        });
-
-        const resp = await fetch(`${API_BASE_URL}/email/sendCode`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email }),
-        });
-
-        if (!resp.ok) {
-            await throwDefaultError(resp);
-        }
-
-        router.push("/auth/email-confirmation");
-    }
-
-    async function setPendingCookie(pendingCookie: PendingCookie) {
-        const pendingCookiesString = await getCookie(CookieNames.PENDING);
-
-        if (!pendingCookiesString) {
-            await setCookie(
-                CookieNames.PENDING,
-                JSON.stringify([pendingCookie])
-            );
-            return;
-        }
-
-        const pendingCookies = JSON.parse(pendingCookiesString);
-
-        const pendingCookiesFiltered = pendingCookies.filter(
-            (pc: PendingCookie) => pc.label !== pendingCookie.label
-        );
-
-        await setCookie(
-            CookieNames.PENDING,
-            JSON.stringify([...pendingCookiesFiltered, pendingCookie])
-        );
-    }
-
-    async function confirmEmailCode(code: string) {
-        const signUpUser = await getCookie(CookieNames.SIGN_UP_USER);
-        const email = JSON.parse(signUpUser ?? "").email;
-
-        const resp = await fetch(`${API_BASE_URL}/email/confirmCode`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, code }),
-        });
-
-        if (!resp.ok) {
-            await throwDefaultError(resp);
-        }
-
-        await setPendingCookie({
-            label: PendingCookiesLabels.SIGN_UP_DETAILS,
-            isPending: true,
-            redirectPath: "/auth/signup/details",
-        });
-
-        await setPendingCookie({
-            label: PendingCookiesLabels.EMAIL_CONFIRMATION,
-            isPending: false,
-            redirectPath: "/auth/email-confirmation",
-        });
-
-        router.push(`/auth/signin?email=${encodeURIComponent(email ?? "")}`);
     }
 
     async function signIn(data: SignInFormFormData) {
@@ -181,7 +93,8 @@ export default function AuthContextProvider({
             await throwDefaultError(resp);
         }
 
-        const { user, authToken } = await resp.json();
+        const { user, authToken }: { user: User; authToken: string } =
+            await resp.json();
 
         setUser(user);
 
@@ -192,16 +105,40 @@ export default function AuthContextProvider({
             path: "/",
         });
 
-        if (!user.country) {
-            await setPendingCookie({
-                label: PendingCookiesLabels.SIGN_UP_DETAILS,
-                isPending: true,
-                redirectPath: "/auth/signup/details",
-            });
+        if (!user.emailConfirmed) {
+            await sendEmailConfirmation(user.email);
+        } else {
+            router.push("/");
+        }
+    }
 
-            router.push("/auth/signup/details");
+    async function sendEmailConfirmation(email: string) {
+        const resp = await fetch(`${API_BASE_URL}/email/sendCode`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        });
 
-            return;
+        if (!resp.ok) {
+            await throwDefaultError(resp);
+        }
+
+        router.push("/auth/email-confirmation");
+    }
+
+    async function confirmEmailCode(code: string) {
+        const resp = await fetch(`${API_BASE_URL}/email/confirmCode`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: user?.email, code }),
+        });
+
+        if (!resp.ok) {
+            await throwDefaultError(resp);
         }
 
         router.push("/");

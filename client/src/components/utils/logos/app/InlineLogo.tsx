@@ -7,7 +7,7 @@ export function InlineLogo({ ...props }: HTMLAttributes<HTMLElement>) {
         <div {...props} className={cn("overflow-hidden", props.className)}>
             <Image
                 className="w-auto h-auto rounded"
-                src="/logos/logo-inline.png"
+                src="/images/logos/logo-inline.png"
                 alt="ProClub inline logo"
                 width={250}
                 height={60}

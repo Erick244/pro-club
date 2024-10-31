@@ -47,8 +47,8 @@ export function EmailConfirmationForm() {
             await confirmEmailCode(data.code);
 
             toast({
-                title: "Email confirmed!",
-                description: "You can now sign in.",
+                title: "Success",
+                description: "Your email has been confirmed.",
             });
         } catch (error: any) {
             toast({
