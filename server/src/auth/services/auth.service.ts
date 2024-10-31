@@ -97,7 +97,6 @@ export class AuthService {
     signOut(dto: SignOutDto, res: Response): void {
         try {
             res.clearCookie(CookiesNames.AUTH_TOKEN);
-            res.clearCookie(CookiesNames.PENDING);
 
             res.redirect(dto.redirectPath);
         } catch (error: any) {

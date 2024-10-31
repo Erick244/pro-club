@@ -267,9 +267,6 @@ describe("AuthService", () => {
             expect(mockRes.clearCookie).toHaveBeenCalledWith(
                 CookiesNames.AUTH_TOKEN,
             );
-            expect(mockRes.clearCookie).toHaveBeenCalledWith(
-                CookiesNames.PENDING,
-            );
             expect(mockRes.redirect).toHaveBeenCalledWith(dto.redirectPath);
         });
 
