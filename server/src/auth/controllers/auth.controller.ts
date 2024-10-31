@@ -16,7 +16,6 @@ export class AuthController {
         return await this.authService.signUp(dto);
     }
 
-    // @UseGuards(EmailConfirmedGuard)
     @Post("/signin")
     async signIn(@Body() dto: SignInRequestDto): Promise<SignInResponseDto> {
         return await this.authService.signIn(dto);
