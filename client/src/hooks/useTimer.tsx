@@ -23,8 +23,8 @@ export function useTimer(startTime: number, localStorageKey: string) {
         }, ONE_SECOND_IN_MS);
 
         if (timer === 0) {
-            localStorage.removeItem(localStorageKey);
             clearInterval(interval);
+            localStorage.setItem(localStorageKey, "0");
         }
 
         return () => {
