@@ -2,6 +2,6 @@ import { IsNotEmpty, IsUrl } from "class-validator";
 
 export class SignOutDto {
     @IsNotEmpty()
-    @IsUrl()
+    @IsUrl({ host_whitelist: ["localhost"] })
     redirectPath: string;
 }
