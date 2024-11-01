@@ -1,14 +1,7 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Post,
-    Req,
-    Res,
-    UseGuards,
-} from "@nestjs/common";
+import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
 import { User } from "@prisma/client";
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AuthUser } from "../decorators/auth-user.decorator";
 import { AuthGuard } from "../guards/auth.guard";
 import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
@@ -33,8 +26,8 @@ export class AuthController {
 
     @UseGuards(AuthGuard)
     @Get("/userByToken")
-    userByToken(@Req() req: Request): User {
-        return req.user as User;
+    userByToken(@AuthUser() user: User): User {
+        return user;
     }
 
     @UseGuards(AuthGuard)

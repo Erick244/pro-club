@@ -1,7 +1,7 @@
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { PrismaService } from "../../db/prisma.service";
 import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
@@ -97,14 +97,13 @@ describe("AuthController", () => {
 
     describe("user by token", () => {
         it("should return user by token", () => {
-            const req = {
-                user: {
-                    id: 123,
-                    email: "john.doe@example.com",
-                },
-            } as unknown as Request;
+            const mockUser = {
+                id: 123,
+                name: "John Doe",
+                email: "john.doe@example.com",
+            } as unknown as User;
 
-            expect(controller.userByToken(req)).toStrictEqual(req.user);
+            expect(controller.userByToken(mockUser)).toStrictEqual(mockUser);
         });
     });
 
