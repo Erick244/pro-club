@@ -1,7 +1,6 @@
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
-import { Request } from "express";
 import { PrismaService } from "../../db/prisma.service";
 import { UpdateUserDto } from "../models/dtos/update-user.dto";
 import { UserService } from "../services/user.service";
@@ -38,26 +37,24 @@ describe("UserController", () => {
 
     describe("update", () => {
         it("should update a user", async () => {
+            const mockUser = {
+                id: 1,
+                name: "Other Name",
+                email: "other@example.com",
+            } as unknown as User;
             const dto: UpdateUserDto = {
                 email: "test@example.com",
                 name: "John Doe",
             };
-
             const updatedUser = {
-                id: 1,
+                id: mockUser.id,
                 ...dto,
             } as unknown as User;
 
-            const req = {
-                user: {
-                    id: 1,
-                },
-            } as unknown as Request;
-
             jest.spyOn(mockUserService, "update").mockReturnValue(updatedUser);
 
-            expect(await controller.update(dto, req)).toBe(updatedUser);
-            expect(userService.update).toHaveBeenCalledWith(dto, 1);
+            expect(await controller.update(dto, mockUser)).toBe(updatedUser);
+            expect(userService.update).toHaveBeenCalledWith(dto, mockUser.id);
         });
     });
 });

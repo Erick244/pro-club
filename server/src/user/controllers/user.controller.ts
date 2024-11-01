@@ -1,6 +1,6 @@
-import { Body, Controller, Patch, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Patch, UseGuards } from "@nestjs/common";
 import { User } from "@prisma/client";
-import { Request } from "express";
+import { AuthUser } from "../../auth/decorators/auth-user.decorator";
 import { AuthGuard } from "../../auth/guards/auth.guard";
 import { UpdateUserDto } from "../models/dtos/update-user.dto";
 import { UserService } from "../services/user.service";
@@ -11,7 +11,7 @@ export class UserController {
 
     @UseGuards(AuthGuard)
     @Patch("/update")
-    async update(@Body() dto: UpdateUserDto, @Req() { user }: Request) {
-        return this.usrService.update(dto, (user as User).id);
+    async update(@Body() dto: UpdateUserDto, @AuthUser() { id }: User) {
+        return this.usrService.update(dto, id);
     }
 }
