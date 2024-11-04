@@ -1,15 +1,9 @@
-import {
-    Controller,
-    Get,
-    Req,
-    Res,
-    UseFilters,
-    UseGuards,
-} from "@nestjs/common";
+import { Controller, Get, Res, UseFilters, UseGuards } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AuthGuard as OAuthGuard } from "@nestjs/passport";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { ONE_MONTH_IN_SECONDS } from "../../../constants";
+import { OAuthUser } from "../decorators/oauth-user.decorator";
 import { OAuthExceptionFilter } from "../filters/oauth-exception.filter";
 import { OAuthDto } from "../models/dtos/oauth.dto";
 import { CookiesNames } from "../models/enums/cookies.enum";
@@ -25,8 +19,8 @@ export class OAuthController {
 
     @Get(["/google", "/google/callback"])
     @UseGuards(OAuthGuard("google"))
-    async googleAuth(@Req() req: Request, @Res() res: Response) {
-        const authToken = await this.oAuthService.auth(req.user as OAuthDto);
+    async googleAuth(@OAuthUser() oauthUser: OAuthDto, @Res() res: Response) {
+        const authToken = await this.oAuthService.auth(oauthUser);
 
         this.setAuthTokenInCookies(authToken, res);
 
@@ -50,8 +44,8 @@ export class OAuthController {
 
     @Get(["/facebook", "/facebook/callback"])
     @UseGuards(OAuthGuard("facebook"))
-    async facebookAuth(@Req() req: Request, @Res() res: Response) {
-        const authToken = await this.oAuthService.auth(req.user as OAuthDto);
+    async facebookAuth(@OAuthUser() oauthUser: OAuthDto, @Res() res: Response) {
+        const authToken = await this.oAuthService.auth(oauthUser);
 
         await this.setAuthTokenInCookies(authToken, res);
 
@@ -60,8 +54,8 @@ export class OAuthController {
 
     @Get(["/discord", "/discord/callback"])
     @UseGuards(OAuthGuard("discord"))
-    async discordAuth(@Req() req: Request, @Res() res: Response) {
-        const authToken = await this.oAuthService.auth(req.user as OAuthDto);
+    async discordAuth(@OAuthUser() oauthUser: OAuthDto, @Res() res: Response) {
+        const authToken = await this.oAuthService.auth(oauthUser);
 
         await this.setAuthTokenInCookies(authToken, res);
 
@@ -70,8 +64,8 @@ export class OAuthController {
 
     @Get(["/github", "/github/callback"])
     @UseGuards(OAuthGuard("github"))
-    async githubAuth(@Req() req: Request, @Res() res: Response) {
-        const authToken = await this.oAuthService.auth(req.user as OAuthDto);
+    async githubAuth(@OAuthUser() oauthUser: OAuthDto, @Res() res: Response) {
+        const authToken = await this.oAuthService.auth(oauthUser);
 
         await this.setAuthTokenInCookies(authToken, res);
 
