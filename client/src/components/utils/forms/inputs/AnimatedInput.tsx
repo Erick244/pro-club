@@ -7,6 +7,7 @@ import {
     FocusEvent,
     forwardRef,
     HTMLAttributes,
+    HTMLInputTypeAttribute,
     Ref,
     useId,
     useState,
@@ -15,6 +16,7 @@ import {
 interface AnimatedInputProps extends HTMLAttributes<HTMLInputElement> {
     label: string;
     value?: string;
+    type?: HTMLInputTypeAttribute;
 }
 
 export const AnimatedInput = forwardRef(
