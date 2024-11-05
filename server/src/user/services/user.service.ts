@@ -9,12 +9,16 @@ export class UserService {
 
     async update(dto: UpdateUserDto, id: number): Promise<User> {
         try {
-            return await this.prismaService.user.update({
+            const updatedUser = await this.prismaService.user.update({
                 where: {
                     id,
                 },
                 data: dto,
             });
+
+            delete updatedUser.password;
+
+            return updatedUser;
         } catch (error: any) {
             throw new InternalServerErrorException(error.message);
         }
