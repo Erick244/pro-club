@@ -24,7 +24,7 @@ export function useTimer(startTime: number, localStorageKey: string) {
 
         if (timer === 0) {
             clearInterval(interval);
-            localStorage.setItem(localStorageKey, "0");
+            localStorage.removeItem(localStorageKey);
         }
 
         return () => {
