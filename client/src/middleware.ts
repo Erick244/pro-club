@@ -52,7 +52,7 @@ export async function middleware(req: NextRequest) {
             latestPendingIssue = pendingIssue;
         }
     } catch (error) {
-        return redirectTo("/auth/signUp", req.url);
+        return redirectTo("/auth/signup", req.url);
     }
 }
 

@@ -33,6 +33,6 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Post("/signout")
     signOut(@Body() dto: SignOutDto, @Res() res: Response): void {
-        this.authService.signOut(dto, res);
+        return this.authService.signOut(dto, res);
     }
 }

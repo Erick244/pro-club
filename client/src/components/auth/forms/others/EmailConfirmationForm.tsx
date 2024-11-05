@@ -4,6 +4,14 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import {
     Form,
     FormControl,
     FormDescription,
@@ -20,19 +28,21 @@ import {
 } from "@/components/ui/input-otp";
 import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
-import { FormRedirectLink } from "@/components/utils/forms/links/FormRedirectLink";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useTimer } from "@/hooks/useTimer";
 import { emailConfirmationMessages } from "@/messages/EmailConfirmationForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { useForm } from "react-hook-form";
+import { EmailUpdateForm } from "./EmailUpdateForm";
 
 const emailConformationFormSchema = z.object({
     code: z.string().min(6, emailConfirmationMessages.code),
 });
 
 type EmailConfirmationFormData = z.infer<typeof emailConformationFormSchema>;
+
+//TODO: Clean
 
 export function EmailConfirmationForm() {
     const FIVE_MINUTES_IN_SECONDS = 60 * 5;
@@ -151,13 +161,36 @@ export function EmailConfirmationForm() {
                         </FormMessage>
                     )}
 
-                    <FormRedirectLink
-                        href="/auth/signup"
-                        initialSentence="Do you want to modify the email?"
-                        flashyText="Click here"
-                    />
+                    <EmailUpdateDialog />
                 </div>
             </form>
         </Form>
+    );
+}
+
+function EmailUpdateDialog() {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button
+                    size={"sm"}
+                    variant={"link"}
+                    className="text-foreground space-x-1"
+                >
+                    <span>Need to change your email?</span>
+                    <span className="text-primary underline">Click here.</span>
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader className="mb-5">
+                    <DialogTitle>Change E-mail</DialogTitle>
+                    <DialogDescription>
+                        After updating your e-mail address, you will be asked to
+                        log in again.
+                    </DialogDescription>
+                </DialogHeader>
+                <EmailUpdateForm />
+            </DialogContent>
+        </Dialog>
     );
 }

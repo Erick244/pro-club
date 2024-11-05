@@ -9,11 +9,11 @@ import { CookieNames, PendingCookiesLabels } from "@/models/enums/cookies.enum";
 import { User } from "@/models/interfaces/user.interface";
 import { useRouter } from "next/navigation";
 import {
-	createContext,
-	useCallback,
-	useContext,
-	useEffect,
-	useState,
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
 } from "react";
 
 interface AuthContextProps {

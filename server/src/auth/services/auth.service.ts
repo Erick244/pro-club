@@ -98,7 +98,7 @@ export class AuthService {
         try {
             res.clearCookie(CookiesNames.AUTH_TOKEN);
 
-            res.redirect(dto.redirectPath);
+            return res.redirect(dto.redirectPath);
         } catch (error: any) {
             throw new ForbiddenException(error.message);
         }
