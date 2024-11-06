@@ -1,4 +1,5 @@
 import { ForbiddenException, NotFoundException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
@@ -6,16 +7,14 @@ import * as bcrypt from "bcrypt";
 import { Response } from "express";
 import { PrismaService } from "../../db/prisma.service";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
-import { SignOutDto } from "../models/dtos/sign-out/sign-out.dto";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
 import { SignUpResponseDto } from "../models/dtos/sign-up/sign-up-response.dto";
 import { CookiesNames } from "../oauth/models/enums/cookies.enum";
 import { AuthService } from "./auth.service";
 describe("AuthService", () => {
     let service: AuthService;
-    let prismaService: PrismaService;
-    let jwtService: JwtService;
 
+    let prismaService: PrismaService;
     const mockPrismaService = {
         user: {
             findUnique: jest.fn(),
@@ -23,8 +22,14 @@ describe("AuthService", () => {
         },
     };
 
+    let jwtService: JwtService;
     const mockJwtService = {
         signAsync: jest.fn(),
+    };
+
+    let configService: ConfigService;
+    const mockConfigService = {
+        get: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -39,12 +44,17 @@ describe("AuthService", () => {
                     provide: JwtService,
                     useValue: mockJwtService,
                 },
+                {
+                    provide: ConfigService,
+                    useValue: mockConfigService,
+                },
             ],
         }).compile();
 
         service = module.get(AuthService);
         prismaService = module.get(PrismaService);
         jwtService = module.get(JwtService);
+        configService = module.get(ConfigService);
     });
 
     it("should be defined", () => {
@@ -252,38 +262,39 @@ describe("AuthService", () => {
 
     describe("sign out", () => {
         it("should sign out a user", async () => {
-            const dto: SignOutDto = {
-                redirectPath: "url",
-            };
+            const redirectPath = "/pathname";
+            const frontendUrl = "frontend_url";
 
             const mockRes = {
                 clearCookie: jest.fn(),
                 redirect: jest.fn(),
             } as unknown as Response;
 
-            service.signOut(dto, mockRes);
+            jest.spyOn(mockConfigService, "get").mockReturnValue(frontendUrl);
+
+            await service.signOut(redirectPath, mockRes);
 
             expect(mockRes.clearCookie).toHaveBeenCalledWith(
                 CookiesNames.AUTH_TOKEN,
             );
-            expect(mockRes.redirect).toHaveBeenCalledWith(dto.redirectPath);
+            expect(configService.get).toHaveBeenCalledWith("FRONTEND_URL");
+            expect(mockRes.redirect).toHaveBeenCalledWith(
+                `${frontendUrl}${redirectPath}`,
+            );
         });
 
         it("should throw ForbiddenException if an error occurs", async () => {
-            const dto: SignOutDto = {
-                redirectPath: "url",
-            };
+            const redirectPath = "pathname";
 
             const mockRes = {
                 clearCookie: jest.fn().mockImplementation(() => {
                     throw Error("error");
                 }),
-                redirect: jest.fn(),
             } as unknown as Response;
 
-            expect(() => service.signOut(dto, mockRes)).toThrow(
-                ForbiddenException,
-            );
+            await expect(
+                service.signOut(redirectPath, mockRes),
+            ).rejects.toThrow(ForbiddenException);
         });
     });
 });

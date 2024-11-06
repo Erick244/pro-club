@@ -5,7 +5,6 @@ import { Response } from "express";
 import { PrismaService } from "../../db/prisma.service";
 import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
-import { SignOutDto } from "../models/dtos/sign-out/sign-out.dto";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
 import { SignUpResponseDto } from "../models/dtos/sign-up/sign-up-response.dto";
 import { AuthService } from "../services/auth.service";
@@ -109,9 +108,7 @@ describe("AuthController", () => {
 
     describe("sign out", () => {
         it("should sign out user", () => {
-            const dto: SignOutDto = {
-                redirectPath: "url",
-            };
+            const redirectPath = "/pathname";
 
             const res = {
                 clearCookie: jest.fn(),
@@ -120,9 +117,9 @@ describe("AuthController", () => {
 
             jest.spyOn(mockAuthService, "signOut");
 
-            controller.signOut(dto, res);
+            controller.signOut(redirectPath, res);
 
-            expect(authService.signOut).toHaveBeenCalledWith(dto, res);
+            expect(authService.signOut).toHaveBeenCalledWith(redirectPath, res);
         });
     });
 });
