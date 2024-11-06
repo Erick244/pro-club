@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { AuthGuard as OAuthGuard } from "@nestjs/passport";
 import { Response } from "express";
 import { ONE_MONTH_IN_SECONDS } from "../../../constants";
+import { ConfigEnvNames } from "../../../models/enums/env-names.enum";
 import { OAuthUser } from "../decorators/oauth-user.decorator";
 import { OAuthExceptionFilter } from "../filters/oauth-exception.filter";
 import { OAuthDto } from "../models/dtos/oauth.dto";
@@ -37,7 +38,9 @@ export class OAuthController {
     }
 
     private async redirectToFrontend(res: Response) {
-        const redirectUrl = await this.configService.get("FRONTEND_URL");
+        const redirectUrl = await this.configService.get(
+            ConfigEnvNames.FRONTEND_URL,
+        );
 
         return res.redirect(redirectUrl);
     }

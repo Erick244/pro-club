@@ -6,6 +6,7 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Response } from "express";
+import { ConfigEnvNames } from "../../../models/enums/env-names.enum";
 
 @Catch(UnauthorizedException)
 export class OAuthExceptionFilter implements ExceptionFilter {
@@ -15,7 +16,7 @@ export class OAuthExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const res = ctx.getResponse<Response>();
 
-        const frontendUrl = this.configService.get("FRONTEND_URL");
+        const frontendUrl = this.configService.get(ConfigEnvNames.FRONTEND_URL);
         res.redirect(frontendUrl);
     }
 }

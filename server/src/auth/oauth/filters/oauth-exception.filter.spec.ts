@@ -3,6 +3,7 @@ import { HttpArgumentsHost } from "@nestjs/common/interfaces";
 import { ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { Response } from "express";
+import { ConfigEnvNames } from "../../../models/enums/env-names.enum";
 import { OAuthExceptionFilter } from "./oauth-exception.filter";
 
 describe("OAuthExceptionFilter", () => {
@@ -48,7 +49,9 @@ describe("OAuthExceptionFilter", () => {
 
         expect(host.switchToHttp).toHaveBeenCalled();
         expect(ctx.getResponse).toHaveBeenCalled();
-        expect(configService.get).toHaveBeenCalledWith("FRONTEND_URL");
+        expect(configService.get).toHaveBeenCalledWith(
+            ConfigEnvNames.FRONTEND_URL,
+        );
         expect(response.redirect).toHaveBeenCalledWith(frontendUrl);
     });
 });

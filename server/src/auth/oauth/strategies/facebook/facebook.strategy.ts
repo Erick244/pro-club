@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-facebook";
+import { OAuthFacebookEnvNames } from "../../../../models/enums/env-names.enum";
 import { OAuthDto } from "../../models/dtos/oauth.dto";
 import { VerifyCallback } from "../../models/types/verify-callback.type";
 
@@ -9,9 +10,15 @@ import { VerifyCallback } from "../../models/types/verify-callback.type";
 export class FacebookStrategy extends PassportStrategy(Strategy, "facebook") {
     constructor(private configService: ConfigService) {
         super({
-            clientID: configService.get("FACEBOOK_CLIENT_ID"),
-            clientSecret: configService.get("FACEBOOK_CLIENT_SECRET"),
-            callbackURL: configService.get("FACEBOOK_CALLBACK_URL"),
+            clientID: configService.get(
+                OAuthFacebookEnvNames.FACEBOOK_CLIENT_ID,
+            ),
+            clientSecret: configService.get(
+                OAuthFacebookEnvNames.FACEBOOK_CLIENT_SECRET,
+            ),
+            callbackURL: configService.get(
+                OAuthFacebookEnvNames.FACEBOOK_CALLBACK_URL,
+            ),
             profileFields: ["displayName", "email"],
             scope: ["email"],
         });
