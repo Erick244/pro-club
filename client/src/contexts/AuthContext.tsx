@@ -4,7 +4,11 @@ import { AuthorizationFetch } from "@/api/AuthorizationFetch";
 import { SignInFormFormData } from "@/components/auth/forms/sign-in/SignInForm";
 import { SignUpFormData } from "@/components/auth/forms/sign-up/SignUpForm";
 import { API_BASE_URL } from "@/constants";
-import { getCookie, setCookie } from "@/functions/client-cookie-store";
+import {
+    delCookie,
+    getCookie,
+    setCookie,
+} from "@/functions/client-cookie-store";
 import { CookieNames, PendingCookiesLabels } from "@/models/enums/cookies.enum";
 import { User } from "@/models/interfaces/user.interface";
 import { useRouter } from "next/navigation";
@@ -22,6 +26,7 @@ interface AuthContextProps {
     signIn: (data: SignInFormFormData) => Promise<void>;
     confirmEmailCode: (code: string) => Promise<void>;
     sendEmailConfirmation: (email: string) => Promise<void>;
+    signOut: (redirectPath?: string) => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -145,6 +150,12 @@ export default function AuthContextProvider({
         router.push("/");
     }
 
+    async function signOut(redirectPath: string = "/auth/signup") {
+        await delCookie(CookieNames.AUTH_TOKEN);
+
+        router.push(redirectPath);
+    }
+
     return (
         <AuthContext.Provider
             value={{
@@ -153,6 +164,7 @@ export default function AuthContextProvider({
                 signIn,
                 confirmEmailCode,
                 sendEmailConfirmation,
+                signOut,
             }}
         >
             {children}
