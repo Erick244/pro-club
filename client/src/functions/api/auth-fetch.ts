@@ -1,5 +1,5 @@
 import { CookieNames } from "@/models/enums/cookies.enum";
-import { getCookie } from "../cookies/client-cookie-store";
+import { getCookie } from "../cookies/cookie-store";
 
 export async function authFetch(
     url: string,

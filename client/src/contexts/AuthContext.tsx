@@ -8,7 +8,7 @@ import {
     delCookie,
     getCookie,
     setCookie,
-} from "@/functions/cookies/client-cookie-store";
+} from "@/functions/cookies/cookie-store";
 import { throwDefaultError } from "@/functions/errors/exceptions";
 import { CookieNames, PendingCookiesLabels } from "@/models/enums/cookies.enum";
 import { User } from "@/models/interfaces/user.interface";
