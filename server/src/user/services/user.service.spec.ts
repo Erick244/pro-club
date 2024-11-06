@@ -1,4 +1,7 @@
-import { InternalServerErrorException } from "@nestjs/common";
+import {
+    InternalServerErrorException,
+    NotAcceptableException,
+} from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
 import { PrismaService } from "../../db/prisma.service";
@@ -12,6 +15,7 @@ describe("UserService", () => {
     const mockPrismaService = {
         user: {
             update: jest.fn(),
+            findUnique: jest.fn(),
         },
     };
 
@@ -46,16 +50,52 @@ describe("UserService", () => {
                 ...dto,
             } as unknown as User;
 
+            jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue(
+                null,
+            );
             jest.spyOn(mockPrismaService.user, "update").mockReturnValue(
                 userUpdated,
             );
 
             expect(await service.update(dto, 1)).toStrictEqual(userUpdated);
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email: dto.email,
+                },
+            });
             expect(prismaService.user.update).toHaveBeenCalledWith({
                 where: {
                     id: 1,
                 },
                 data: dto,
+            });
+        });
+
+        it("should throw a NotAcceptableException if dto.email is already in use", async () => {
+            const dto: UpdateUserDto = {
+                email: "test@example.com",
+                name: "John Doe",
+            };
+
+            const userUpdated = {
+                id: 1,
+                ...dto,
+            } as unknown as User;
+
+            jest.spyOn(mockPrismaService.user, "update").mockReturnValue(
+                userUpdated,
+            );
+            jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue(
+                {} as User,
+            );
+
+            await expect(service.update(dto, 1)).rejects.toThrow(
+                NotAcceptableException,
+            );
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email: dto.email,
+                },
             });
         });
 
@@ -65,6 +105,9 @@ describe("UserService", () => {
                 name: "John Doe",
             };
 
+            jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue(
+                null,
+            );
             jest.spyOn(mockPrismaService.user, "update").mockRejectedValue(
                 new Error("Database error"),
             );
@@ -72,6 +115,11 @@ describe("UserService", () => {
             await expect(service.update(dto, 1)).rejects.toThrow(
                 InternalServerErrorException,
             );
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email: dto.email,
+                },
+            });
             expect(prismaService.user.update).toHaveBeenCalledWith({
                 where: {
                     id: 1,
