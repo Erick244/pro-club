@@ -1,14 +1,15 @@
 "use client";
 
-import { AuthorizationFetch } from "@/api/AuthorizationFetch";
 import { SignInFormFormData } from "@/components/auth/forms/sign-in/SignInForm";
 import { SignUpFormData } from "@/components/auth/forms/sign-up/SignUpForm";
 import { API_BASE_URL } from "@/constants";
+import { authFetch } from "@/functions/api/auth-fetch";
 import {
     delCookie,
     getCookie,
     setCookie,
-} from "@/functions/client-cookie-store";
+} from "@/functions/cookies/client-cookie-store";
+import { throwDefaultError } from "@/functions/errors/exceptions";
 import { CookieNames, PendingCookiesLabels } from "@/models/enums/cookies.enum";
 import { User } from "@/models/interfaces/user.interface";
 import { useRouter } from "next/navigation";
@@ -54,9 +55,13 @@ export default function AuthContextProvider({
             return;
         }
 
-        const userByToken = await AuthorizationFetch(
-            `${API_BASE_URL}/auth/userByToken`
-        );
+        const reps = await authFetch(`${API_BASE_URL}/auth/userByToken`);
+
+        if (!reps.ok) {
+            await throwDefaultError(reps);
+        }
+
+        const userByToken = (await reps.json()) as User;
 
         setUser(userByToken);
     }, []);
@@ -79,11 +84,6 @@ export default function AuthContextProvider({
         }
 
         await signIn({ email: data.email, password: data.password });
-    }
-
-    async function throwDefaultError(resp: Response) {
-        const error = await resp.json();
-        throw new Error(error.message);
     }
 
     async function signIn(data: SignInFormFormData) {

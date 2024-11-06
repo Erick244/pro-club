@@ -3,7 +3,7 @@
 import { CookieNames } from "@/models/enums/cookies.enum";
 import { cookies } from "next/headers";
 
-export async function AuthorizationFetch(url: string, options?: RequestInit) {
+export async function authFetch(url: string, options?: RequestInit): Promise<Response> {
     const authToken = cookies().get(CookieNames.AUTH_TOKEN)?.value;
 
     const resp = await fetch(url, {
@@ -14,7 +14,5 @@ export async function AuthorizationFetch(url: string, options?: RequestInit) {
         },
     });
 
-    if (resp.ok && resp.json) {
-        return await resp.json();
-    }
+    return resp;
 }

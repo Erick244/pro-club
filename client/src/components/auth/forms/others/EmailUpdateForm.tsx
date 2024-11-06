@@ -1,19 +1,20 @@
 "use client";
 
-import { AuthorizationFetch } from "@/api/AuthorizationFetch";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { API_BASE_URL } from "@/constants";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { authFetch } from "@/functions/api/auth-fetch";
+import { throwDefaultError } from "@/functions/errors/exceptions";
 import { emailUpdateMessages } from "@/messages/EmailUpdateForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -37,7 +38,7 @@ export function EmailUpdateForm() {
 
     async function onSubmit({ email }: EmailUpdateFormData) {
         try {
-            await AuthorizationFetch(`${API_BASE_URL}/users/update`, {
+            const resp = await authFetch(`${API_BASE_URL}/users/update`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -46,6 +47,10 @@ export function EmailUpdateForm() {
                     email,
                 }),
             });
+
+            if (!resp.ok) {
+                await throwDefaultError(resp);
+            }
 
             await signOut(`/auth/signin?email=${encodeURIComponent(email)}`);
 
