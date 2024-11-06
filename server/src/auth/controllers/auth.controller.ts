@@ -1,14 +1,5 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Post,
-    Query,
-    Res,
-    UseGuards,
-} from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { User } from "@prisma/client";
-import { Response } from "express";
 import { AuthUser } from "../decorators/auth-user.decorator";
 import { AuthGuard } from "../guards/auth.guard";
 import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
@@ -35,14 +26,5 @@ export class AuthController {
     @Get("/userByToken")
     userByToken(@AuthUser() user: User): User {
         return user;
-    }
-
-    @UseGuards(AuthGuard)
-    @Post("/signout")
-    async signOut(
-        @Query("redirectPath") redirectPath: string,
-        @Res() res: Response,
-    ): Promise<void> {
-        return await this.authService.signOut(redirectPath, res);
     }
 }

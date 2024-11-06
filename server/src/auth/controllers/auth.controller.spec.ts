@@ -1,7 +1,6 @@
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
-import { Response } from "express";
 import { PrismaService } from "../../db/prisma.service";
 import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
@@ -103,23 +102,6 @@ describe("AuthController", () => {
             } as unknown as User;
 
             expect(controller.userByToken(mockUser)).toStrictEqual(mockUser);
-        });
-    });
-
-    describe("sign out", () => {
-        it("should sign out user", () => {
-            const redirectPath = "/pathname";
-
-            const res = {
-                clearCookie: jest.fn(),
-                redirect: jest.fn(),
-            } as unknown as Response;
-
-            jest.spyOn(mockAuthService, "signOut");
-
-            controller.signOut(redirectPath, res);
-
-            expect(authService.signOut).toHaveBeenCalledWith(redirectPath, res);
         });
     });
 });

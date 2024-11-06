@@ -3,23 +3,19 @@ import {
     Injectable,
     NotFoundException,
 } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { Response } from "express";
 import { PrismaService } from "../../db/prisma.service";
 import { SignInResponseDto } from "../models/dtos/sign-in/sign-in-response.dto";
 import { SignInRequestDto } from "../models/dtos/sign-in/sign-in.request.dto";
 import { SignUpRequestDto } from "../models/dtos/sign-up/sign-up-request.dto";
 import { SignUpResponseDto } from "../models/dtos/sign-up/sign-up-response.dto";
-import { CookiesNames } from "../oauth/models/enums/cookies.enum";
 
 @Injectable()
 export class AuthService {
     constructor(
         private prismaService: PrismaService,
         private jwtService: JwtService,
-        private configService: ConfigService,
     ) {}
 
     async signUp(dto: SignUpRequestDto): Promise<SignUpResponseDto> {
@@ -90,18 +86,6 @@ export class AuthService {
                 user,
                 authToken,
             };
-        } catch (error: any) {
-            throw new ForbiddenException(error.message);
-        }
-    }
-
-    async signOut(redirectPath: string, res: Response): Promise<void> {
-        try {
-            res.clearCookie(CookiesNames.AUTH_TOKEN);
-
-            const frontendUrl = await this.configService.get("FRONTEND_URL");
-
-            return res.redirect(`${frontendUrl}${redirectPath}`);
         } catch (error: any) {
             throw new ForbiddenException(error.message);
         }
