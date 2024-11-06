@@ -1,10 +1,11 @@
-"use server";
-
 import { CookieNames } from "@/models/enums/cookies.enum";
-import { cookies } from "next/headers";
+import { getCookie } from "../cookies/client-cookie-store";
 
-export async function authFetch(url: string, options?: RequestInit): Promise<Response> {
-    const authToken = cookies().get(CookieNames.AUTH_TOKEN)?.value;
+export async function authFetch(
+    url: string,
+    options?: RequestInit
+): Promise<Response> {
+    const authToken = await getCookie(CookieNames.AUTH_TOKEN);
 
     const resp = await fetch(url, {
         ...options,
