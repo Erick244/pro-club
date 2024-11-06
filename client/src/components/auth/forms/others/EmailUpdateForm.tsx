@@ -1,19 +1,21 @@
 "use client";
 
+import { AuthorizationFetch } from "@/api/AuthorizationFetch";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@/components/ui/dialog";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
+import { API_BASE_URL } from "@/constants";
+import { useAuthContext } from "@/contexts/AuthContext";
 import { emailUpdateMessages } from "@/messages/EmailUpdateForm.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -31,11 +33,27 @@ export function EmailUpdateForm() {
         },
     });
 
-    const router = useRouter();
+    const { signOut } = useAuthContext();
 
     async function onSubmit({ email }: EmailUpdateFormData) {
         try {
-            console.log(email);
+            await AuthorizationFetch(`${API_BASE_URL}/users/update`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                }),
+            });
+
+            await signOut(`/auth/signin?email=${encodeURIComponent(email)}`);
+
+            toast({
+                title: "Success",
+                description:
+                    "Your email has been updated. Now you can sign in with your new email.",
+            });
         } catch (error: any) {
             toast({
                 title: "Error",
