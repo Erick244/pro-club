@@ -175,7 +175,6 @@ describe("AuthService", () => {
             );
             expect(jwtService.signAsync).toHaveBeenCalledWith({
                 userId: 123,
-                email: dto.email,
             });
         });
 

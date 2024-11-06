@@ -80,7 +80,6 @@ describe("AuthGuard", () => {
             expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: {
                     id: payload.userId,
-                    email: payload.email,
                 },
             });
             expect(mockReq.user).toEqual(user);
@@ -122,7 +121,6 @@ describe("AuthGuard", () => {
             expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: {
                     id: payload.userId,
-                    email: payload.email,
                 },
             });
         });

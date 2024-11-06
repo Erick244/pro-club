@@ -1,7 +1,7 @@
 import { OmitType } from "@nestjs/mapped-types";
 import { OAuthProvider } from "@prisma/client";
 import { IsEnum, IsNotEmpty } from "class-validator";
-import { SignUpRequestDto } from "src/auth/models/dtos/sign-up/sign-up-request.dto";
+import { SignUpRequestDto } from "../../../models/dtos/sign-up/sign-up-request.dto";
 
 export class OAuthDto extends OmitType(SignUpRequestDto, [
     "confirmPassword",

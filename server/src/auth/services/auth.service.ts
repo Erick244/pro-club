@@ -80,7 +80,7 @@ export class AuthService {
                 throw new ForbiddenException("Password is incorrect.");
             }
 
-            const payload = { userId: user.id, email: user.email };
+            const payload = { userId: user.id };
             const authToken = await this.jwtService.signAsync(payload);
 
             delete user.password;

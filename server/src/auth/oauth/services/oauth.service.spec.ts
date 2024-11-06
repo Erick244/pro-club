@@ -59,7 +59,6 @@ describe("OAuthService", () => {
         it("should return JWT token", async () => {
             const payload = {
                 userId: mockUser.id,
-                email: mockUser.email,
             };
 
             jest.spyOn(jwtService, "signAsync").mockResolvedValue("auth-token");

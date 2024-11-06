@@ -1,7 +1,7 @@
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { PrismaService } from "../../../db/prisma.service";
 import { OAuthDto } from "../models/dtos/oauth.dto";
 import { OAuthService } from "../services/oauth.service";
@@ -40,13 +40,11 @@ describe("OAuthController", () => {
                 provider: "Google",
             };
 
-            const mockReq = { user: mockUser } as unknown as Request;
-
             jest.spyOn(oAuthService, "auth").mockImplementation(
                 async () => mockToken,
             );
 
-            await controller.googleAuth(mockReq, mockRes);
+            await controller.googleAuth(mockUser, mockRes);
 
             expect(oAuthService.auth).toHaveBeenCalledWith(mockUser);
             expect(mockRes.cookie).toHaveBeenCalled();
@@ -62,13 +60,11 @@ describe("OAuthController", () => {
                 provider: "Facebook",
             };
 
-            const mockReq = { user: mockUser } as unknown as Request;
-
             jest.spyOn(oAuthService, "auth").mockImplementation(
                 async () => mockToken,
             );
 
-            await controller.facebookAuth(mockReq, mockRes);
+            await controller.facebookAuth(mockUser, mockRes);
 
             expect(oAuthService.auth).toHaveBeenCalledWith(mockUser);
             expect(mockRes.cookie).toHaveBeenCalled();
@@ -84,13 +80,11 @@ describe("OAuthController", () => {
                 provider: "Discord",
             };
 
-            const mockReq = { user: mockUser } as unknown as Request;
-
             jest.spyOn(oAuthService, "auth").mockImplementation(
                 async () => mockToken,
             );
 
-            await controller.discordAuth(mockReq, mockRes);
+            await controller.discordAuth(mockUser, mockRes);
 
             expect(oAuthService.auth).toHaveBeenCalledWith(mockUser);
             expect(mockRes.cookie).toHaveBeenCalled();
@@ -106,13 +100,11 @@ describe("OAuthController", () => {
                 provider: "Github",
             };
 
-            const mockReq = { user: mockUser } as unknown as Request;
-
             jest.spyOn(oAuthService, "auth").mockImplementation(
                 async () => mockToken,
             );
 
-            await controller.githubAuth(mockReq, mockRes);
+            await controller.githubAuth(mockUser, mockRes);
 
             expect(oAuthService.auth).toHaveBeenCalledWith(mockUser);
             expect(mockRes.cookie).toHaveBeenCalled();
