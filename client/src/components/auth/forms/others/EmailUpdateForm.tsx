@@ -15,13 +15,14 @@ import { API_BASE_URL } from "@/constants";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { authFetch } from "@/functions/api/auth-fetch";
 import { throwDefaultError } from "@/functions/errors/exceptions";
-import { emailUpdateMessages } from "@/messages/EmailUpdateForm.messages";
+import { formMessages } from "@/messages/form.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+const messages = formMessages["EmailUpdateForm"];
 const emailUpdateSchema = z.object({
-    email: z.string().email(emailUpdateMessages.email),
+    email: z.string().email(messages.email),
 });
 
 type EmailUpdateFormData = z.infer<typeof emailUpdateSchema>;

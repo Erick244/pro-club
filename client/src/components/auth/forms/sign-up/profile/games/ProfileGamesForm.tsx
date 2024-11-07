@@ -15,13 +15,14 @@ import {
     ImageCardSelectOptions,
     ImageCardSelectSearch,
 } from "@/components/utils/forms/selects/ImageCardSelect";
-import { profileGamesMessages } from "@/messages/ProfileGamesForm.messages";
+import { formMessages } from "@/messages/form.messages";
 import { Game } from "@/models/entities/game.entity";
 import { GamePlatform } from "@/models/enums/game-platform.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+const messages = formMessages["ProfileGamesForm"];
 const profileGamesFormSchema = z.object({
     games: z
         .array(
@@ -32,7 +33,7 @@ const profileGamesFormSchema = z.object({
                 capeImageUrl: z.string(),
             })
         )
-        .refine((games) => games.length > 0, profileGamesMessages.games),
+        .refine((games) => games.length > 0, messages.games),
 });
 
 type ProfileGamesFormData = z.infer<typeof profileGamesFormSchema>;

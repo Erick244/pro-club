@@ -32,13 +32,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { countries } from "@/data/countries";
 import { cn } from "@/lib/utils";
-import { signUpDetailsMessages } from "@/messages/SignUpDetailsForm.messages";
+import { formMessages } from "@/messages/form.messages";
 import { ComponentProps, forwardRef } from "react";
 import Flag from "react-country-flag";
 
+const messages = formMessages["SignUpDetailsForm"];
 const signUpDetailsFormSchema = z.object({
-    country: z.string({ required_error: signUpDetailsMessages.required }),
-    biography: z.string().max(255, signUpDetailsMessages.biography.max).min(0),
+    country: z.string({ required_error: messages.country }),
+    biography: z.string().max(255, messages.biography.max).min(0),
 });
 
 type SignUpDetailsFormData = z.infer<typeof signUpDetailsFormSchema>;

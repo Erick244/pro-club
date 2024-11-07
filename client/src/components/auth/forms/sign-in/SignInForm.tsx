@@ -13,18 +13,19 @@ import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { FormRedirectLink } from "@/components/utils/forms/links/FormRedirectLink";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
-import { signInMessages } from "@/messages/SignInForm.messages";
+import { formMessages } from "@/messages/form.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+const messages = formMessages["SignInForm"];
 const signInFormFormSchema = z.object({
-    email: z.string().email(signInMessages.email),
+    email: z.string().email(messages.email),
     password: z
         .string()
-        .min(8, signInMessages.password.min)
-        .max(16, signInMessages.password.max),
+        .min(8, messages.password.min)
+        .max(16, messages.password.max),
 });
 
 export type SignInFormFormData = z.infer<typeof signInFormFormSchema>;

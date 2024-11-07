@@ -30,14 +30,15 @@ import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useTimer } from "@/hooks/useTimer";
-import { emailConfirmationMessages } from "@/messages/EmailConfirmationForm.messages";
+import { formMessages } from "@/messages/form.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 import { useForm } from "react-hook-form";
 import { EmailUpdateForm } from "./EmailUpdateForm";
 
+const messages = formMessages["EmailConfirmationForm"];
 const emailConformationFormSchema = z.object({
-    code: z.string().min(6, emailConfirmationMessages.code),
+    code: z.string().min(6, messages.code),
 });
 
 type EmailConfirmationFormData = z.infer<typeof emailConformationFormSchema>;

@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
-import { socialMediaFormMessages } from "@/messages/SocialMediaForm.messages";
+import { formMessages } from "@/messages/form.messages";
 import { SocialMediaNames } from "@/models/enums/social-media-names.enum";
 import { SocialMedia } from "@/models/interfaces/social-media.interface";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +21,7 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+const messages = formMessages["SocialMediaForm"];
 const socialMediaFormSchema = z.object({
     name: z.nativeEnum(SocialMediaNames),
     tag: z.string().optional(),
@@ -29,7 +30,7 @@ const socialMediaFormSchema = z.object({
         .optional()
         .refine(
             (url) => url?.startsWith("https://") || url?.length === 0,
-            socialMediaFormMessages.profileLink.url
+            messages.profileLink.url
         ),
 });
 

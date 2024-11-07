@@ -1,11 +1,11 @@
 "use client";
 
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
@@ -13,29 +13,27 @@ import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { FormRedirectLink } from "@/components/utils/forms/links/FormRedirectLink";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
-import { signUpMessages } from "@/messages/SignUpForm.messages";
+import { formMessages } from "@/messages/form.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+const messages = formMessages["SignUpForm"];
 const signUpFormSchema = z
     .object({
-        name: z
-            .string()
-            .min(2, signUpMessages.name.min)
-            .max(50, signUpMessages.name.max),
-        email: z.string().email(signUpMessages.email),
+        name: z.string().min(2, messages.name.min).max(50, messages.name.max),
+        email: z.string().email(messages.email),
         password: z
             .string()
-            .min(8, signUpMessages.password.min)
-            .max(16, signUpMessages.password.max),
+            .min(8, messages.password.min)
+            .max(16, messages.password.max),
         confirmPassword: z
             .string()
-            .min(8, signUpMessages.password.min)
-            .max(16, signUpMessages.password.max),
+            .min(8, messages.password.min)
+            .max(16, messages.password.max),
     })
     .refine(({ confirmPassword, password }) => confirmPassword === password, {
-        message: signUpMessages.confirmPassword,
+        message: messages.confirmPassword,
         path: ["confirmPassword"],
     });
 

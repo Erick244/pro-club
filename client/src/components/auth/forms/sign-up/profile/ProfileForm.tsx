@@ -19,7 +19,7 @@ import { TiktokLogo } from "@/components/utils/logos/third-party/TiktokLogo";
 import { TwitchTVLogo } from "@/components/utils/logos/third-party/TwitchTVLogo";
 import { XLogo } from "@/components/utils/logos/third-party/XLogo";
 import { YoutubeLogo } from "@/components/utils/logos/third-party/YoutubeLogo";
-import { profileFormMessages } from "@/messages/ProfileForm.messages";
+import { formMessages } from "@/messages/form.messages";
 import { SocialMediaNames } from "@/models/enums/social-media-names.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtom } from "jotai";
@@ -27,13 +27,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { SocialMediaInput } from "./social-medias/SocialMediaInput";
 
+const messages = formMessages["ProfileForm"];
 const profileFormSchema = z.object({
     profileImage: z
         .instanceof(File)
-        .refine(
-            (file) => file.type.startsWith("image"),
-            profileFormMessages.profileImage
-        )
+        .refine((file) => file.type.startsWith("image"), messages.profileImage)
         .optional(),
     color: z.string(),
     socialMedias: z
@@ -46,7 +44,7 @@ const profileFormSchema = z.object({
         )
         .refine(
             (socialMedias) => socialMedias.length > 0,
-            profileFormMessages.socialMedias
+            messages.socialMedias
         ),
 });
 
