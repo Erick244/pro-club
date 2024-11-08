@@ -1,3 +1,13 @@
+export const getCountries = (take: number, search?: string) => {
+    if (search) {
+        return countries.filter((country) => {
+            return country.label.toLowerCase().includes(search.toLowerCase());
+        });
+    }
+
+    return countries.slice(0, take);
+};
+
 export const countries = [
     { label: "Afghanistan", value: "af" },
     { label: "Albania", value: "al" },

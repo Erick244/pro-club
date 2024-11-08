@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, SearchIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -10,7 +10,6 @@ import {
     Command,
     CommandEmpty,
     CommandGroup,
-    CommandInput,
     CommandItem,
     CommandList,
 } from "@/components/ui/command";
@@ -30,10 +29,13 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
-import { countries } from "@/data/countries";
+import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
+import { Loader } from "@/components/utils/loading/Loader";
+import { countries, getCountries } from "@/data/countries";
+import { useInfiniteScroll } from "@/hooks/useInfinityScroll";
 import { cn } from "@/lib/utils";
 import { formMessages } from "@/messages/form.messages";
-import { ComponentProps, forwardRef } from "react";
+import { ComponentProps, forwardRef, UIEvent } from "react";
 import Flag from "react-country-flag";
 
 const messages = formMessages["SignUpDetailsForm"];
@@ -56,6 +58,8 @@ export function SignUpDetailsForm() {
         console.log(data);
     }
 
+    const infinityScroll = useInfiniteScroll(10, 10);
+
     return (
         <Form {...form}>
             <form
@@ -70,7 +74,11 @@ export function SignUpDetailsForm() {
                             <FormLabel className="text-center">
                                 Country
                             </FormLabel>
-                            <Popover>
+                            <Popover
+                                onOpenChange={(open) =>
+                                    open && infinityScroll.reset()
+                                }
+                            >
                                 <PopoverTrigger asChild>
                                     <FormControl>
                                         <PopoverTriggerButton
@@ -80,21 +88,34 @@ export function SignUpDetailsForm() {
                                         />
                                     </FormControl>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-[200px] p-0">
-                                    <CountryCommand>
-                                        {countries.map((country) => (
-                                            <CountryCommandItem
-                                                key={country.value}
-                                                country={country}
-                                                fieldValue={field.value}
-                                                onSelect={() => {
-                                                    form.setValue(
-                                                        "country",
+                                <PopoverContent className="w-[300px] px-0">
+                                    <CountryCommand
+                                        isLoading={infinityScroll.isLoading}
+                                        onSearch={infinityScroll.handleOnSearch}
+                                        onListScroll={
+                                            infinityScroll.handleOnScroll
+                                        }
+                                    >
+                                        {!infinityScroll.isLoading &&
+                                            getCountries(
+                                                infinityScroll.take,
+                                                infinityScroll.searchTerm
+                                            ).map((country) => (
+                                                <CountryCommandItem
+                                                    key={country.value}
+                                                    country={country}
+                                                    isSelect={
+                                                        field.value ===
                                                         country.value
-                                                    );
-                                                }}
-                                            />
-                                        ))}
+                                                    }
+                                                    onSelect={() => {
+                                                        form.setValue(
+                                                            "country",
+                                                            country.value
+                                                        );
+                                                    }}
+                                                />
+                                            ))}
                                     </CountryCommand>
                                 </PopoverContent>
                             </Popover>
@@ -174,14 +195,32 @@ PopoverTriggerButton.displayName = "PopoverTriggerButton";
 
 interface CountryCommandProps {
     children: React.ReactNode;
+    onListScroll?: (e: UIEvent<HTMLDivElement, globalThis.UIEvent>) => void;
+    onSearch?: (search: string) => void;
+    isLoading?: boolean;
 }
 
-function CountryCommand({ children }: CountryCommandProps) {
+function CountryCommand({
+    children,
+    onListScroll,
+    onSearch,
+    isLoading,
+}: CountryCommandProps) {
     return (
-        <Command>
-            <CommandInput placeholder="Search language..." />
-            <CommandList>
-                <CommandEmpty>No country found.</CommandEmpty>
+        <Command className="pt-2">
+            <div className="flex px-5 mb-3 justify-center items-center gap-2 relative">
+                <SearchIcon className="w-6 h-6 absolute right-5 text-primary" />
+                <AnimatedInput
+                    label="Search"
+                    onChange={(e) =>
+                        onSearch?.((e.target as HTMLInputElement).value)
+                    }
+                />
+            </div>
+            <CommandList className="px-5" onScroll={onListScroll}>
+                <CommandEmpty className="flex justify-center py-10">
+                    {isLoading ? <Loader /> : "No country found."}
+                </CommandEmpty>
                 <CommandGroup>{children}</CommandGroup>
             </CommandList>
         </Command>
@@ -190,12 +229,12 @@ function CountryCommand({ children }: CountryCommandProps) {
 
 interface CountryCommandItemProps extends ComponentProps<typeof CommandItem> {
     country: { label: string; value: string };
-    fieldValue: string;
+    isSelect: boolean;
 }
 
 function CountryCommandItem({
     country,
-    fieldValue,
+    isSelect,
     ...props
 }: CountryCommandItemProps) {
     return (
@@ -203,7 +242,7 @@ function CountryCommandItem({
             <Check
                 className={cn(
                     "mr-2 h-4 w-4 ",
-                    country.value === fieldValue ? "opacity-100" : "opacity-0"
+                    isSelect ? "opacity-100" : "opacity-0"
                 )}
             />
             <Flag
