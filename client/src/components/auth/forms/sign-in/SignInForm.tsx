@@ -67,7 +67,11 @@ export function SignInFormForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <AnimatedInput label="E-mail" {...field} />
+                                <AnimatedInput
+                                    label="E-mail"
+                                    type="email"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -85,7 +89,11 @@ export function SignInFormForm() {
                             )}
                         >
                             <FormControl>
-                                <AnimatedInput label="Password" {...field} />
+                                <AnimatedInput
+                                    label="Password"
+                                    type="password"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>

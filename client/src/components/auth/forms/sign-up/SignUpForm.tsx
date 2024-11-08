@@ -1,11 +1,11 @@
 "use client";
 
 import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
@@ -94,7 +94,11 @@ export function SignUpForm() {
                             )}
                         >
                             <FormControl>
-                                <AnimatedInput label="E-mail" {...field} />
+                                <AnimatedInput
+                                    label="E-mail"
+                                    type="email"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -112,7 +116,11 @@ export function SignUpForm() {
                             )}
                         >
                             <FormControl>
-                                <AnimatedInput label="Password" {...field} />
+                                <AnimatedInput
+                                    label="Password"
+                                    type="password"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -131,6 +139,7 @@ export function SignUpForm() {
                         >
                             <FormControl>
                                 <AnimatedInput
+                                    type="password"
                                     label="Confirm Password"
                                     {...field}
                                 />
