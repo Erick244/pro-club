@@ -3,6 +3,11 @@ import { API_BASE_URL } from "./constants";
 import { CookieNames } from "./models/enums/cookies.enum";
 import { User } from "./models/interfaces/user.interface";
 
+type PendingIssue = {
+    isPending: boolean;
+    redirectPath: string;
+};
+
 export async function middleware(req: NextRequest) {
     const authToken = req.cookies.get(CookieNames.AUTH_TOKEN)?.value;
 
@@ -22,15 +27,13 @@ export async function middleware(req: NextRequest) {
     try {
         const user = await getUserByToken(authToken);
 
-        const pendingIssues = [
+        const pendingIssues: PendingIssue[] = [
             {
                 isPending: !user.emailConfirmed,
-                path: "/auth/email-confirmation",
                 redirectPath: "/auth/email-confirmation",
             },
             {
                 isPending: !user.country,
-                path: "/auth/signup/details",
                 redirectPath: "/auth/signup/details",
             },
         ];
@@ -44,12 +47,27 @@ export async function middleware(req: NextRequest) {
             if (
                 pendingIssue.isPending &&
                 latestPendingIssueIsNotPending &&
-                pendingIssue.path !== pathname
+                pendingIssue.redirectPath !== pathname
             ) {
                 return redirectTo(pendingIssue.redirectPath, req.url);
             }
 
             latestPendingIssue = pendingIssue;
+        }
+
+        const notAllowPaths = [
+            {
+                isNotAllow: !!user.country,
+                path: "/auth/signup/details",
+            },
+        ];
+
+        for (const notAllowPath of notAllowPaths) {
+            const isSamePath = pathname === notAllowPath.path;
+
+            if (notAllowPath.isNotAllow && isSamePath) {
+                return redirectTo("/", req.url);
+            }
         }
     } catch (error) {
         return redirectTo("/auth/signup", req.url);
