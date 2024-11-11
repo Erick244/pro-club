@@ -150,7 +150,12 @@ export function SignUpDetailsForm() {
                         </FormItem>
                     )}
                 />
-                <SubmitButton className="mt-20">Continue</SubmitButton>
+                <SubmitButton
+                    isLoading={form.formState.isSubmitting}
+                    className="mt-20"
+                >
+                    Continue
+                </SubmitButton>
             </form>
         </Form>
     );

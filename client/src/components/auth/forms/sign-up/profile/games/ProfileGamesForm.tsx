@@ -121,7 +121,9 @@ export function ProfileGamesForm() {
                         </FormItem>
                     )}
                 />
-                <SubmitButton>Finish</SubmitButton>
+                <SubmitButton isLoading={form.formState.isSubmitting}>
+                    Finish
+                </SubmitButton>
             </form>
         </Form>
     );

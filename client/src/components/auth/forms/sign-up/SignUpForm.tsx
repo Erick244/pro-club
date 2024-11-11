@@ -149,7 +149,9 @@ export function SignUpForm() {
                     )}
                 />
                 <div className="flex flex-col gap-5 items-center">
-                    <SubmitButton>Continue</SubmitButton>
+                    <SubmitButton isLoading={form.formState.isSubmitting}>
+                        Continue
+                    </SubmitButton>
                     <FormRedirectLink
                         href="/auth/signin"
                         initialSentence="Already have an account?"

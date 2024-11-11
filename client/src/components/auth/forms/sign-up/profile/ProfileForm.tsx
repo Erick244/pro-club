@@ -140,6 +140,7 @@ export function ProfileForm() {
                     )}
                 />
                 <SubmitButton
+                    isLoading={form.formState.isSubmitting}
                     style={{
                         background: `linear-gradient(200deg, hsl(var(--primary)) 40%, ${
                             profileColor ? profileColor : "hsl(var(--primary))"

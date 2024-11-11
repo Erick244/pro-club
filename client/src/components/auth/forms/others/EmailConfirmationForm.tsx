@@ -143,7 +143,12 @@ export function EmailConfirmationForm() {
                 />
 
                 <div className="flex flex-col gap-5 items-center w-full">
-                    <SubmitButton disabled={!timer}>Continue</SubmitButton>
+                    <SubmitButton
+                        isLoading={form.formState.isSubmitting}
+                        disabled={!timer}
+                    >
+                        Continue
+                    </SubmitButton>
 
                     <Button
                         disabled={!!timer}

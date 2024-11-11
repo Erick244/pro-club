@@ -116,7 +116,12 @@ export function SocialMediaForm({
                     )}
                 />
                 <PopoverClose asChild>
-                    <SubmitButton className="mt-2 h-10">Save</SubmitButton>
+                    <SubmitButton
+                        isLoading={form.formState.isSubmitting}
+                        className="mt-2 h-10"
+                    >
+                        Save
+                    </SubmitButton>
                 </PopoverClose>
             </form>
         </Form>

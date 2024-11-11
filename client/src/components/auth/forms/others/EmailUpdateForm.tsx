@@ -10,6 +10,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
+import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { API_BASE_URL } from "@/constants";
 import { useAuthContext } from "@/contexts/AuthContext";
@@ -93,7 +94,12 @@ export function EmailUpdateForm() {
                     <DialogClose asChild>
                         <Button variant={"outline"}>Cancel</Button>
                     </DialogClose>
-                    <Button type="submit">Update</Button>
+                    <SubmitButton
+                        className="w-auto h-auto"
+                        isLoading={form.formState.isSubmitting}
+                    >
+                        Update
+                    </SubmitButton>
                 </div>
             </form>
         </Form>
