@@ -12,10 +12,8 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
-import { API_BASE_URL } from "@/constants";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { authFetch } from "@/functions/api/auth-fetch";
-import { throwDefaultError } from "@/functions/errors/exceptions";
+import { customFetch } from "@/functions/api/custom-fetch";
 import { formMessages } from "@/messages/form.messages";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -40,19 +38,11 @@ export function EmailUpdateForm() {
 
     async function onSubmit({ email }: EmailUpdateFormData) {
         try {
-            const resp = await authFetch(`${API_BASE_URL}/users/update`, {
+            await customFetch("/users/update", {
+                auth: true,
                 method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email,
-                }),
+                body: { email },
             });
-
-            if (!resp.ok) {
-                await throwDefaultError(resp);
-            }
 
             await signOut(`/auth/signin?email=${encodeURIComponent(email)}`);
 

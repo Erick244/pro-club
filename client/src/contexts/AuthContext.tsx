@@ -2,14 +2,12 @@
 
 import { SignInFormFormData } from "@/components/auth/forms/sign-in/SignInForm";
 import { SignUpFormData } from "@/components/auth/forms/sign-up/SignUpForm";
-import { API_BASE_URL } from "@/constants";
-import { authFetch } from "@/functions/api/auth-fetch";
+import { customFetch } from "@/functions/api/custom-fetch";
 import {
     delCookie,
     getCookie,
     setCookie,
 } from "@/functions/cookies/cookie-store";
-import { throwDefaultError } from "@/functions/errors/exceptions";
 import { CookieNames, PendingCookiesLabels } from "@/models/enums/cookies.enum";
 import { User } from "@/models/interfaces/user.interface";
 import { useRouter } from "next/navigation";
@@ -55,13 +53,11 @@ export default function AuthContextProvider({
             return;
         }
 
-        const reps = await authFetch(`${API_BASE_URL}/auth/userByToken`);
+        const resp = await customFetch("/auth/userByToken", {
+            auth: true,
+        });
 
-        if (!reps.ok) {
-            await throwDefaultError(reps);
-        }
-
-        const userByToken = (await reps.json()) as User;
+        const userByToken = (await resp.json()) as User;
 
         setUser(userByToken);
     }, []);
@@ -71,33 +67,19 @@ export default function AuthContextProvider({
     }, [recoverUser]);
 
     async function signUp(data: SignUpFormData) {
-        const resp = await fetch(`${API_BASE_URL}/auth/signup`, {
+        await customFetch("/auth/signup", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
+            body: data,
         });
-
-        if (!resp.ok) {
-            await throwDefaultError(resp);
-        }
 
         await signIn({ email: data.email, password: data.password });
     }
 
     async function signIn(data: SignInFormFormData) {
-        const resp = await fetch(`${API_BASE_URL}/auth/signin`, {
+        const resp = await customFetch("/auth/signin", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
+            body: data,
         });
-
-        if (!resp.ok) {
-            await throwDefaultError(resp);
-        }
 
         const { user, authToken }: { user: User; authToken: string } =
             await resp.json();
@@ -119,33 +101,19 @@ export default function AuthContextProvider({
     }
 
     async function sendEmailConfirmation(email: string) {
-        const resp = await fetch(`${API_BASE_URL}/email/sendCode`, {
+        await customFetch("/email/sendCode", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email }),
+            body: { email },
         });
-
-        if (!resp.ok) {
-            await throwDefaultError(resp);
-        }
 
         router.push("/auth/email-confirmation");
     }
 
     async function confirmEmailCode(code: string) {
-        const resp = await fetch(`${API_BASE_URL}/email/confirmCode`, {
+        await customFetch("/email/confirmCode", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email: user?.email, code }),
+            body: { email: user?.email, code },
         });
-
-        if (!resp.ok) {
-            await throwDefaultError(resp);
-        }
 
         router.push("/");
     }

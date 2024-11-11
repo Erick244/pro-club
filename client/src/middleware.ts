@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { API_BASE_URL } from "./constants";
+import { customFetch } from "./functions/api/custom-fetch";
 import { CookieNames } from "./models/enums/cookies.enum";
 import { User } from "./models/interfaces/user.interface";
 
@@ -25,7 +25,7 @@ export async function middleware(req: NextRequest) {
     }
 
     try {
-        const user = await getUserByToken(authToken);
+        const user = await getUserByToken();
 
         const pendingIssues: PendingIssue[] = [
             {
@@ -60,6 +60,10 @@ export async function middleware(req: NextRequest) {
                 isNotAllow: !!user.country,
                 path: "/auth/signup/details",
             },
+            {
+                isNotAllow: user.emailConfirmed,
+                path: "/auth/email-confirmation",
+            },
         ];
 
         for (const notAllowPath of notAllowPaths) {
@@ -78,16 +82,13 @@ const redirectTo = (path: string, url: string) => {
     return NextResponse.redirect(new URL(path, url));
 };
 
-const getUserByToken = async (authToken: string): Promise<User> => {
-    const resp = await fetch(`${API_BASE_URL}/auth/userByToken`, {
-        headers: {
-            Authorization: `Bearer ${authToken}`,
+const getUserByToken = async (): Promise<User> => {
+    const resp = await customFetch("/auth/userByToken", {
+        auth: true,
+        error: {
+            message: "Unauthorized. Try sign up.",
         },
     });
-
-    if (!resp.ok) {
-        throw new Error("Unauthorized");
-    }
 
     return await resp.json();
 };

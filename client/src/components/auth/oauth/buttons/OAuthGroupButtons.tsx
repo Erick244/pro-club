@@ -1,7 +1,7 @@
 "use client";
 
 import { GithubLogo } from "@/components/utils/logos/third-party/GithubLogo";
-import { API_BASE_URL } from "@/constants";
+import { BASE_API_URL } from "@/constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { HTMLAttributes } from "react";
@@ -11,7 +11,7 @@ import { GoogleLogo } from "../../../utils/logos/third-party/GoogleLogo";
 import { OAuthButton } from "./OAuthButton";
 
 export function OAuthGroupButtons(props: HTMLAttributes<HTMLDivElement>) {
-    const BASE_PATH = `${API_BASE_URL}/oauth`;
+    const BASE_PATH = `${BASE_API_URL}/oauth`;
 
     return (
         <div className={cn("space-y-2", props.className)}>

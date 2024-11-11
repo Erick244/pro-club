@@ -32,10 +32,8 @@ import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { Loader } from "@/components/utils/loading/Loader";
-import { API_BASE_URL } from "@/constants";
 import { countries, getCountries } from "@/data/countries";
-import { authFetch } from "@/functions/api/auth-fetch";
-import { throwDefaultError } from "@/functions/errors/exceptions";
+import { customFetch } from "@/functions/api/custom-fetch";
 import { useInfiniteScroll } from "@/hooks/useInfinityScroll";
 import { cn } from "@/lib/utils";
 import { formMessages } from "@/messages/form.messages";
@@ -63,17 +61,11 @@ export function SignUpDetailsForm() {
 
     async function onSubmit(data: SignUpDetailsFormData) {
         try {
-            const resp = await authFetch(`${API_BASE_URL}/users/update`, {
+            await customFetch("/users/update", {
+                auth: true,
                 method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
+                body: data,
             });
-
-            if (!resp.ok) {
-                await throwDefaultError(resp);
-            }
 
             router.push("/auth/signup/profile");
         } catch (error: any) {
