@@ -28,13 +28,18 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { Loader } from "@/components/utils/loading/Loader";
+import { API_BASE_URL } from "@/constants";
 import { countries, getCountries } from "@/data/countries";
+import { authFetch } from "@/functions/api/auth-fetch";
+import { throwDefaultError } from "@/functions/errors/exceptions";
 import { useInfiniteScroll } from "@/hooks/useInfinityScroll";
 import { cn } from "@/lib/utils";
 import { formMessages } from "@/messages/form.messages";
+import { useRouter } from "next/navigation";
 import { ComponentProps, forwardRef, UIEvent } from "react";
 import Flag from "react-country-flag";
 
@@ -54,8 +59,30 @@ export function SignUpDetailsForm() {
         },
     });
 
-    function onSubmit(data: SignUpDetailsFormData) {
-        console.log(data);
+    const router = useRouter();
+
+    async function onSubmit(data: SignUpDetailsFormData) {
+        try {
+            const resp = await authFetch(`${API_BASE_URL}/users/update`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!resp.ok) {
+                await throwDefaultError(resp);
+            }
+
+            router.push("/auth/signup/profile");
+        } catch (error: any) {
+            toast({
+                title: "Error",
+                description: error.message,
+                variant: "destructive",
+            });
+        }
     }
 
     const infinityScroll = useInfiniteScroll(10, 10);
