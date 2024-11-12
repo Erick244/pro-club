@@ -46,6 +46,9 @@ export function SocialMediaInput({
         defaultValuesSocialMedias
     );
 
+    const [currentSocialMediaFormOpen, setCurrentSocialMediaFormOpen] =
+        useState<SocialMedia | null>(null);
+
     function handleSubmit(data: SocialMediaFormData) {
         const updatedSocialMedias = { ...socialMedias };
 
@@ -65,9 +68,6 @@ export function SocialMediaInput({
         );
     }
 
-    const [currentSocialMediaFormOpen, setCurrentSocialMediaFormOpen] =
-        useState<SocialMedia | null>(null);
-
     function handleCurrentSocialMediaFormVisibility(
         isOpen: boolean,
         currentSocialMedia: SocialMedia
@@ -85,9 +85,12 @@ export function SocialMediaInput({
                 const currentItem = socialMedias[socialMediaRender.name];
                 const itemIsFiled =
                     !!currentItem?.tag || !!currentItem?.profileLink;
+                const popoverIsOpen =
+                    currentItem === currentSocialMediaFormOpen;
 
                 return (
                     <Popover
+                        open={popoverIsOpen}
                         key={i}
                         onOpenChange={(isOpen) =>
                             handleCurrentSocialMediaFormVisibility(
@@ -98,9 +101,7 @@ export function SocialMediaInput({
                     >
                         <PopoverTrigger asChild>
                             <SocialMediaInputButton
-                                formIsVisible={
-                                    currentItem === currentSocialMediaFormOpen
-                                }
+                                formIsVisible={popoverIsOpen}
                                 filed={itemIsFiled}
                                 style={{
                                     backgroundColor:
@@ -112,6 +113,9 @@ export function SocialMediaInput({
                         </PopoverTrigger>
                         <PopoverContent>
                             <SocialMediaForm
+                                handlerPopoverClose={() =>
+                                    setCurrentSocialMediaFormOpen(null)
+                                }
                                 defaultValues={currentItem}
                                 handlerSubmit={handleSubmit}
                             />

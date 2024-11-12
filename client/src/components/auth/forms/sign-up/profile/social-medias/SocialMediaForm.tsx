@@ -5,19 +5,18 @@ import { Muted } from "@/components/typography/Muted";
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
+import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { formMessages } from "@/messages/form.messages";
 import { SocialMediaNames } from "@/models/enums/social-media-names.enum";
 import { SocialMedia } from "@/models/interfaces/social-media.interface";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PopoverClose } from "@radix-ui/react-popover";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -39,11 +38,13 @@ export type SocialMediaFormData = z.infer<typeof socialMediaFormSchema>;
 interface SocialMediaFormProps {
     defaultValues?: SocialMedia;
     handlerSubmit?: (data: SocialMediaFormData) => void;
+    handlerPopoverClose: () => void;
 }
 
 export function SocialMediaForm({
     defaultValues,
     handlerSubmit,
+    handlerPopoverClose,
 }: SocialMediaFormProps) {
     const form = useForm<SocialMediaFormData>({
         resolver: zodResolver(socialMediaFormSchema),
@@ -61,6 +62,8 @@ export function SocialMediaForm({
             toast({
                 description: `${data.name} saved in your Profile.`,
             });
+
+            handlerPopoverClose();
         }
     }
 
@@ -77,22 +80,20 @@ export function SocialMediaForm({
                     e.stopPropagation();
                     form.handleSubmit(onSubmit)(e);
                 }}
-                className="flex flex-col justify-between items-center gap-5 w-full"
+                className="gap-5 flex flex-col items-center w-full"
             >
                 <FormField
                     control={form.control}
                     name="tag"
                     render={({ field }) => (
-                        <FormItem className="grid grid-cols-3 items-center gap-3">
-                            <FormLabel>Tag:</FormLabel>
+                        <FormItem>
                             <FormControl>
-                                <Input
-                                    {...field}
-                                    placeholder="Ex: @user123..."
-                                    className="h-8 col-span-2"
-                                />
+                                <AnimatedInput {...field} label="Tag" />
                             </FormControl>
-                            <FormMessage className="col-span-3" />
+                            <FormMessage />
+                            <FormDescription>
+                                Example: @username, user#123
+                            </FormDescription>
                         </FormItem>
                     )}
                 />
@@ -100,29 +101,28 @@ export function SocialMediaForm({
                     control={form.control}
                     name="profileLink"
                     render={({ field }) => (
-                        <FormItem className="grid grid-cols-3 items-center gap-3">
-                            <FormLabel className="whitespace-nowrap">
-                                Profile Link:
-                            </FormLabel>
+                        <FormItem>
                             <FormControl>
-                                <Input
+                                <AnimatedInput
                                     {...field}
-                                    placeholder="Your profile link URL"
-                                    className="h-8 col-span-2"
+                                    // type="url"
+                                    label="Profile Link"
                                 />
                             </FormControl>
-                            <FormMessage className="col-span-3" />
+                            <FormMessage />
+                            <FormDescription>
+                                Link to your profile.
+                            </FormDescription>
                         </FormItem>
                     )}
                 />
-                <PopoverClose asChild>
-                    <SubmitButton
-                        isLoading={form.formState.isSubmitting}
-                        className="mt-2 h-10"
-                    >
-                        Save
-                    </SubmitButton>
-                </PopoverClose>
+
+                <SubmitButton
+                    isLoading={form.formState.isSubmitting}
+                    className="mt-2 h-10"
+                >
+                    Save
+                </SubmitButton>
             </form>
         </Form>
     );
