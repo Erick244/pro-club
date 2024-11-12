@@ -65,6 +65,20 @@ export function SocialMediaInput({
         );
     }
 
+    const [currentSocialMediaFormOpen, setCurrentSocialMediaFormOpen] =
+        useState<SocialMedia | null>(null);
+
+    function handleCurrentSocialMediaFormVisibility(
+        isOpen: boolean,
+        currentSocialMedia: SocialMedia
+    ) {
+        if (isOpen) {
+            setCurrentSocialMediaFormOpen(currentSocialMedia);
+        } else {
+            setCurrentSocialMediaFormOpen(null);
+        }
+    }
+
     return (
         <div className="border-2 border-foreground rounded-lg flex justify-between flex-wrap items-center gap-2 p-2">
             {socialMediasRenderData.map((socialMediaRender, i) => {
@@ -73,9 +87,20 @@ export function SocialMediaInput({
                     !!currentItem?.tag || !!currentItem?.profileLink;
 
                 return (
-                    <Popover key={i}>
+                    <Popover
+                        key={i}
+                        onOpenChange={(isOpen) =>
+                            handleCurrentSocialMediaFormVisibility(
+                                isOpen,
+                                currentItem
+                            )
+                        }
+                    >
                         <PopoverTrigger asChild>
                             <SocialMediaInputButton
+                                formIsVisible={
+                                    currentItem === currentSocialMediaFormOpen
+                                }
                                 filed={itemIsFiled}
                                 style={{
                                     backgroundColor:
@@ -100,12 +125,13 @@ export function SocialMediaInput({
 
 interface SocialMediaInputButtonProps extends ButtonProps {
     filed?: boolean;
+    formIsVisible?: boolean;
 }
 
 const SocialMediaInputButton = forwardRef<
     HTMLButtonElement,
     SocialMediaInputButtonProps
->(({ children, filed, ...props }, ref) => {
+>(({ children, filed, formIsVisible, ...props }, ref) => {
     return (
         <Button
             {...props}
@@ -113,8 +139,11 @@ const SocialMediaInputButton = forwardRef<
             size="icon"
             type="button"
             className={cn(
-                "hover:-translate-y-0.5 transition-all grayscale border",
+                " transition-all grayscale border-2",
                 filed ? "grayscale-0 border-primary" : "grayscale border-none",
+                formIsVisible
+                    ? "scale-110 grayscale-0"
+                    : "hover:scale-105 active:scale-95",
                 props.className
             )}
         >
