@@ -3,19 +3,19 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-github";
 import { VerifyCallback } from "passport-google-oauth20";
-import { OAuthDiscordEnvNames } from "../../../../models/enums/env-names.enum";
+import { OAuthGithubEnvNames } from "../../../../models/enums/env-names.enum";
 import { OAuthDto } from "../../models/dtos/oauth.dto";
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy, "github") {
     constructor(private configService: ConfigService) {
         super({
-            clientID: configService.get(OAuthDiscordEnvNames.DISCORD_CLIENT_ID),
+            clientID: configService.get(OAuthGithubEnvNames.GITHUB_CLIENT_ID),
             clientSecret: configService.get(
-                OAuthDiscordEnvNames.DISCORD_CLIENT_SECRET,
+                OAuthGithubEnvNames.GITHUB_CLIENT_SECRET,
             ),
             callbackURL: configService.get(
-                OAuthDiscordEnvNames.DISCORD_CALLBACK_URL,
+                OAuthGithubEnvNames.GITHUB_CALLBACK_URL,
             ),
             scope: ["user", "user:email"],
         });
