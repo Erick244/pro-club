@@ -2,7 +2,7 @@ import { Controller, Get, Res, UseFilters, UseGuards } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AuthGuard as OAuthGuard } from "@nestjs/passport";
 import { Response } from "express";
-import { ONE_MONTH_IN_SECONDS } from "../../../constants";
+import { ONE_MONTH_IN_MS } from "../../../constants";
 import { ConfigEnvNames } from "../../../models/enums/env-names.enum";
 import { OAuthUser } from "../decorators/oauth-user.decorator";
 import { OAuthExceptionFilter } from "../filters/oauth-exception.filter";
@@ -33,7 +33,7 @@ export class OAuthController {
             httpOnly: true,
             secure: true,
             sameSite: "none",
-            maxAge: ONE_MONTH_IN_SECONDS,
+            maxAge: ONE_MONTH_IN_MS,
         });
     }
 
