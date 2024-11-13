@@ -2,6 +2,7 @@
 
 import { SignInFormFormData } from "@/components/auth/forms/sign-in/SignInForm";
 import { SignUpFormData } from "@/components/auth/forms/sign-up/SignUpForm";
+import { ONE_MONTH_IN_MS } from "@/constants";
 import { customFetch } from "@/functions/api/custom-fetch";
 import {
     delCookie,
@@ -91,6 +92,7 @@ export default function AuthContextProvider({
             secure: true,
             sameSite: "strict",
             path: "/",
+            maxAge: ONE_MONTH_IN_MS,
         });
 
         if (!user.emailConfirmed) {
