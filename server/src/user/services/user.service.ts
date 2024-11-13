@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { PrismaService } from "../../db/prisma.service";
+import { UpdateEmailDto } from "../models/dtos/update-email.dto";
 import { UpdateUserDto } from "../models/dtos/update-user.dto";
 
 @Injectable()
@@ -12,10 +13,6 @@ export class UserService {
     constructor(private prismaService: PrismaService) {}
 
     async update(dto: UpdateUserDto, id: number): Promise<User> {
-        if (await this.emailIsUsed(dto.email)) {
-            throw new NotAcceptableException("Email is already used.");
-        }
-
         try {
             const updatedUser = await this.prismaService.user.update({
                 where: {
@@ -32,17 +29,44 @@ export class UserService {
         }
     }
 
-    private async emailIsUsed(email: string | undefined): Promise<boolean> {
-        if (!email) {
-            return false;
+    async updateEmail({ email }: UpdateEmailDto, id: number): Promise<string> {
+        if (await this.emailIsUsed(email)) {
+            throw new NotAcceptableException("Email is already used.");
         }
 
-        const user = await this.prismaService.user.findUnique({
-            where: {
-                email,
-            },
-        });
+        try {
+            const { email: updatedEmail } =
+                await this.prismaService.user.update({
+                    where: {
+                        id,
+                    },
+                    data: {
+                        emailConfirmed: false,
+                        email,
+                    },
+                });
 
-        return !!user;
+            return updatedEmail;
+        } catch (error: any) {
+            throw new InternalServerErrorException(error.message);
+        }
+    }
+
+    private async emailIsUsed(email: string | undefined): Promise<boolean> {
+        try {
+            if (!email) {
+                return false;
+            }
+
+            const user = await this.prismaService.user.findUnique({
+                where: {
+                    email,
+                },
+            });
+
+            return !!user;
+        } catch (error: any) {
+            throw new InternalServerErrorException(error.message);
+        }
     }
 }
