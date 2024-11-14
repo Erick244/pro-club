@@ -42,6 +42,8 @@ export class UserService {
                     },
                     data: {
                         emailConfirmed: false,
+                        oauth: false,
+                        oauthProvider: null,
                         email,
                     },
                 });

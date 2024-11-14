@@ -174,6 +174,8 @@ describe("UserService", () => {
             const updatedUser = {
                 ...dto,
                 emailConfirmed: false,
+                oauth: false,
+                oauthProvider: null,
             } as unknown as User;
 
             jest.spyOn(mockPrismaService.user, "findUnique").mockReturnValue(
@@ -197,6 +199,8 @@ describe("UserService", () => {
                 },
                 data: {
                     emailConfirmed: false,
+                    oauth: false,
+                    oauthProvider: null,
                     email: dto.email,
                 },
             });
@@ -253,6 +257,8 @@ describe("UserService", () => {
                 },
                 data: {
                     emailConfirmed: false,
+                    oauth: false,
+                    oauthProvider: null,
                     email: dto.email,
                 },
             });
