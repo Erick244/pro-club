@@ -38,9 +38,9 @@ export function EmailUpdateForm() {
 
     async function onSubmit({ email }: EmailUpdateFormData) {
         try {
-            await customFetch("/users/update", {
+            await customFetch("/users/update/email", {
                 auth: true,
-                method: "PATCH",
+                method: "PUT",
                 body: { email },
             });
 
