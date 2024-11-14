@@ -74,7 +74,11 @@ export async function middleware(req: NextRequest) {
             }
         }
     } catch (error) {
-        return redirectTo("/auth/signup", req.url);
+        const response = redirectTo("/auth/signin", req.url);
+
+        response.cookies.delete(CookieNames.AUTH_TOKEN);
+
+        return response;
     }
 }
 
@@ -86,7 +90,7 @@ const getUserByToken = async (): Promise<User> => {
     const resp = await customFetch("/auth/userByToken", {
         auth: true,
         error: {
-            message: "Unauthorized. Try sign up.",
+            message: "Unauthorized. Try logging in again.",
         },
     });
 
