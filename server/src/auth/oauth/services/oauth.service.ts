@@ -20,6 +20,19 @@ export class OAuthService {
             });
 
             if (user) {
+                if (!user.oauth) {
+                    await this.prismaService.user.update({
+                        where: {
+                            id: user.id,
+                        },
+                        data: {
+                            oauth: true,
+                            oauthProvider: dto.provider,
+                            emailConfirmed: true,
+                        },
+                    });
+                }
+
                 return await this.signIn(user);
             }
 

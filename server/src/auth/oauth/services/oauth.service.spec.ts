@@ -15,6 +15,7 @@ describe("OAuthService", () => {
         user: {
             findUnique: jest.fn(),
             create: jest.fn(),
+            update: jest.fn(),
         },
     };
     const mockDto: OAuthDto = {
@@ -53,6 +54,7 @@ describe("OAuthService", () => {
     const mockUser = {
         id: 1,
         email: "test@example.com",
+        oauth: true,
     } as unknown as User;
 
     describe("auth", () => {
@@ -101,6 +103,35 @@ describe("OAuthService", () => {
             expect(prismaService.user.findUnique).toHaveBeenCalledWith({
                 where: {
                     email: mockDto.email,
+                },
+            });
+        });
+
+        it("should sign in a exist oauth user and set oauth atributes", async () => {
+            mockUser.oauth = false;
+
+            jest.spyOn(mockPrismaService.user, "findUnique").mockResolvedValue(
+                mockUser,
+            );
+            jest.spyOn(mockPrismaService.user, "update").mockResolvedValue({
+                ...mockUser,
+                oauth: true,
+            });
+
+            expect(typeof (await service.auth(mockDto))).toBe("string");
+            expect(prismaService.user.findUnique).toHaveBeenCalledWith({
+                where: {
+                    email: mockDto.email,
+                },
+            });
+            expect(prismaService.user.update).toHaveBeenCalledWith({
+                where: {
+                    id: mockUser.id,
+                },
+                data: {
+                    oauth: true,
+                    oauthProvider: mockDto.provider,
+                    emailConfirmed: true,
                 },
             });
         });
