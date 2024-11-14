@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { PrismaService } from "../db/prisma.service";
 import { EmailEnvNames } from "../models/enums/env-names.enum";
 import { EmailController } from "./controllers/email.controller";
+import { EmailConfirmedGuard } from "./guards/email-confirmed.guard";
 import { CodeService } from "./services/code.service";
 import { EmailConfirmationService } from "./services/email-confirmation.service";
 import { EmailService } from "./services/email.service";
@@ -24,6 +25,7 @@ import { EmailService } from "./services/email.service";
         CodeService,
         PrismaService,
         EmailConfirmationService,
+        EmailConfirmedGuard,
     ],
     controllers: [EmailController],
 })
