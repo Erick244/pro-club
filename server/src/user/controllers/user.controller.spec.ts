@@ -2,6 +2,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Test } from "@nestjs/testing";
 import { User } from "@prisma/client";
 import { PrismaService } from "../../db/prisma.service";
+import { UpdateEmailDto } from "../models/dtos/update-email.dto";
 import { UpdateUserDto } from "../models/dtos/update-user.dto";
 import { UserService } from "../services/user.service";
 import { UserController } from "./user.controller";
@@ -12,6 +13,7 @@ describe("UserController", () => {
 
     const mockUserService = {
         update: jest.fn(),
+        updateEmail: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -43,7 +45,6 @@ describe("UserController", () => {
                 email: "other@example.com",
             } as unknown as User;
             const dto: UpdateUserDto = {
-                email: "test@example.com",
                 name: "John Doe",
             };
             const updatedUser = {
@@ -55,6 +56,29 @@ describe("UserController", () => {
 
             expect(await controller.update(dto, mockUser)).toBe(updatedUser);
             expect(userService.update).toHaveBeenCalledWith(dto, mockUser.id);
+        });
+    });
+
+    describe("updateEmail", () => {
+        it("should update a user email", async () => {
+            const mockUser = {
+                id: 1,
+                name: "Other Name",
+                email: "other@example.com",
+            } as unknown as User;
+            const dto: UpdateEmailDto = {
+                email: "example@email.com",
+            };
+
+            jest.spyOn(mockUserService, "updateEmail").mockReturnValue(
+                dto.email,
+            );
+
+            expect(await controller.updateEmail(dto, mockUser)).toBe(dto.email);
+            expect(userService.updateEmail).toHaveBeenCalledWith(
+                dto,
+                mockUser.id,
+            );
         });
     });
 });
