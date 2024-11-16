@@ -49,8 +49,7 @@ export function EmailConfirmationForm() {
     const FIVE_MINUTES_IN_SECONDS = 60 * 5;
 
     const { formattedTimer, timer, resetTimer } = useTimer(
-        FIVE_MINUTES_IN_SECONDS,
-        "email-confirmation-timer"
+        FIVE_MINUTES_IN_SECONDS
     );
 
     const form = useForm<EmailConfirmationFormData>({
