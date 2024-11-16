@@ -2,6 +2,7 @@ import { Body, Controller, Patch, Put, UseGuards } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { AuthUser } from "../../auth/decorators/auth-user.decorator";
 import { AuthGuard } from "../../auth/guards/auth.guard";
+import { EmailConfirmedGuard } from "../../email/guards/email-confirmed.guard";
 import { UpdateEmailDto } from "../models/dtos/update-email.dto";
 import { UpdateUserDto } from "../models/dtos/update-user.dto";
 import { UserService } from "../services/user.service";
@@ -10,7 +11,7 @@ import { UserService } from "../services/user.service";
 export class UserController {
     constructor(private userService: UserService) {}
 
-    @UseGuards(AuthGuard)
+    @UseGuards(AuthGuard, EmailConfirmedGuard)
     @Patch("/update")
     async update(@Body() dto: UpdateUserDto, @AuthUser() { id }: User) {
         return await this.userService.update(dto, id);
