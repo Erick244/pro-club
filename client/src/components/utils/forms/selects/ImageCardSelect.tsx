@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { SearchIcon } from "lucide-react";
+import { CheckIcon, SearchIcon } from "lucide-react";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -22,7 +22,7 @@ export function ImageCardSelectOptions({
     children,
 }: ImageCardSelectOptionsProps) {
     return (
-        <div className="overflow-y-scroll max-h-[400px] p-5 flex justify-between flex-wrap gap-5">
+        <div className="overflow-y-scroll max-h-[400px] p-5 flex justify-evenly flex-wrap gap-5">
             {children}
         </div>
     );
@@ -35,7 +35,6 @@ interface ImageCardSelectSearchProps {
 
 export function ImageCardSelectSearch({
     onSearch,
-    placeholder,
 }: ImageCardSelectSearchProps) {
     const [query, setQuery] = useState<string>("");
 
@@ -50,15 +49,9 @@ export function ImageCardSelectSearch({
 
     return (
         <div className="mt-5 flex items-center gap-2">
-            {/* <Input
-                onChange={handleOnChange}
-                className="bg-transparent border-2 border-primary"
-                placeholder={ placeholder || "Search..."}
-            /> */}
-
             <AnimatedInput
                 className="grow"
-                label={placeholder || "Search..."}
+                label="Search"
                 onChange={handleOnChange}
             />
             <Button
@@ -97,23 +90,40 @@ export function ImageCardSelectOption({
 
     return (
         <div
-            className="space-y-1 cursor-pointer select-none group"
+            className={cn(
+                "transition-all h-[200px] w-[150px] relative cursor-pointer select-none group overflow-hidden border-2 rounded-lg active:scale-95",
+                selected
+                    ? "border-primary shadow-lg shadow-primary"
+                    : "border-foreground"
+            )}
             onClick={handlerClick}
         >
             <Image
                 priority
-                className={cn(
-                    "rounded-lg w-[100px] h-[150px] border-2 transition-all group-hover:scale-105 group-active:scale-100",
-                    selected
-                        ? "border-primary shadow-lg shadow-primary"
-                        : "border-foreground"
-                )}
+                className="w-full h-full transition-all group-hover:scale-110"
                 src={capeImageUrl}
-                width={100}
-                height={150}
+                width={150}
+                height={200}
                 alt="Card image"
             />
-            <p className="text-xs text-center w-full max-w-[100px]">{name}</p>
+
+            <p className="z-10 transition-all font-semibold text-xs text-center w-full absolute -bottom-10 left-1/2 -translate-x-1/2 bg-primary py-2 text-secondary group-hover:bottom-0">
+                {name}
+            </p>
+
+            <CheckIcon
+                className={cn(
+                    "z-10 transition-all w-20 h-20 absolute inset-1/2 -translate-x-1/2 -translate-y-1/2",
+                    selected ? "opacity-100" : "opacity-0"
+                )}
+            />
+
+            <div
+                className={cn(
+                    "bg-muted/30 w-full h-full absolute inset-0",
+                    selected ? "opacity-100" : "opacity-0"
+                )}
+            />
         </div>
     );
 }
