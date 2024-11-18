@@ -9,6 +9,7 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
 import { ImagePickerInput } from "@/components/utils/forms/inputs/ImagePickerInput";
 import { ColorSelect } from "@/components/utils/forms/selects/ColorSelect";
@@ -19,10 +20,12 @@ import { TiktokLogo } from "@/components/utils/logos/third-party/TiktokLogo";
 import { TwitchTVLogo } from "@/components/utils/logos/third-party/TwitchTVLogo";
 import { XLogo } from "@/components/utils/logos/third-party/XLogo";
 import { YoutubeLogo } from "@/components/utils/logos/third-party/YoutubeLogo";
+import { customFetch } from "@/functions/api/custom-fetch";
 import { formMessages } from "@/messages/form.messages";
 import { SocialMediaNames } from "@/models/enums/social-media-names.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtom } from "jotai";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { SocialMediaInput } from "./social-medias/SocialMediaInput";
@@ -38,8 +41,8 @@ const profileFormSchema = z.object({
         .array(
             z.object({
                 name: z.nativeEnum(SocialMediaNames),
-                tag: z.string().optional(),
-                profileLink: z.string().optional(),
+                tag: z.string().optional().nullable(),
+                profileLink: z.string().optional().nullable(),
             })
         )
         .refine(
@@ -60,8 +63,29 @@ export function ProfileForm() {
         },
     });
 
-    function onSubmit(data: ProfileFormData) {
-        console.log(data);
+    const router = useRouter();
+
+    async function onSubmit(data: ProfileFormData) {
+        try {
+            await customFetch("/profile", {
+                method: "POST",
+                auth: true,
+                body: data,
+            });
+
+            router.push("/auth/signup/profile/games");
+
+            toast({
+                title: "Profile Created!",
+                description: "Now define some information about the games.",
+            });
+        } catch (error: any) {
+            toast({
+                title: "Error",
+                description: error.message,
+                variant: "destructive",
+            });
+        }
     }
 
     const [profileColor, setProfileColor] = useAtom(profileColorAtom);

@@ -18,7 +18,7 @@ import {
 
 interface AnimatedInputProps extends HTMLAttributes<HTMLInputElement> {
     label: string;
-    value?: string;
+    value?: string | null;
     type?: HTMLInputTypeAttribute;
 }
 
@@ -67,6 +67,7 @@ export const AnimatedInput = forwardRef(
                 <Input
                     id={props.id || inputId}
                     {...props}
+                    value={props.value ?? ""}
                     type={currentType}
                     ref={ref}
                     onFocus={onFocus}

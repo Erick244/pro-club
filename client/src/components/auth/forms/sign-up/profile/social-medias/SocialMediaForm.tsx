@@ -23,14 +23,12 @@ import { z } from "zod";
 const messages = formMessages["SocialMediaForm"];
 const socialMediaFormSchema = z.object({
     name: z.nativeEnum(SocialMediaNames),
-    tag: z.string().optional(),
+    tag: z.string().optional().nullable(),
     profileLink: z
         .string()
         .optional()
-        .refine(
-            (url) => url?.startsWith("https://") || url?.length === 0,
-            messages.profileLink.url
-        ),
+        .refine((url) => url?.startsWith("https://"), messages.profileLink.url)
+        .nullable(),
 });
 
 export type SocialMediaFormData = z.infer<typeof socialMediaFormSchema>;

@@ -33,8 +33,8 @@ export function SocialMediaInput({
         (accumulator, socialMediaName) => {
             accumulator[socialMediaName] = {
                 name: socialMediaName,
-                tag: "",
-                profileLink: "",
+                tag: null,
+                profileLink: null,
             };
 
             return accumulator;
