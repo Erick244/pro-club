@@ -44,15 +44,14 @@ enum UserRoles {
 }
 
 model UserProfile {
-    id                  Int           @id @default(autoincrement())
-    User                User[]
-    likes               Int           @default(0)
-    color               String
-    availableTimeToPlay String?
-    profileImageUrl     String?
-    socialMedias        SocialMedia[]
-    gamingSetup         Json?
-    gamesConfig         GameConfig[]
+    id              Int           @id @default(autoincrement())
+    User            User[]
+    likes           Int           @default(0)
+    color           String
+    profileImageUrl String?
+    socialMedias    SocialMedia[]
+    gamingSetup     Json?
+    gamesConfig     GameConfig[]
 }
 
 model SocialMedia {

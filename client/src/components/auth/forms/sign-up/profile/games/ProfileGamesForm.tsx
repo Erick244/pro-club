@@ -112,7 +112,7 @@ export function ProfileGamesForm() {
                                             );
                                         })}
                                     </ImageCardSelectOptions>
-                                    <Muted className="text-primary text-center">
+                                    <Muted className="text-center text-primary">
                                         {form.getValues("games").length}
                                     </Muted>
                                 </ImageCardSelect>
