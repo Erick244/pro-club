@@ -1,17 +1,16 @@
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CheckIcon, SearchIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { AnimatedInput } from "../inputs/AnimatedInput";
+import { SearchAnimatedInput } from "../inputs/AnimatedInput";
 
 interface ImageCardSelectProps {
     children: React.ReactNode;
 }
 
 export function ImageCardSelect({ children }: ImageCardSelectProps) {
-    return <div className="space-y-5">{children}</div>;
+    return <div className="space-y-5 w-full">{children}</div>;
 }
 
 interface ImageCardSelectOptionsProps {
@@ -48,21 +47,11 @@ export function ImageCardSelectSearch({
     const handleSearch = useDebouncedCallback(() => onSearch(query), 300);
 
     return (
-        <div className="mt-5 flex items-center gap-2">
-            <AnimatedInput
-                className="grow"
-                label="Search"
+        <div className="flex justify-center">
+            <SearchAnimatedInput
+                className="mt-5 w-10/12"
                 onChange={handleOnChange}
             />
-            <Button
-                size="icon"
-                onClick={(e) => {
-                    e.preventDefault();
-                    handleSearch();
-                }}
-            >
-                <SearchIcon className="text-foreground" />
-            </Button>
         </div>
     );
 }
@@ -107,7 +96,7 @@ export function ImageCardSelectOption({
                 alt="Card image"
             />
 
-            <p className="z-10 transition-all font-semibold text-xs text-center w-full absolute -bottom-10 left-1/2 -translate-x-1/2 bg-primary py-2 text-secondary group-hover:bottom-0">
+            <p className="z-10 transition-all font-semibold text-xs text-center w-full absolute -bottom-10 left-1/2 -translate-x-1/2 bg-primary py-2 dark:text-secondary text-foreground group-hover:bottom-0">
                 {name}
             </p>
 

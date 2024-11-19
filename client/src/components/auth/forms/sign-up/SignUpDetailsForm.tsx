@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown, SearchIcon } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -30,7 +30,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { SubmitButton } from "@/components/utils/forms/buttons/SubmitButton";
-import { AnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
+import { SearchAnimatedInput } from "@/components/utils/forms/inputs/AnimatedInput";
 import { Loader } from "@/components/utils/loading/Loader";
 import { countries, getCountries } from "@/data/countries";
 import { customFetch } from "@/functions/api/custom-fetch";
@@ -232,15 +232,12 @@ function CountryCommand({
 }: CountryCommandProps) {
     return (
         <Command className="pt-2">
-            <div className="flex px-5 mb-3 justify-center items-center gap-2 relative">
-                <SearchIcon className="w-6 h-6 absolute right-5 text-primary" />
-                <AnimatedInput
-                    label="Search"
-                    onChange={(e) =>
-                        onSearch?.((e.target as HTMLInputElement).value)
-                    }
-                />
-            </div>
+            <SearchAnimatedInput
+                onChange={(e) =>
+                    onSearch?.((e.target as HTMLInputElement).value)
+                }
+            />
+
             <CommandList className="px-5" onScroll={onListScroll}>
                 <CommandEmpty className="flex justify-center py-10">
                     {isLoading ? <Loader /> : "No country found."}

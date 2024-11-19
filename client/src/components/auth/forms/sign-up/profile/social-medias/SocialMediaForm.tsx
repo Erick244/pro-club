@@ -104,7 +104,6 @@ export function SocialMediaForm({
                             <FormControl>
                                 <AnimatedInput
                                     {...field}
-                                    // type="url"
                                     label="Profile Link"
                                 />
                             </FormControl>
