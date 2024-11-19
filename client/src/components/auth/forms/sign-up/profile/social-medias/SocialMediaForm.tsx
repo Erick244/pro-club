@@ -23,12 +23,11 @@ import { z } from "zod";
 const messages = formMessages["SocialMediaForm"];
 const socialMediaFormSchema = z.object({
     name: z.nativeEnum(SocialMediaNames),
-    tag: z.string().optional().nullable(),
+    tag: z.string().optional(),
     profileLink: z
         .string()
         .optional()
-        .refine((url) => url?.startsWith("https://"), messages.profileLink.url)
-        .nullable(),
+        .refine((url) => url?.startsWith("https://"), messages.profileLink.url),
 });
 
 export type SocialMediaFormData = z.infer<typeof socialMediaFormSchema>;
@@ -48,8 +47,10 @@ export function SocialMediaForm({
         resolver: zodResolver(socialMediaFormSchema),
         defaultValues: {
             name: defaultValues?.name,
-            tag: defaultValues?.tag,
-            profileLink: defaultValues?.profileLink,
+            tag: !defaultValues?.tag ? undefined : defaultValues.tag,
+            profileLink: !defaultValues?.profileLink
+                ? undefined
+                : defaultValues.profileLink,
         },
     });
 
