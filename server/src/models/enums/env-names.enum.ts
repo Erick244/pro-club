@@ -35,3 +35,7 @@ export enum OAuthGithubEnvNames {
     GITHUB_CLIENT_SECRET = "GITHUB_CLIENT_SECRET",
     GITHUB_CALLBACK_URL = "GITHUB_CALLBACK_URL",
 }
+
+export enum ImgurEnvNames {
+    CLIENT_ID = "CLIENT_ID",
+}
