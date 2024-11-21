@@ -8,7 +8,7 @@ import {
 @ValidatorConstraint({ async: false })
 export class IsImageFileConstraint implements ValidatorConstraintInterface {
     validate(file: File): boolean {
-        return file.type.startsWith("image/");
+        return !!file && file.type.startsWith("image/");
     }
 
     defaultMessage(): string {

@@ -27,6 +27,12 @@ describe("ImageFileValidator", () => {
 
                 expect(isImageFileConstraint.validate(mockFile)).toBe(false);
             });
+
+            it("should return false if the file not exist", () => {
+                const mockFile = null as unknown as File;
+
+                expect(isImageFileConstraint.validate(mockFile)).toBe(false);
+            });
         });
     });
 });
