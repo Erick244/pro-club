@@ -1,11 +1,15 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { UserProfile } from "@prisma/client";
 import { PrismaService } from "../../db/prisma.service";
+import { ImageService } from "../../image/services/image.service";
 import { CreateProfileDto } from "../models/dtos/create-profile.dto";
 
 @Injectable()
 export class ProfileService {
-    constructor(private prismaService: PrismaService) {}
+    constructor(
+        private prismaService: PrismaService,
+        private imageService: ImageService,
+    ) {}
 
     async create(dto: CreateProfileDto, userId: number): Promise<UserProfile> {
         try {
@@ -22,6 +26,29 @@ export class ProfileService {
                     },
                 },
             });
+        } catch (error: any) {
+            throw new InternalServerErrorException(error.message);
+        }
+    }
+
+    async updateImage(
+        imageMulterFile: Express.Multer.File,
+        userProfileId: number,
+    ): Promise<string> {
+        const profileImageUrl =
+            await this.imageService.uploadImage(imageMulterFile);
+
+        try {
+            await this.prismaService.userProfile.update({
+                where: {
+                    id: userProfileId,
+                },
+                data: {
+                    profileImageUrl,
+                },
+            });
+
+            return profileImageUrl;
         } catch (error: any) {
             throw new InternalServerErrorException(error.message);
         }
