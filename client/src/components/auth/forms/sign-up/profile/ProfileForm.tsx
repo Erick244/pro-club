@@ -20,7 +20,6 @@ import { TiktokLogo } from "@/components/utils/logos/third-party/TiktokLogo";
 import { TwitchTVLogo } from "@/components/utils/logos/third-party/TwitchTVLogo";
 import { XLogo } from "@/components/utils/logos/third-party/XLogo";
 import { YoutubeLogo } from "@/components/utils/logos/third-party/YoutubeLogo";
-import { customFetch } from "@/functions/api/custom-fetch";
 import { formMessages } from "@/messages/form.messages";
 import { SocialMediaNames } from "@/models/enums/social-media-names.enum";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -67,18 +66,7 @@ export function ProfileForm() {
 
     async function onSubmit(data: ProfileFormData) {
         try {
-            await customFetch("/profile", {
-                method: "POST",
-                auth: true,
-                body: data,
-            });
-
-            router.push("/auth/signup/profile/games");
-
-            toast({
-                title: "Profile Created!",
-                description: "Now define some information about the games.",
-            });
+            console.log(data);
         } catch (error: any) {
             toast({
                 title: "Error",
